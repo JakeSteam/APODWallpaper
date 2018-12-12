@@ -1,11 +1,11 @@
 package uk.co.jakelee.apodwallpaper
 
+import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
-import android.widget.Toast
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -16,6 +16,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             .map {
                 if (checkValidResults(it.response)) {
                     saveResults(it.response, it.image, dateString)
-                    updateWallpaper(it.response)
+                    updateWallpaper(it.image)
                 }
                 it
             }
@@ -79,14 +81,11 @@ class MainActivity : AppCompatActivity() {
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         stream.close()
         val file = File(File(context.filesDir, "images"), "$date.png")
-        if (file.exists()) {
-            val size = file.totalSpace
-            val abc = size
-        }
     }
 
-    private fun updateWallpaper(response: ApodResponse) {
-        Toast.makeText(this, "Setting wallpaper: ${response.hdurl}", Toast.LENGTH_SHORT).show()
+    private fun updateWallpaper(bitmap: Bitmap) {
+        val wallpaperManager = WallpaperManager.getInstance(applicationContext)
+        wallpaperManager.setBitmap(bitmap)
     }
 
     override fun onDestroy() {
