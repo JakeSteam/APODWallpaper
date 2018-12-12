@@ -39,18 +39,14 @@ class MainActivity : AppCompatActivity() {
                 val a = getImage(it.hdurl ?: it.url)
                 intermediate(it, a)
             }
-            .map {
-                if (checkValidResults(it.response)) {
-                    saveResults(it.response, it.image, dateString)
-                    updateWallpaper(it.image)
-                }
-                it
-            }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-
+                    if (checkValidResults(it.response)) {
+                        saveResults(it.response, it.image, dateString)
+                        updateWallpaper(it.image)
+                    }
                 },
                 { Timber.e(it) }
             )
