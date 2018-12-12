@@ -21,11 +21,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getApod(date: Date) {
-        val dateString = SimpleDateFormat("yyyy-MM-yy", Locale.UK).format(date)
+        val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.UK).format(date)
         val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
         Timber.d("Pulling data...")
-        disposable = Single
-            .fromCallable {
+        disposable = Single.fromCallable {
                 getResponse(url)
             }
             .subscribe(
