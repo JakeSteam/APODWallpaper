@@ -1,6 +1,9 @@
 package uk.co.jakelee.apodwallpaper
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import io.reactivex.Single
@@ -9,8 +12,11 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
     var disposable: Disposable? = null
@@ -25,28 +31,58 @@ class MainActivity : AppCompatActivity() {
     private fun getApod(date: Date) {
         val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.UK).format(date)
         val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
-        Timber.d("Pulling data...")
-        disposable = Single.fromCallable {
-                getResponse(url)
+        disposable = Single
+            .fromCallable { getResponse(url) }
+            .map {
+                val a = getImage(it.hdurl ?: it.url)
+                intermediate(it, a)
+            }
+            .map {
+                if (checkValidResults(it.response)) {
+                    saveResults(it.response, it.image, dateString)
+                    updateWallpaper(it.response)
+                }
+                it
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    if (checkValidResults(it)) {
-                        saveResults(it)
-                        updateWallpaper(it)
-                    }
+
                 },
                 { Timber.e(it) }
             )
     }
 
-    private fun checkValidResults(response: ApodResponse) =
-        response.media_type == "image" && response.title.isNotEmpty() && response.hdurl.isNotEmpty()
+    data class intermediate(val response: ApodResponse, val image: Bitmap) {
 
-    private fun saveResults(response: ApodResponse) {
-        Toast.makeText(this, "Received title: ${response.title}", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun checkValidResults(response: ApodResponse) =
+        response.media_type == "image" && response.title.isNotEmpty() &&
+                (!response.hdurl.isNullOrEmpty() || !response.url.isEmpty())
+
+    private fun saveResults(response: ApodResponse, image: Bitmap, dateString: String) {
+        val imageUrl = response.hdurl ?: response.url
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+            .putString("${dateString}_title", response.title)
+            .putString("${dateString}_desc", response.explanation)
+            .putString("${dateString}_image", imageUrl)
+            .apply()
+        saveToInternal(this, image, dateString)
+    }
+
+    private fun saveToInternal(context: Context, bitmap: Bitmap, date: String) {
+        val filePath = File(context.filesDir, "images")
+        filePath.mkdirs()
+        val stream = FileOutputStream("$filePath/$date.png")
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        stream.close()
+        val file = File(File(context.filesDir, "images"), "$date.png")
+        if (file.exists()) {
+            val size = file.totalSpace
+            val abc = size
+        }
     }
 
     private fun updateWallpaper(response: ApodResponse) {

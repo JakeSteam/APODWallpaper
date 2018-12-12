@@ -1,9 +1,11 @@
 package uk.co.jakelee.apodwallpaper
 
+import android.graphics.BitmapFactory
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
+import java.net.URL
 
 fun getResponse(url: String): ApodResponse {
     val request = Request.Builder()
@@ -21,11 +23,13 @@ fun getResponse(url: String): ApodResponse {
     }
 }
 
+fun getImage(image: String) = BitmapFactory.decodeStream(URL(image).openStream())
+
 data class ApodResponse(
     val copyright: String,
     val date: String,
     val explanation: String,
-    val hdurl: String,
+    val hdurl: String?,
     val media_type: String,
     val service_version: String,
     val title: String,
