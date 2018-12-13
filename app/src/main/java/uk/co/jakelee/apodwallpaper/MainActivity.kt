@@ -6,6 +6,9 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -28,6 +31,23 @@ class MainActivity : AppCompatActivity() {
         testPull.setOnClickListener {
             getApod(Calendar.getInstance().time)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.top_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_settings -> {
+                Toast.makeText(this, "Display some kind of settings...", Toast.LENGTH_SHORT).show()
+            }
+            R.id.nav_calendar -> {
+                Toast.makeText(this, "Display date selector...", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return true
     }
 
     private fun getApod(date: Date) {

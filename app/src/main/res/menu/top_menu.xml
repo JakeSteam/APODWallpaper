@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_calendar"
+        android:orderInCategory="100"
+        android:title="Calendar"
+        android:icon="@drawable/ic_calendar"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/nav_settings"
+        android:orderInCategory="100"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"
+        app:showAsAction="ifRoom"/>
+</menu>
