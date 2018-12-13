@@ -9,10 +9,13 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.api.ApiClient
-import uk.co.jakelee.apodwallpaper.api.ResponseApod
 import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
+import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
+import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import uk.co.jakelee.apodwallpaper.helper.WallpaperHelper
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,7 +25,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getApod(Calendar.getInstance().time)
+        testPull.setOnClickListener {
+            getApod(Calendar.getInstance().time)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -49,7 +54,7 @@ class MainActivity : AppCompatActivity() {
             .fromCallable { ApiClient(url).getApodResponse() }
             .map {
                 val bitmap = it.pullRemoteImage()
-                if (checkValidResults(it)) {
+                if (it.isValid()) {
                     return@map ResponseApodProcessed(it, bitmap)
                 }
                 throw IOException()
@@ -59,22 +64,17 @@ class MainActivity : AppCompatActivity() {
             .subscribe(
                 {
                     PreferenceHelper(this).updateLastCheckDate()
-                    saveResults(it)
+                    PreferenceHelper(this).saveResponsePrefs(it)
+                    FileSystemHelper(this).saveImage(it.image, it.date)
                     WallpaperHelper(this).updateWallpaper(it.image)
-                    WallpaperHelper(this).updateLockScreen(FileSystemHelper(this).getFilePath(it.date))
+                    WallpaperHelper(this)
+                        .updateLockScreen(FileSystemHelper(this).getImage(it.date))
                 },
                 { Timber.e(it) }
             )
     }
 
-    private fun checkValidResults(response: ResponseApod) =
-        response.media_type == "image" && response.title.isNotEmpty() &&
-                (!response.hdurl.isNullOrEmpty() || !response.url.isEmpty())
 
-    private fun saveResults(response: ResponseApodProcessed) {
-        PreferenceHelper(this).saveResponsePrefs(response)
-        FileSystemHelper(this).saveToInternal(response.image, response.date)
-    }
 
 
 

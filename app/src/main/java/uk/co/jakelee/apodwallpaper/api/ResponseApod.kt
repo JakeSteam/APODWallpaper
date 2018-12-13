@@ -3,7 +3,7 @@ package uk.co.jakelee.apodwallpaper.api
 import android.graphics.BitmapFactory
 import java.net.URL
 
-data class ApodResponse(
+data class ResponseApod(
     val copyright: String,
     val date: String,
     val explanation: String,
@@ -14,4 +14,7 @@ data class ApodResponse(
     val url: String
 ) {
     fun pullRemoteImage() = BitmapFactory.decodeStream(URL(this.hdurl ?: this.url).openStream())
+
+    fun isValid() =
+        this.media_type == "image" && this.title.isNotEmpty() && (!this.hdurl.isNullOrEmpty() || !this.url.isEmpty())
 }
