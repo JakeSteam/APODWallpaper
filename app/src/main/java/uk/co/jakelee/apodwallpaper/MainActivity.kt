@@ -21,9 +21,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         displayLatestSavedApod()
-        fullscreenButton.setOnClickListener {
-            startActivity(Intent(this, ImageActivity::class.java))
-        }
         if (!PreferenceHelper(this).haveScheduledTask()) {
             JobScheduler.scheduleJob(this)
         }
@@ -58,7 +55,13 @@ class MainActivity : AppCompatActivity() {
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
             metadataBar.text = String.format(getString(R.string.last_checked), lastPulled, lastChecked)
+            setUpFullscreenButton(lastPulled)
         }
+    }
+
+    private fun setUpFullscreenButton(dateString: String) = fullscreenButton.setOnClickListener {
+        val imageFile = FileSystemHelper(this).getImage(dateString)
+        startActivity(Intent(this, ImageActivity::class.java).putExtra("image", imageFile.path))
     }
 
     private fun getApod(dateString: String = JobScheduler.getLatestDate()) {

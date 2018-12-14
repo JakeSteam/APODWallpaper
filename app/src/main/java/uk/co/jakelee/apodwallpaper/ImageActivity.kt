@@ -1,17 +1,18 @@
 package uk.co.jakelee.apodwallpaper
 
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_image.*
-import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
-import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import java.io.File
+
 
 class ImageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image)
-        val a = PreferenceHelper(this).getApodData(FileSystemHelper(this), "2018-12-14").image
-        myZoomageView.setImageBitmap(a)
+        val imagePath = intent.getStringExtra("image")
+        myZoomageView.setImageURI(Uri.fromFile(File(imagePath)))
     }
 }
