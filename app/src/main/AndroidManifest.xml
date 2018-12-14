@@ -28,7 +28,7 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ImageActivity">
+        <activity android:name=".ImageFragment">
         </activity>
     </application>
 
