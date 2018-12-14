@@ -48,7 +48,8 @@ class HomeFragment : Fragment() {
         val bundle = Bundle().apply { putString("image", imageFile.path) }
         val fragment = ImageFragment().apply { arguments = bundle }
         activity!!.supportFragmentManager.beginTransaction()
-            .replace(R.id.mainFrame, fragment, ImageFragment.TAG)
+            .replace(R.id.mainFrame, fragment, "image_fragment")
+            .addToBackStack(null)
             .commit()
     }
 
@@ -60,9 +61,5 @@ class HomeFragment : Fragment() {
                 { displayLatestSavedApod() },
                 { Timber.e(it) }
             )
-    }
-
-    companion object {
-        val TAG = "HOME_FRAGMENT"
     }
 }
