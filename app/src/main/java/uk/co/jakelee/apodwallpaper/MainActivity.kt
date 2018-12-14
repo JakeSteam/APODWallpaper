@@ -1,7 +1,9 @@
 package uk.co.jakelee.apodwallpaper
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.format.DateUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -15,6 +17,7 @@ import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
 import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import uk.co.jakelee.apodwallpaper.helper.SettingsHelper
 import uk.co.jakelee.apodwallpaper.helper.WallpaperHelper
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -25,10 +28,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        recheckBar.setOnClickListener {
+        displayLatestSavedApod()
+        recheckButton.setOnClickListener {
             getApod(Calendar.getInstance().time)
         }
-        loadLocalApod()
+        fullsizeButton.setOnClickListener {
+            startActivity(Intent(this, ImageActivity::class.java))
+        }
+        if (!PreferenceHelper(this).haveScheduledTask()) {
+            JobScheduler.scheduleJob(this)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -48,13 +57,14 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun loadLocalApod() {
+    private fun displayLatestSavedApod() {
         val lastPulled = PreferenceHelper(this).getLastPulledDate()
+        val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(this).getLastCheckedDate())
         val apodData = PreferenceHelper(this).getApodData(FileSystemHelper(this), lastPulled)
         backgroundImage.setImageBitmap(apodData.image)
         titleBar.text = apodData.title
         descriptionBar.text = apodData.desc
-        recheckBar.text = String.format(getString(R.string.last_checked), lastPulled, PreferenceHelper(this).getLastCheckedDate())
+        metadataBar.text = String.format(getString(R.string.last_checked), lastPulled, lastChecked)
     }
 
     private fun getApod(date: Date) {
@@ -73,22 +83,24 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    PreferenceHelper(this).updateLastCheckedDate()
-                    PreferenceHelper(this).updateLastPulledDate(it.date)
-                    PreferenceHelper(this).saveApodData(it)
-                    FileSystemHelper(this).saveImage(it.image!!, it.date)
-                    WallpaperHelper(this).updateWallpaper(it.image)
-                    WallpaperHelper(this).updateLockScreen(FileSystemHelper(this).getImage(it.date))
+                    val prefHelper = PreferenceHelper(this)
+                    prefHelper.updateLastCheckedDate()
+                    if (prefHelper.getLastPulledDate() != it.date) {
+                        prefHelper.updateLastPulledDate(it.date)
+                        prefHelper.saveApodData(it)
+                        FileSystemHelper(this).saveImage(it.image!!, it.date)
+                        if (SettingsHelper.setWallpaper) {
+                            WallpaperHelper(this).updateWallpaper(it.image)
+                        }
+                        if (SettingsHelper.setLockScreen) {
+                            WallpaperHelper(this).updateLockScreen(FileSystemHelper(this).getImage(it.date))
+                        }
+                        displayLatestSavedApod()
+                    }
                 },
                 { Timber.e(it) }
             )
     }
-
-
-
-
-
-
 
     override fun onDestroy() {
         super.onDestroy()

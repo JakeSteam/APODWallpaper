@@ -39,12 +39,30 @@
             android:background="@color/textBackground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/checkInformation"
+            app:layout_constraintBottom_toTopOf="@+id/recheckButton"
             app:layout_constraintVertical_bias="0.0"/>
+    <Button
+            android:id="@+id/recheckButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Check"
+            app:layout_constraintBottom_toTopOf="@id/metadataBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintVertical_bias="1.0"/>
+    <Button
+            android:id="@+id/fullsizeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fullsize"
+            app:layout_constraintBottom_toTopOf="@id/metadataBar"
+            app:layout_constraintEnd_toStartOf="@id/recheckButton"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintVertical_bias="1.0"/>
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/recheckBar"
+            android:id="@+id/metadataBar"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="@string/last_checked"

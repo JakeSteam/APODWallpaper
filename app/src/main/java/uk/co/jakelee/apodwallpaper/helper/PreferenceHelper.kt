@@ -16,9 +16,9 @@ class PreferenceHelper(context: Context) {
         .apply()
 
     fun getApodData(fsh: FileSystemHelper, date: String) = ResponseApodProcessed(
+            date,
             prefs.getString("${date}_${StringPref.Title.name}", ""),
             prefs.getString("${date}_${StringPref.Desc.name}", ""),
-            date,
             prefs.getString("${date}_${StringPref.Image.name}", ""),
             BitmapFactory.decodeFile(fsh.getImage(date).path)
         )
@@ -34,4 +34,10 @@ class PreferenceHelper(context: Context) {
         .apply()
 
     fun getLastCheckedDate() = prefs.getLong("last_checked", 0)
+
+    fun setScheduledTask() = prefs.edit()
+        .putBoolean("scheduled_tasks", true)
+        .apply()
+
+    fun haveScheduledTask() = prefs.getBoolean("scheduled_tasks", false)
 }

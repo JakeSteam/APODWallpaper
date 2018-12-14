@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">APOD Daily Wallpaper</string>
-    <string name="last_checked">APOD from: %s. Last checked: %s\nTap to recheck.</string>
+    <string name="last_checked">APOD for %s (checked: %s)</string>
 </resources>
