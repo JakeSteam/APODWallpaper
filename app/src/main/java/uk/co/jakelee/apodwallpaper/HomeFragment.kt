@@ -52,6 +52,7 @@ class HomeFragment : Fragment() {
         }
         val fragment = ImageFragment().apply { arguments = bundle }
         activity!!.supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
             .replace(R.id.mainFrame, fragment, "image_fragment")
             .addToBackStack(null)
             .commit()
