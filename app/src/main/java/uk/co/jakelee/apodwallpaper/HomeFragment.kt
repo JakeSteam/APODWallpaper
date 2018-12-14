@@ -1,5 +1,6 @@
 package uk.co.jakelee.apodwallpaper
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.LayoutInflater
@@ -25,23 +26,14 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
+    val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+        getApod("$year-$month-$day", false)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
-        displayLatestSavedApod()
-    }
-
-    private fun displayLatestSavedApod() {
-        val lastPulled = PreferenceHelper(activity!!).getLastPulledDate()
-        if (lastPulled != "") {
-            val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
-            val apodData = PreferenceHelper(activity!!).getApodData(FileSystemHelper(activity!!), lastPulled)
-            backgroundImage.setImageBitmap(apodData.image)
-            titleBar.text = apodData.title
-            descriptionBar.text = apodData.desc
-            metadataBar.text = String.format(getString(R.string.last_checked), lastPulled, lastChecked)
-            setUpFullscreenButton(apodData.title, lastPulled)
-        }
+        displayApod(PreferenceHelper(activity!!).getLastPulledDate())
     }
 
     private fun setUpFullscreenButton(title: String, dateString: String) = fullscreenButton.setOnClickListener {
@@ -58,13 +50,25 @@ class HomeFragment : Fragment() {
             .commit()
     }
 
-    fun getApod(dateString: String = JobScheduler.getLatestDate()) {
-        disposable = JobScheduler.downloadApod(activity!!, dateString)
+    fun getApod(dateString: String, pullingLatest: Boolean) {
+        disposable = JobScheduler.downloadApod(activity!!, dateString, pullingLatest)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { displayLatestSavedApod() },
+                { displayApod(dateString) },
                 { Timber.e(it) }
             )
+    }
+
+    private fun displayApod(dateString: String) {
+        if (dateString.isNotEmpty()) {
+            val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
+            val apodData = PreferenceHelper(activity!!).getApodData(FileSystemHelper(activity!!), dateString)
+            backgroundImage.setImageBitmap(apodData.image)
+            titleBar.text = apodData.title
+            descriptionBar.text = apodData.desc
+            metadataBar.text = String.format(getString(R.string.last_checked), dateString, lastChecked)
+            setUpFullscreenButton(apodData.title, dateString)
+        }
     }
 }

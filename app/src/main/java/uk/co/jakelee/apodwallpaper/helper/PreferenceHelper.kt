@@ -23,6 +23,8 @@ class PreferenceHelper(context: Context) {
             BitmapFactory.decodeFile(fsh.getImage(date).path)
         )
 
+    fun doesDataExist(date: String) = prefs.getString("${date}_${StringPref.Title.name}", "") != ""
+
     fun updateLastPulledDate(date: String) = prefs.edit()
         .putString("last_pulled", date)
         .apply()

@@ -21,7 +21,7 @@ class JobScheduler : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
-        downloadApod(applicationContext, getLatestDate())
+        downloadApod(applicationContext, getLatestDate(), true)
         return true
     }
 
@@ -29,7 +29,7 @@ class JobScheduler : JobService() {
 
 
     companion object {
-        fun downloadApod(context: Context, dateString: String): Single<ResponseApodProcessed> {
+        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean): Single<ResponseApodProcessed> {
             val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
             return Single
                 .fromCallable { ApiClient(url).getApodResponse() }
@@ -42,11 +42,15 @@ class JobScheduler : JobService() {
                 }
                 .map {
                     val prefHelper = PreferenceHelper(context)
-                    prefHelper.updateLastCheckedDate()
-                    if (prefHelper.getLastPulledDate() != it.date) {
-                        prefHelper.updateLastPulledDate(it.date)
+                    // If data hasn't been saved before, save it
+                    if (!prefHelper.doesDataExist(it.date)) {
                         prefHelper.saveApodData(it)
                         FileSystemHelper(context).saveImage(it.image, it.date)
+                    }
+                    // If we're pulling the latest image, and it's different to the current latest
+                    if (pullingLatest && it.date != prefHelper.getLastPulledDate()) {
+                        prefHelper.updateLastPulledDate(it.date)
+                        prefHelper.updateLastCheckedDate()
                         if (SettingsHelper.setWallpaper) {
                             WallpaperHelper(context).updateWallpaper(it.image)
                         }

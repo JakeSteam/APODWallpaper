@@ -1,14 +1,17 @@
 package uk.co.jakelee.apodwallpaper
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
+
     private val HomeFragmentTag = "HOME_FRAGMENT"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +41,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-
         val fragment = supportFragmentManager.findFragmentByTag(HomeFragmentTag)
         if (fragment != null && fragment.isVisible) {
             (fragment as HomeFragment)
@@ -48,11 +49,16 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Display some kind of settings...", Toast.LENGTH_SHORT).show()
                 }
                 R.id.nav_calendar -> {
-                    Toast.makeText(this, "Display date selector...", Toast.LENGTH_SHORT).show()
+                    val myCalendar = Calendar.getInstance()
+                    DatePickerDialog(this, fragment.dateSetListener,
+                        myCalendar.get(Calendar.YEAR),
+                        myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)
+                    ).show()
                 }
                 R.id.nav_recheck -> {
                     if (System.currentTimeMillis() - PreferenceHelper(this).getLastCheckedDate() > TimeUnit.MINUTES.toMillis(10)) {
-                        fragment.getApod()
+                        fragment.getApod(JobScheduler.getLatestDate(), true)
                     } else {
                         Toast.makeText(this, "Checked too recently, please try again in a few minutes!", Toast.LENGTH_SHORT).show()
                     }
