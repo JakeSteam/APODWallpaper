@@ -25,9 +25,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        testPull.setOnClickListener {
+        recheckBar.setOnClickListener {
             getApod(Calendar.getInstance().time)
         }
+        loadLocalApod()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -47,6 +48,15 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    private fun loadLocalApod() {
+        val lastPulled = PreferenceHelper(this).getLastPulledDate()
+        val apodData = PreferenceHelper(this).getApodData(FileSystemHelper(this), lastPulled)
+        backgroundImage.setImageBitmap(apodData.image)
+        titleBar.text = apodData.title
+        descriptionBar.text = apodData.desc
+        recheckBar.text = String.format(getString(R.string.last_checked), lastPulled, PreferenceHelper(this).getLastCheckedDate())
+    }
+
     private fun getApod(date: Date) {
         val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.UK).format(date)
         val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
@@ -63,12 +73,12 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    PreferenceHelper(this).updateLastCheckDate()
-                    PreferenceHelper(this).saveResponsePrefs(it)
-                    FileSystemHelper(this).saveImage(it.image, it.date)
+                    PreferenceHelper(this).updateLastCheckedDate()
+                    PreferenceHelper(this).updateLastPulledDate(it.date)
+                    PreferenceHelper(this).saveApodData(it)
+                    FileSystemHelper(this).saveImage(it.image!!, it.date)
                     WallpaperHelper(this).updateWallpaper(it.image)
-                    WallpaperHelper(this)
-                        .updateLockScreen(FileSystemHelper(this).getImage(it.date))
+                    WallpaperHelper(this).updateLockScreen(FileSystemHelper(this).getImage(it.date))
                 },
                 { Timber.e(it) }
             )

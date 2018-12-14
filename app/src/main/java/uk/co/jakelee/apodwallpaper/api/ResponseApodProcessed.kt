@@ -7,7 +7,7 @@ data class ResponseApodProcessed(
     val desc: String,
     val date: String,
     val imageUrl: String,
-    val image: Bitmap
+    val image: Bitmap?
 ) {
     constructor(response: ResponseApod, image: Bitmap) : this(
         response.title,

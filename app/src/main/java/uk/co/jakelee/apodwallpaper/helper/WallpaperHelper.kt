@@ -1,4 +1,4 @@
-package uk.co.jakelee.apodwallpaper
+package uk.co.jakelee.apodwallpaper.helper
 
 import android.app.WallpaperManager
 import android.content.Context
@@ -11,7 +11,6 @@ class WallpaperHelper(context: Context) {
     val manager = WallpaperManager.getInstance(context)
 
     fun updateWallpaper(bitmap: Bitmap) = manager.setBitmap(bitmap)
-
 
     fun updateLockScreen(file: File) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
