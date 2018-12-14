@@ -39,26 +39,17 @@
             android:background="@color/textBackground"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/recheckButton"
+            app:layout_constraintBottom_toTopOf="@+id/fullscreenButton"
             app:layout_constraintVertical_bias="0.0"/>
-    <Button
-            android:id="@+id/recheckButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Check"
+    <ImageView
+            android:id="@+id/fullscreenButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             app:layout_constraintBottom_toTopOf="@id/metadataBar"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintVertical_bias="1.0"/>
-    <Button
-            android:id="@+id/fullsizeButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Fullsize"
-            app:layout_constraintBottom_toTopOf="@id/metadataBar"
-            app:layout_constraintEnd_toStartOf="@id/recheckButton"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintVertical_bias="1.0"/>
+            app:layout_constraintVertical_bias="1.0"
+            android:src="@drawable/ic_fullscreen"
+            android:background="@color/textBackground"/>
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

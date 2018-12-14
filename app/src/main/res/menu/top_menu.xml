@@ -14,4 +14,10 @@
         android:title="Settings"
         android:icon="@drawable/ic_settings"
         app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/nav_recheck"
+        android:orderInCategory="100"
+        android:title="Recheck"
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="ifRoom"/>
 </menu>
