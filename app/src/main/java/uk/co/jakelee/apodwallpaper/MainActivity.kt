@@ -6,8 +6,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
+    private val HomeFragmentTag = "HOME_FRAGMENT"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -16,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.mainFrame, HomeFragment(), "HOME_FRAGMENT").commit()
+        ft.replace(R.id.mainFrame, HomeFragment(), HomeFragmentTag).commit()
 
         supportFragmentManager.addOnBackStackChangedListener {
             val stackHeight = supportFragmentManager.backStackEntryCount
@@ -36,22 +38,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                supportFragmentManager.popBackStack()
-            }
-            R.id.nav_settings -> {
-                Toast.makeText(this, "Display some kind of settings...", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_calendar -> {
-                Toast.makeText(this, "Display date selector...", Toast.LENGTH_SHORT).show()
-            }
-            R.id.nav_recheck -> {
-                val fragment = supportFragmentManager.findFragmentByTag("HOME_FRAGMENT")
-                if (fragment != null && fragment.isVisible) {
-                    (fragment as HomeFragment).getApod()
+
+
+        val fragment = supportFragmentManager.findFragmentByTag(HomeFragmentTag)
+        if (fragment != null && fragment.isVisible) {
+            (fragment as HomeFragment)
+            when (item.itemId) {
+                R.id.nav_settings -> {
+                    Toast.makeText(this, "Display some kind of settings...", Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_calendar -> {
+                    Toast.makeText(this, "Display date selector...", Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_recheck -> {
+                    if (System.currentTimeMillis() - PreferenceHelper(this).getLastCheckedDate() > TimeUnit.MINUTES.toMillis(10)) {
+                        fragment.getApod()
+                    } else {
+                        Toast.makeText(this, "Checked too recently, please try again in a few minutes!", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
+        } else if (item.itemId == android.R.id.home) {
+            supportFragmentManager.popBackStack()
         }
         return true
     }
