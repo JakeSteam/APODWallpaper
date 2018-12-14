@@ -2,6 +2,7 @@ package uk.co.jakelee.apodwallpaper
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.app.AppCompatActivity
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +22,12 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
         displayLatestSavedApod()
     }
 
@@ -39,13 +40,16 @@ class HomeFragment : Fragment() {
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
             metadataBar.text = String.format(getString(R.string.last_checked), lastPulled, lastChecked)
-            setUpFullscreenButton(lastPulled)
+            setUpFullscreenButton(apodData.title, lastPulled)
         }
     }
 
-    private fun setUpFullscreenButton(dateString: String) = fullscreenButton.setOnClickListener {
+    private fun setUpFullscreenButton(title: String, dateString: String) = fullscreenButton.setOnClickListener {
         val imageFile = FileSystemHelper(activity!!).getImage(dateString)
-        val bundle = Bundle().apply { putString("image", imageFile.path) }
+        val bundle = Bundle().apply {
+            putString("image", imageFile.path)
+            putString("title", title)
+        }
         val fragment = ImageFragment().apply { arguments = bundle }
         activity!!.supportFragmentManager.beginTransaction()
             .replace(R.id.mainFrame, fragment, "image_fragment")
