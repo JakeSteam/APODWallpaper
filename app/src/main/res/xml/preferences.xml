@@ -2,102 +2,131 @@
     <PreferenceCategory android:title="Automatic checking">
         <SwitchPreference
                 android:key="enable_automatic_checking"
+                android:defaultValue="true"
                 android:title="Enable"
+                android:icon="@drawable/ic_settings_checking"
                 android:summary="When enabled, new wallpapers will be regularly checked for." />
         <SwitchPreference
                 android:key="automatic_check_wifi"
+                android:defaultValue="false"
                 android:title="WiFi only"
+                android:icon="@drawable/ic_settings_wifi"
                 android:dependency="enable_automatic_checking"
                 android:summary="When enabled, checks will only occur when on WiFi." />
         <SeekBarPreference
                 android:key="automatic_check_frequency"
+                android:defaultValue="24"
                 android:title="Frequency (hours)"
+                android:icon="@drawable/ic_settings_frequency"
                 android:dependency="enable_automatic_checking"
                 android:summary="Determines how often checks will be performed."
-                android:max="48"
-                android:defaultValue="24"/>
+                android:max="48"/>
         <SeekBarPreference
                 android:key="automatic_check_variance"
+                android:defaultValue="5"
                 android:title="Variance (hours)"
+                android:icon="@drawable/ic_settings_variance"
                 android:dependency="enable_automatic_checking"
                 android:summary="Determines how many hours the OS can modify the check time by. Higher = better battery."
-                android:max="12"
-                android:defaultValue="5"/>
+                android:max="12"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Image filtering">
         <SwitchPreference
                 android:key="enable_filtering"
+                android:defaultValue="false"
                 android:title="Enable"
+                android:icon="@drawable/ic_settings_filter"
                 android:summary="When enabled, images will be quality checked before being applied." />
         <SeekBarPreference
                 android:key="minimum_width"
+                android:defaultValue="500"
                 android:title="Minimum width (px)"
+                android:icon="@drawable/ic_settings_width"
                 android:dependency="enable_filtering"
                 android:summary="How many pixels wide must an image be, to be applied."
-                android:max="10000"
-                android:defaultValue="500"/>
+                android:max="10000"/>
         <SeekBarPreference
                 android:key="minimum_height"
+                android:defaultValue="500"
                 android:title="Minimum height (px)"
+                android:icon="@drawable/ic_settings_height"
                 android:dependency="enable_filtering"
                 android:summary="How many pixels high must an image be, to be applied."
-                android:max="10000"
-                android:defaultValue="500"/>
+                android:max="10000"/>
         <SwitchPreference
                 android:key="enable_ratio_filtering"
+                android:defaultValue="false"
                 android:title="Enable ratio filtering"
+                android:icon="@drawable/ic_settings_ratio"
                 android:dependency="enable_filtering"
                 android:summary="Enable filtering images by height to width ratio." />
         <SeekBarPreference
                 android:key="ratio_filter"
-                android:title="Minimum height (px)"
+                android:defaultValue="1"
+                android:title="Minimum ratio"
                 android:dependency="enable_ratio_filtering"
                 android:summary="Ratio of width / height.. somehow"
-                android:max="5"
-                android:defaultValue="1"/>
+                android:max="5"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Targets">
         <SwitchPreference
                 android:key="enable_wallpaper"
+                android:defaultValue="true"
                 android:title="Wallpaper"
+                android:icon="@drawable/ic_settings_wallpaper"
                 android:summary="When enabled, your wallpaper image will be set when a new image is found." />
         <SwitchPreference
                 android:key="enable_lockscreen"
+                android:defaultValue="true"
                 android:title="Lock screen"
+                android:icon="@drawable/ic_settings_lock"
                 android:summary="When enabled, your lock screen image will be set when a new image is found." />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Notifications">
+    <PreferenceCategory
+            android:title="Notifications">
         <SwitchPreference
                 android:key="notifications"
+                android:defaultValue="true"
                 android:title="Enable"
+                android:icon="@drawable/ic_settings_notifications"
                 android:summary="When enabled, you will receive notifications when a new image has been downloaded." />
         <SwitchPreference
                 android:key="notification_led"
-                android:title="Enable"
+                android:defaultValue="true"
+                android:title="LED"
+                android:icon="@drawable/ic_settings_led"
                 android:dependency="notifications"
                 android:summary="When enabled, the notification will light up your LED (if available)." />
         <SwitchPreference
                 android:key="notification_sound"
-                android:title="Enable"
+                android:defaultValue="false"
+                android:title="Sound"
+                android:icon="@drawable/ic_settings_sound"
                 android:dependency="notifications"
                 android:summary="When enabled, the notification will make a little beep noise." />
         <SwitchPreference
                 android:key="notification_rich_preview"
-                android:title="Enable"
+                android:defaultValue="true"
+                android:title="Rich previews"
+                android:icon="@drawable/ic_settings_preview"
                 android:dependency="notifications"
                 android:summary="When enabled, the notification will contain the APOD itself." />
     </PreferenceCategory>
-    <PreferenceCategory>
+    <PreferenceCategory
+            android:title="Additional actions">
         <Preference
                 android:key="view_log"
                 android:title="View log"
+                android:icon="@drawable/ic_settings_log"
                 android:summary="View last 100 actions taken by app." />
         <Preference
                 android:key="view_quota"
                 android:title="View quota"
+                android:icon="@drawable/ic_settings_quota"
                 android:summary="View current API quota." />
         <PreferenceScreen
                 android:title="View source"
+                android:icon="@drawable/ic_settings_code"
                 android:summary="View complete app source code.">
             <intent android:action="android.intent.action.VIEW"
                     android:data="https://www.github.com/JakeSteam/APODWallpaper" />
