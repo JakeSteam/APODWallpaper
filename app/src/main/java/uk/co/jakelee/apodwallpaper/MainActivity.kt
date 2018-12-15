@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -48,11 +49,19 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Display some kind of settings...", Toast.LENGTH_SHORT).show()
                 }
                 R.id.nav_calendar -> {
-                    DatePickerDialog(this, fragment.dateSetListener,
+                    val datePicker = DatePickerDialog(this, fragment.dateSetListener,
                         fragment.selectedYear,
                         fragment.selectedMonth - 1,
                         fragment.selectedDay
-                    ).show()
+                    )
+                    val cal = Calendar.getInstance()
+                    datePicker.datePicker.minDate = cal.apply {
+                        set(Calendar.YEAR, 1995)
+                        set(Calendar.MONTH, 5)
+                        set(Calendar.DAY_OF_MONTH, 20)
+                    }.timeInMillis
+                    datePicker.datePicker.maxDate = System.currentTimeMillis()
+                    datePicker.show()
                 }
                 R.id.nav_recheck -> {
                     if (System.currentTimeMillis() - PreferenceHelper(this).getLastCheckedDate() > TimeUnit.MINUTES.toMillis(10)) {
