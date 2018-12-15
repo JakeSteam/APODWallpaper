@@ -1,6 +1,7 @@
 package uk.co.jakelee.apodwallpaper.fragments
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.LayoutInflater
@@ -75,6 +76,17 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setUpShareButton(title: String, url: String) {
+        shareButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, title)
+                putExtra(Intent.EXTRA_TEXT, url)
+            }
+            activity!!.startActivity(Intent.createChooser(intent, "Send $title to..."))
+        }
+    }
+
     fun getApod(dateString: String, pullingLatest: Boolean) {
         if (PreferenceHelper(activity!!).doesDataExist(activity!!, dateString)) {
             displayApod(dateString)
@@ -127,6 +139,7 @@ class HomeFragment : Fragment() {
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
             setUpFullscreenButton(apodData.title, dateString)
+            setUpShareButton(apodData.title, apodData.imageUrl)
             if (prefsHelper.getLastPulledDate() == dateString) {
                 val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
                 metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
