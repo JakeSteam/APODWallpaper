@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">APOD Daily Wallpaper</string>
-    <string name="last_checked">APOD for %s (checked: %s)</string>
+    <string name="metadata_bar_checked">APOD for %s (checked: %s)</string>
+    <string name="metadata_bar">APOD for %s</string>
     <string name="loading_message">Loading APOD...</string>
 </resources>

@@ -103,13 +103,18 @@ class HomeFragment : Fragment() {
 
     private fun displayApod(dateString: String) {
         if (dateString.isNotEmpty()) {
-            val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
-            val apodData = PreferenceHelper(activity!!).getApodData(FileSystemHelper(activity!!), dateString)
+            val prefsHelper = PreferenceHelper(activity!!)
+            val apodData = prefsHelper.getApodData(FileSystemHelper(activity!!), dateString)
             backgroundImage.setImageBitmap(apodData.image)
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
-            metadataBar.text = String.format(getString(R.string.last_checked), dateString, lastChecked)
             setUpFullscreenButton(apodData.title, dateString)
+            if (prefsHelper.getLastPulledDate() == dateString) {
+                val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
+                metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked)
+            } else {
+                metadataBar.text = String.format(getString(R.string.metadata_bar), dateString)
+            }
             metadataGroup.visibility = View.VISIBLE
         }
     }
