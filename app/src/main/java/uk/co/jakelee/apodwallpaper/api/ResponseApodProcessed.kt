@@ -13,7 +13,7 @@ data class ResponseApodProcessed(
         response.date,
         response.title,
         response.explanation,
-        response.hdurl ?: response.url,
+        response.url,
         image
     )
 }

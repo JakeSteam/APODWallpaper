@@ -13,7 +13,7 @@ data class ResponseApod(
     val title: String,
     val url: String
 ) {
-    fun pullRemoteImage() = BitmapFactory.decodeStream(URL(this.hdurl ?: this.url).openStream())
+    fun pullRemoteImage() = BitmapFactory.decodeStream(URL(this.url).openStream())
 
     fun isValid() =
         this.media_type == "image" && this.title.isNotEmpty() && (!this.hdurl.isNullOrEmpty() || !this.url.isEmpty())

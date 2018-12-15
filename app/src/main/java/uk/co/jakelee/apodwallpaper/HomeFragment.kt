@@ -35,9 +35,11 @@ class HomeFragment : Fragment() {
     val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
         resetApod()
         selectedYear = year
-        selectedMonth = month + 1
+        selectedMonth = (month + 1)
         selectedDay = day
-        getApod("$selectedYear-$selectedMonth-$selectedDay", false)
+        getApod("$selectedYear" + "-" +
+                selectedMonth.toString().padStart(2, '0') + "-" +
+                selectedDay.toString().padStart(2, '0'), false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
