@@ -9,12 +9,8 @@ import io.reactivex.Single
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
-import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
-import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-import uk.co.jakelee.apodwallpaper.helper.SettingsHelper
-import uk.co.jakelee.apodwallpaper.helper.WallpaperHelper
+import uk.co.jakelee.apodwallpaper.helper.*
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 
 class JobScheduler : JobService() {
@@ -64,7 +60,7 @@ class JobScheduler : JobService() {
                 }
         }
 
-        fun getLatestDate() = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Calendar.getInstance().time)
+        fun getLatestDate() = CalendarHelper.calendarToString(Calendar.getInstance())
 
         fun scheduleJob(context: Context) {
             /*val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))

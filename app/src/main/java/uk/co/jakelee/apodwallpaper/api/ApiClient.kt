@@ -23,12 +23,13 @@ class ApiClient(val url: String) {
         }
     }
 
-    class DateRequestedException() : Exception()
+    class DateRequestedException : Exception()
 
     private val httpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
+        .retryOnConnectionFailure(false)
         .build()
 }
 

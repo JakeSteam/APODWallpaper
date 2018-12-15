@@ -15,6 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.api.ApiClient
+import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
 import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
 import java.util.*
@@ -77,11 +78,9 @@ class HomeFragment : Fragment() {
                     {
                         Timber.e(it)
                         if (pullingLatest && it is ApiClient.DateRequestedException) {
-                            Toast.makeText(activity, "Failed to find APOD for $dateString, trying day before...", Toast.LENGTH_SHORT).show()
-                            selectedYear = 2018
-                            selectedMonth = 12
-                            selectedDay = 14
-                            getApod("2018-12-14", true)
+                            val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
+                            Toast.makeText(activity, "Failed to find APOD for $dateString, trying $newDateString", Toast.LENGTH_SHORT).show()
+                            getApod(newDateString, true)
                         } else {
                             Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
                         }
