@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import uk.co.jakelee.apodwallpaper.fragments.HomeFragment
+import uk.co.jakelee.apodwallpaper.fragments.SettingsFragment
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
 import uk.co.jakelee.apodwallpaper.helper.TaskSchedulerHelper
 import java.util.*
@@ -47,7 +48,16 @@ class MainActivity : AppCompatActivity() {
             (fragment as HomeFragment)
             when (item.itemId) {
                 R.id.nav_settings -> {
-                    Toast.makeText(this, "Display some kind of settings...", Toast.LENGTH_SHORT).show()
+                    supportFragmentManager.beginTransaction()
+                        .setCustomAnimations(
+                            R.anim.enter_from_right,
+                            R.anim.exit_to_left,
+                            R.anim.enter_from_left,
+                            R.anim.exit_to_right
+                        )
+                        .replace(R.id.mainFrame, SettingsFragment(), "settings_fragment")
+                        .addToBackStack(null)
+                        .commit()
                 }
                 R.id.nav_calendar -> {
                     val datePicker = DatePickerDialog(this, fragment.dateSetListener,
