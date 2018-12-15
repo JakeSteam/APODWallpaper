@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -49,11 +48,10 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Display some kind of settings...", Toast.LENGTH_SHORT).show()
                 }
                 R.id.nav_calendar -> {
-                    val myCalendar = Calendar.getInstance()
                     DatePickerDialog(this, fragment.dateSetListener,
-                        myCalendar.get(Calendar.YEAR),
-                        myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)
+                        fragment.selectedYear,
+                        fragment.selectedMonth,
+                        fragment.selectedDay
                     ).show()
                 }
                 R.id.nav_recheck -> {

@@ -61,5 +61,10 @@
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:background="@color/textBackground"/>
+    <androidx.constraintlayout.widget.Group
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/metadataGroup"
+            app:constraint_referenced_ids="descriptionBar,fullscreenButton,metadataBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,13 +13,17 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
+import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-
+import java.util.*
 
 
 class HomeFragment : Fragment() {
-    var disposable: Disposable? = null
+    private var disposable: Disposable? = null
+    var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
+    var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
+    var selectedDay: Int = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -28,6 +32,9 @@ class HomeFragment : Fragment() {
 
     val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
         resetApod()
+        selectedYear = year
+        selectedMonth = month
+        selectedDay = day
         getApod("$year-$month-$day", false)
     }
 
@@ -36,6 +43,7 @@ class HomeFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
         resetApod()
         displayApod(PreferenceHelper(activity!!).getLastPulledDate())
+        getApod(JobScheduler.getLatestDate(), true)
     }
 
     private fun setUpFullscreenButton(title: String, dateString: String){
@@ -52,7 +60,6 @@ class HomeFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
-        fullscreenButton.visibility = View.VISIBLE
     }
 
     fun getApod(dateString: String, pullingLatest: Boolean) {
@@ -63,8 +70,15 @@ class HomeFragment : Fragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { displayApod(dateString) },
-                    { Timber.e(it) }
+                    {
+                        displayApod(dateString)
+                    },
+                    {
+                        Timber.e(it)
+                        if (pullingLatest && it is ApiClient.DateRequestedException) {
+                            getApod("2018-12-14", true)
+                        }
+                    }
                 )
         }
     }
@@ -72,9 +86,7 @@ class HomeFragment : Fragment() {
     private fun resetApod() {
         backgroundImage.setImageResource(R.color.colorPrimary)
         titleBar.text = activity!!.getString(R.string.loading_message)
-        descriptionBar.visibility = View.GONE
-        metadataBar.visibility = View.GONE
-        fullscreenButton.visibility = View.GONE
+        metadataGroup.visibility = View.GONE
     }
 
     private fun displayApod(dateString: String) {
@@ -83,12 +95,10 @@ class HomeFragment : Fragment() {
             val apodData = PreferenceHelper(activity!!).getApodData(FileSystemHelper(activity!!), dateString)
             backgroundImage.setImageBitmap(apodData.image)
             titleBar.text = apodData.title
-            titleBar.visibility = View.VISIBLE
             descriptionBar.text = apodData.desc
-            descriptionBar.visibility = View.VISIBLE
             metadataBar.text = String.format(getString(R.string.last_checked), dateString, lastChecked)
-            metadataBar.visibility = View.VISIBLE
             setUpFullscreenButton(apodData.title, dateString)
+            metadataGroup.visibility = View.VISIBLE
         }
     }
 }

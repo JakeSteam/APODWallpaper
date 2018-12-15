@@ -30,9 +30,11 @@ class JobScheduler : JobService() {
 
     companion object {
         fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean): Single<ResponseApodProcessed> {
-            val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
             return Single
-                .fromCallable { ApiClient(url).getApodResponse() }
+                .fromCallable {
+                    val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
+                    ApiClient(url).getApodResponse()
+                }
                 .map {
                     val bitmap = it.pullRemoteImage()
                     if (it.isValid()) {

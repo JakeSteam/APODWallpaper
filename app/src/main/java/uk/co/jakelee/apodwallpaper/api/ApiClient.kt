@@ -18,9 +18,11 @@ class ApiClient(val url: String) {
             }
             throw IOException()
         } else {
-            throw IOException()
+            throw DateRequestedException()
         }
     }
+
+    class DateRequestedException() : Exception()
 }
 
 
