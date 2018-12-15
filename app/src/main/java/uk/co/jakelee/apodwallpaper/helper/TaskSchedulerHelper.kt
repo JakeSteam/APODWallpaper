@@ -1,4 +1,4 @@
-package uk.co.jakelee.apodwallpaper
+package uk.co.jakelee.apodwallpaper.helper
 
 import android.content.Context
 import com.firebase.jobdispatcher.FirebaseJobDispatcher
@@ -7,17 +7,22 @@ import com.firebase.jobdispatcher.JobParameters
 import com.firebase.jobdispatcher.JobService
 import io.reactivex.Single
 import timber.log.Timber
+import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
-import uk.co.jakelee.apodwallpaper.helper.*
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.TimeUnit
 
-class JobScheduler : JobService() {
+class TaskSchedulerHelper : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
-        downloadApod(applicationContext, getLatestDate(), true)
+        downloadApod(
+            applicationContext,
+            getLatestDate(),
+            true
+        )
         return true
     }
 
@@ -25,6 +30,9 @@ class JobScheduler : JobService() {
 
 
     companion object {
+        fun canRecheck(context: Context) =
+            System.currentTimeMillis() - PreferenceHelper(context).getLastCheckedDate() > TimeUnit.MINUTES.toMillis(10)
+
         fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean): Single<ResponseApodProcessed> {
             return Single
                 .fromCallable {

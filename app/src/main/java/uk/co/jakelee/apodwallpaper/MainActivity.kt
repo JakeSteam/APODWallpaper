@@ -6,9 +6,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import uk.co.jakelee.apodwallpaper.fragments.HomeFragment
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import uk.co.jakelee.apodwallpaper.helper.TaskSchedulerHelper
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         if (!PreferenceHelper(this).haveScheduledTask()) {
-            JobScheduler.scheduleJob(this)
+            TaskSchedulerHelper.scheduleJob(this)
         }
 
         val ft = supportFragmentManager.beginTransaction()
@@ -64,10 +65,10 @@ class MainActivity : AppCompatActivity() {
                     datePicker.show()
                 }
                 R.id.nav_recheck -> {
-                    if (System.currentTimeMillis() - PreferenceHelper(this).getLastCheckedDate() > TimeUnit.MINUTES.toMillis(10)) {
-                        fragment.getApod(JobScheduler.getLatestDate(), true)
+                    if (TaskSchedulerHelper.canRecheck(this)) {
+                        fragment.getApod(TaskSchedulerHelper.getLatestDate(), true)
                     } else {
-                        Toast.makeText(this, "Checked too recently, please try again in a few minutes!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.checked_too_recently), Toast.LENGTH_SHORT).show()
                     }
                 }
             }

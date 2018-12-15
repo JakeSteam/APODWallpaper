@@ -1,4 +1,4 @@
-package uk.co.jakelee.apodwallpaper
+package uk.co.jakelee.apodwallpaper.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_image.*
+import uk.co.jakelee.apodwallpaper.R
 import java.io.File
 
 

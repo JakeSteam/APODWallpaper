@@ -1,4 +1,4 @@
-package uk.co.jakelee.apodwallpaper
+package uk.co.jakelee.apodwallpaper.fragments
 
 import android.app.DatePickerDialog
 import android.os.Bundle
@@ -14,10 +14,12 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
+import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
 import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import uk.co.jakelee.apodwallpaper.helper.TaskSchedulerHelper
 import java.util.*
 
 
@@ -47,7 +49,9 @@ class HomeFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
         resetApod()
         displayApod(PreferenceHelper(activity!!).getLastPulledDate())
-        getApod(JobScheduler.getLatestDate(), true)
+        if (TaskSchedulerHelper.canRecheck(activity!!)) {
+            getApod(TaskSchedulerHelper.getLatestDate(), true)
+        }
     }
 
     private fun setUpFullscreenButton(title: String, dateString: String){
@@ -59,7 +63,12 @@ class HomeFragment : Fragment() {
             }
             val fragment = ImageFragment().apply { arguments = bundle }
             activity!!.supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                .setCustomAnimations(
+                    R.anim.enter_from_right,
+                    R.anim.exit_to_left,
+                    R.anim.enter_from_left,
+                    R.anim.exit_to_right
+                )
                 .replace(R.id.mainFrame, fragment, "image_fragment")
                 .addToBackStack(null)
                 .commit()
@@ -70,7 +79,11 @@ class HomeFragment : Fragment() {
         if (PreferenceHelper(activity!!).doesDataExist(dateString)) {
             displayApod(dateString)
         } else {
-            disposable = JobScheduler.downloadApod(activity!!, dateString, pullingLatest)
+            disposable = TaskSchedulerHelper.downloadApod(
+                activity!!,
+                dateString,
+                pullingLatest
+            )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

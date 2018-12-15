@@ -21,14 +21,14 @@
         </activity>
 
         <service
-                android:name=".JobScheduler"
+                android:name=".helper.TaskSchedulerHelper"
                 android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
             </intent-filter>
         </service>
 
-        <activity android:name=".ImageFragment">
+        <activity android:name=".fragments.ImageFragment">
         </activity>
     </application>
 
