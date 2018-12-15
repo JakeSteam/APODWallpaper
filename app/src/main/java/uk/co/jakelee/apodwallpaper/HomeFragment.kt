@@ -27,37 +27,54 @@ class HomeFragment : Fragment() {
     }
 
     val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+        resetApod()
         getApod("$year-$month-$day", false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
+        resetApod()
         displayApod(PreferenceHelper(activity!!).getLastPulledDate())
     }
 
-    private fun setUpFullscreenButton(title: String, dateString: String) = fullscreenButton.setOnClickListener {
-        val imageFile = FileSystemHelper(activity!!).getImage(dateString)
-        val bundle = Bundle().apply {
-            putString("image", imageFile.path)
-            putString("title", title)
+    private fun setUpFullscreenButton(title: String, dateString: String){
+        fullscreenButton.setOnClickListener {
+            val imageFile = FileSystemHelper(activity!!).getImage(dateString)
+            val bundle = Bundle().apply {
+                putString("image", imageFile.path)
+                putString("title", title)
+            }
+            val fragment = ImageFragment().apply { arguments = bundle }
+            activity!!.supportFragmentManager.beginTransaction()
+                .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
+                .replace(R.id.mainFrame, fragment, "image_fragment")
+                .addToBackStack(null)
+                .commit()
         }
-        val fragment = ImageFragment().apply { arguments = bundle }
-        activity!!.supportFragmentManager.beginTransaction()
-            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right)
-            .replace(R.id.mainFrame, fragment, "image_fragment")
-            .addToBackStack(null)
-            .commit()
+        fullscreenButton.visibility = View.VISIBLE
     }
 
     fun getApod(dateString: String, pullingLatest: Boolean) {
-        disposable = JobScheduler.downloadApod(activity!!, dateString, pullingLatest)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { displayApod(dateString) },
-                { Timber.e(it) }
-            )
+        if (PreferenceHelper(activity!!).doesDataExist(dateString)) {
+            displayApod(dateString)
+        } else {
+            disposable = JobScheduler.downloadApod(activity!!, dateString, pullingLatest)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { displayApod(dateString) },
+                    { Timber.e(it) }
+                )
+        }
+    }
+
+    private fun resetApod() {
+        backgroundImage.setImageResource(R.color.colorPrimary)
+        titleBar.text = activity!!.getString(R.string.loading_message)
+        descriptionBar.visibility = View.GONE
+        metadataBar.visibility = View.GONE
+        fullscreenButton.visibility = View.GONE
     }
 
     private fun displayApod(dateString: String) {
@@ -66,8 +83,11 @@ class HomeFragment : Fragment() {
             val apodData = PreferenceHelper(activity!!).getApodData(FileSystemHelper(activity!!), dateString)
             backgroundImage.setImageBitmap(apodData.image)
             titleBar.text = apodData.title
+            titleBar.visibility = View.VISIBLE
             descriptionBar.text = apodData.desc
+            descriptionBar.visibility = View.VISIBLE
             metadataBar.text = String.format(getString(R.string.last_checked), dateString, lastChecked)
+            metadataBar.visibility = View.VISIBLE
             setUpFullscreenButton(apodData.title, dateString)
         }
     }
