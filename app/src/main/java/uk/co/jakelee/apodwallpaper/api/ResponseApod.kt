@@ -4,7 +4,7 @@ import android.graphics.BitmapFactory
 import java.net.URL
 
 data class ResponseApod(
-    val copyright: String,
+    val copyright: String?,
     val date: String,
     val explanation: String,
     val hdurl: String?,
@@ -16,5 +16,5 @@ data class ResponseApod(
     fun pullRemoteImage() = BitmapFactory.decodeStream(URL(this.url).openStream())
 
     fun isValid() =
-        this.media_type == "image" && this.title.isNotEmpty() && (!this.hdurl.isNullOrEmpty() || !this.url.isEmpty())
+        this.media_type == "image" && this.title.isNotEmpty() && !this.url.isEmpty()
 }

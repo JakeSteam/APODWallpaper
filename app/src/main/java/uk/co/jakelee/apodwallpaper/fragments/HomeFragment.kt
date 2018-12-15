@@ -88,6 +88,7 @@ class HomeFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
+                        updateSelectedDate(dateString)
                         displayApod(dateString)
                     },
                     {
@@ -95,10 +96,7 @@ class HomeFragment : Fragment() {
                         if (pullingLatest && it is ApiClient.DateRequestedException) {
                             val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
                             Toast.makeText(activity, "Failed to find APOD for $dateString, trying $newDateString", Toast.LENGTH_SHORT).show()
-                            val date = CalendarHelper.stringToCalendar(newDateString)
-                            selectedYear = date.get(Calendar.YEAR)
-                            selectedMonth = date.get(Calendar.MONTH) + 1
-                            selectedDay = date.get(Calendar.DAY_OF_MONTH)
+                            updateSelectedDate(newDateString)
                             getApod(newDateString, true)
                         } else {
                             Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
@@ -106,6 +104,13 @@ class HomeFragment : Fragment() {
                     }
                 )
         }
+    }
+
+    private fun updateSelectedDate(dateString: String) {
+        val date = CalendarHelper.stringToCalendar(dateString)
+        selectedYear = date.get(Calendar.YEAR)
+        selectedMonth = date.get(Calendar.MONTH) + 1
+        selectedDay = date.get(Calendar.DAY_OF_MONTH)
     }
 
     private fun resetApod() {
@@ -124,9 +129,9 @@ class HomeFragment : Fragment() {
             setUpFullscreenButton(apodData.title, dateString)
             if (prefsHelper.getLastPulledDate() == dateString) {
                 val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
-                metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked)
+                metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
             } else {
-                metadataBar.text = String.format(getString(R.string.metadata_bar), dateString)
+                metadataBar.text = String.format(getString(R.string.metadata_bar), dateString, apodData.copyright)
             }
             metadataGroup.visibility = View.VISIBLE
         }

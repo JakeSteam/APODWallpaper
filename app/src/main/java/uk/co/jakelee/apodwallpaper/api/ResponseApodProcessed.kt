@@ -7,6 +7,8 @@ data class ResponseApodProcessed(
     val title: String,
     val desc: String,
     val imageUrl: String,
+    val imageUrlHd: String,
+    val copyright: String,
     val image: Bitmap
 ) {
     constructor(response: ResponseApod, image: Bitmap) : this(
@@ -14,6 +16,8 @@ data class ResponseApodProcessed(
         response.title,
         response.explanation,
         response.url,
+        response.hdurl ?: response.url,
+        response.copyright ?: "NASA",
         image
     )
 }

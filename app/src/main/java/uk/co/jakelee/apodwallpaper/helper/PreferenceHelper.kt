@@ -7,12 +7,14 @@ import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
 
 class PreferenceHelper(context: Context) {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-    enum class StringPref { Title, Desc, Image, LastCheckedDate }
+    enum class StringPref { Title, Desc, Image, ImageHd, Copyright, LastCheckedDate }
 
     fun saveApodData(response: ResponseApodProcessed) = prefs.edit()
         .putString("${response.date}_${StringPref.Title.name}", response.title)
         .putString("${response.date}_${StringPref.Desc.name}", response.desc)
         .putString("${response.date}_${StringPref.Image.name}", response.imageUrl)
+        .putString("${response.date}_${StringPref.ImageHd.name}", response.imageUrlHd)
+        .putString("${response.date}_${StringPref.Copyright.name}", response.copyright)
         .apply()
 
     fun getApodData(fsh: FileSystemHelper, date: String) = ResponseApodProcessed(
@@ -20,6 +22,8 @@ class PreferenceHelper(context: Context) {
             prefs.getString("${date}_${StringPref.Title.name}", ""),
             prefs.getString("${date}_${StringPref.Desc.name}", ""),
             prefs.getString("${date}_${StringPref.Image.name}", ""),
+            prefs.getString("${date}_${StringPref.ImageHd.name}", ""),
+            prefs.getString("${date}_${StringPref.Copyright.name}", ""),
             BitmapFactory.decodeFile(fsh.getImage(date).path)
         )
 

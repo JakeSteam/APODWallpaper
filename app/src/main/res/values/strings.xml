@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">APOD Daily Wallpaper</string>
-    <string name="metadata_bar_checked">APOD for %s (checked: %s)</string>
-    <string name="metadata_bar">APOD for %s</string>
+    <string name="metadata_bar_checked">APOD for %s (checked: %s) © %s</string>
+    <string name="metadata_bar">APOD for %s © %s</string>
     <string name="loading_message">Loading APOD...</string>
     <string name="checked_too_recently">Checked too recently, please try again in a few minutes!</string>
 </resources>
