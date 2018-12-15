@@ -25,7 +25,7 @@ class HomeFragment : Fragment() {
     private var disposable: Disposable? = null
     var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
     var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
-    var selectedDay: Int = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+    var selectedDay: Int = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -80,6 +80,10 @@ class HomeFragment : Fragment() {
                         if (pullingLatest && it is ApiClient.DateRequestedException) {
                             val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
                             Toast.makeText(activity, "Failed to find APOD for $dateString, trying $newDateString", Toast.LENGTH_SHORT).show()
+                            val date = CalendarHelper.stringToCalendar(newDateString)
+                            selectedYear = date.get(Calendar.YEAR)
+                            selectedMonth = date.get(Calendar.MONTH) + 1
+                            selectedDay = date.get(Calendar.DAY_OF_MONTH)
                             getApod(newDateString, true)
                         } else {
                             Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()

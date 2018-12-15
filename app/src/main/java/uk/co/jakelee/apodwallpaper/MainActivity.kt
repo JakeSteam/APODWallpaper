@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_calendar -> {
                     DatePickerDialog(this, fragment.dateSetListener,
                         fragment.selectedYear,
-                        fragment.selectedMonth -1,
+                        fragment.selectedMonth - 1,
                         fragment.selectedDay
                     ).show()
                 }
