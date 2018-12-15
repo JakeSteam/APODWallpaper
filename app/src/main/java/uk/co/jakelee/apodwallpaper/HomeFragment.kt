@@ -6,6 +6,7 @@ import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -33,9 +34,9 @@ class HomeFragment : Fragment() {
     val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
         resetApod()
         selectedYear = year
-        selectedMonth = month
+        selectedMonth = month + 1
         selectedDay = day
-        getApod("$year-$month-$day", false)
+        getApod("$selectedYear-$selectedMonth-$selectedDay", false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,7 +77,13 @@ class HomeFragment : Fragment() {
                     {
                         Timber.e(it)
                         if (pullingLatest && it is ApiClient.DateRequestedException) {
+                            Toast.makeText(activity, "Failed to find APOD for $dateString, trying day before...", Toast.LENGTH_SHORT).show()
+                            selectedYear = 2018
+                            selectedMonth = 12
+                            selectedDay = 14
                             getApod("2018-12-14", true)
+                        } else {
+                            Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
                         }
                     }
                 )
