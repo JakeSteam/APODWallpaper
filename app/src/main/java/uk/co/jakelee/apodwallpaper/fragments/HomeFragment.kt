@@ -76,7 +76,7 @@ class HomeFragment : Fragment() {
     }
 
     fun getApod(dateString: String, pullingLatest: Boolean) {
-        if (PreferenceHelper(activity!!).doesDataExist(dateString)) {
+        if (PreferenceHelper(activity!!).doesDataExist(activity!!, dateString)) {
             displayApod(dateString)
         } else {
             disposable = TaskSchedulerHelper.downloadApod(

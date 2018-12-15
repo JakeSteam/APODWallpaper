@@ -49,7 +49,7 @@ class TaskSchedulerHelper : JobService() {
                 .map {
                     val prefHelper = PreferenceHelper(context)
                     // If data hasn't been saved before, save it
-                    if (!prefHelper.doesDataExist(it.date)) {
+                    if (!prefHelper.doesDataExist(context, it.date)) {
                         prefHelper.saveApodData(it)
                         FileSystemHelper(context).saveImage(it.image, it.date)
                     }

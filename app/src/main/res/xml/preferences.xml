@@ -1,0 +1,9 @@
+<androidx.preference.PreferenceScreen
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SeekBarPreference
+            app:key="check_frequency"
+            app:summary="How often should automatic checks happen?"
+    />
+
+</androidx.preference.PreferenceScreen>
