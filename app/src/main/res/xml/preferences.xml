@@ -32,52 +32,52 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="Image filtering">
         <SwitchPreference
-                android:key="enable_filtering"
-                android:defaultValue="false"
+                android:key="@string/filtering_enabled"
+                android:defaultValue="@bool/filtering_enabled_default"
                 android:title="Enable"
                 android:icon="@drawable/ic_settings_filter"
                 android:summary="When enabled, images will be quality checked before being applied." />
         <SeekBarPreference
-                android:key="minimum_width"
-                android:defaultValue="500"
+                android:key="@string/filtering_width"
+                android:defaultValue="@integer/filtering_width_default"
                 android:title="Minimum width (px)"
                 android:icon="@drawable/ic_settings_width"
-                android:dependency="enable_filtering"
+                android:dependency="@string/filtering_enabled"
                 android:summary="How many pixels wide must an image be, to be applied."
                 android:max="10000"/>
         <SeekBarPreference
-                android:key="minimum_height"
-                android:defaultValue="500"
+                android:key="@string/filtering_height"
+                android:defaultValue="@integer/filtering_height_default"
                 android:title="Minimum height (px)"
                 android:icon="@drawable/ic_settings_height"
-                android:dependency="enable_filtering"
+                android:dependency="@string/filtering_enabled"
                 android:summary="How many pixels high must an image be, to be applied."
                 android:max="10000"/>
         <SwitchPreference
-                android:key="enable_ratio_filtering"
-                android:defaultValue="false"
+                android:key="@string/filtering_ratio_enabled"
+                android:defaultValue="@bool/filtering_ratio_enabled_default"
                 android:title="Enable ratio filtering"
                 android:icon="@drawable/ic_settings_ratio"
-                android:dependency="enable_filtering"
+                android:dependency="@string/filtering_enabled"
                 android:summary="Enable filtering images by height to width ratio." />
         <SeekBarPreference
-                android:key="ratio_filter"
-                android:defaultValue="1"
+                android:key="@string/filtering_ratio"
+                android:defaultValue="@integer/filtering_ratio_default"
                 android:title="Minimum ratio"
-                android:dependency="enable_ratio_filtering"
+                android:dependency="@string/filtering_ratio_enabled"
                 android:summary="Ratio of width / height.. somehow"
                 android:max="5"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Targets">
         <SwitchPreference
-                android:key="enable_wallpaper"
-                android:defaultValue="true"
+                android:key="@string/wallpaper_enabled"
+                android:defaultValue="@bool/wallpaper_enabled_default"
                 android:title="Wallpaper"
                 android:icon="@drawable/ic_settings_wallpaper"
                 android:summary="When enabled, your wallpaper image will be set when a new image is found." />
         <SwitchPreference
-                android:key="enable_lockscreen"
-                android:defaultValue="true"
+                android:key="@string/lockscreen_enabled"
+                android:defaultValue="@bool/lockscreen_enabled_default"
                 android:title="Lock screen"
                 android:icon="@drawable/ic_settings_lock"
                 android:summary="When enabled, your lock screen image will be set when a new image is found." />
@@ -85,31 +85,31 @@
     <PreferenceCategory
             android:title="Notifications">
         <SwitchPreference
-                android:key="notifications"
-                android:defaultValue="true"
+                android:key="@string/notifications_enabled"
+                android:defaultValue="@bool/notifications_enabled_default"
                 android:title="Enable"
                 android:icon="@drawable/ic_settings_notifications"
                 android:summary="When enabled, you will receive notifications when a new image has been downloaded." />
         <SwitchPreference
-                android:key="notification_led"
-                android:defaultValue="true"
+                android:key="@string/notifications_led"
+                android:defaultValue="@bool/notifications_led_default"
                 android:title="LED"
                 android:icon="@drawable/ic_settings_led"
-                android:dependency="notifications"
+                android:dependency="@string/notifications_enabled"
                 android:summary="When enabled, the notification will light up your LED (if available)." />
         <SwitchPreference
-                android:key="notification_sound"
-                android:defaultValue="false"
+                android:key="@string/notifications_sound"
+                android:defaultValue="@bool/notifications_sound_default"
                 android:title="Sound"
                 android:icon="@drawable/ic_settings_sound"
-                android:dependency="notifications"
+                android:dependency="@string/notifications_enabled"
                 android:summary="When enabled, the notification will make a little beep noise." />
         <SwitchPreference
-                android:key="notification_rich_preview"
-                android:defaultValue="true"
+                android:key="@string/notifications_preview"
+                android:defaultValue="@bool/notifications_preview_default"
                 android:title="Rich previews"
                 android:icon="@drawable/ic_settings_preview"
-                android:dependency="notifications"
+                android:dependency="@string/notifications_enabled"
                 android:summary="When enabled, the notification will contain the APOD itself." />
     </PreferenceCategory>
     <PreferenceCategory
