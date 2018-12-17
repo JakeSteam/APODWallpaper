@@ -29,7 +29,7 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         (activity as AppCompatActivity).supportActionBar!!.title = "Settings"
         setHasOptionsMenu(true)
-        addPreferencesFromResource(R.xml.preferences)
+        addPreferencesFromResource(R.xml.preferences_ui)
         findPreference(getString(R.string.view_status)).onPreferenceClickListener = viewStatusListener
         findPreference(getString(R.string.view_quota)).onPreferenceClickListener = viewQuotaListener
     }

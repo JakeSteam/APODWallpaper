@@ -57,15 +57,14 @@ class HomeFragment : Fragment() {
         }
         descriptionBar.setOnClickListener {
             val prefs = PreferenceHelper(activity!!)
-            prefs.setShowDescription(!prefs.shouldShowDescription())
-            descriptionBar.setSingleLine(!PreferenceHelper(activity!!).shouldShowDescription())
+            prefs.setBooleanPref(PreferenceHelper.BooleanPref.show_description, !prefs.getBooleanPref(PreferenceHelper.BooleanPref.show_description))
+            descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
         }
     }
 
     override fun onResume() {
         super.onResume()
-        descriptionBar.setSingleLine(!PreferenceHelper(activity!!).shouldShowDescription())
-        descriptionBar.setSingleLine(!PreferenceHelper(activity!!).shouldShowDescription())
+        descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
     }
 
     private fun toggleRecheckIfNecessary(menuItem: MenuItem?, enabled: Boolean) = menuItem?.let {

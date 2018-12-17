@@ -54,13 +54,21 @@ class PreferenceHelper(val context: Context) {
     fun getLastSetDate(manual: Boolean) = prefs.getLong(getLastSetPref(manual), 0)
     private fun getLastSetPref(manual: Boolean) = context.getString(if (manual) R.string.last_manual_set else R.string.last_automatic_set)
 
-    fun shouldShowDescription() = prefs.getBoolean(
-        context.getString(R.string.show_description),
-        context.resources.getBoolean(R.bool.show_description_default))
-    fun setShowDescription(show: Boolean) = prefs
-        .edit()
-        .putBoolean(context.getString(R.string.show_description), show)
-        .apply()
-
     fun haveScheduledTask() = false
+
+    enum class BooleanPref(val prefId: Int, val defaultId: Int) {
+        automatic_enabled(R.string.automatic_enabled, R.bool.automatic_enabled_default),
+        automatic_check_wifi(R.string.automatic_check_wifi, R.bool.automatic_check_wifi_default),
+        show_description(R.string.show_description, R.bool.show_description_default),
+    }
+
+    fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(
+        context.getString(pref.prefId),
+        context.resources.getBoolean(pref.defaultId)
+    )
+
+    fun setBooleanPref(pref: BooleanPref, value: Boolean) = prefs.edit().putBoolean(
+        context.getString(pref.prefId),
+        value
+    ).commit()
 }
