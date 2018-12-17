@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         val datePicker = DatePickerDialog(
             this, fragment.dateSetListener,
             fragment.selectedYear,
-            fragment.selectedMonth - 1,
+            fragment.selectedMonth,
             fragment.selectedDay
         )
         val cal = Calendar.getInstance()
