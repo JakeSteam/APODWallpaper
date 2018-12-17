@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
             fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
-            shareButton.setOnClickListener(shareButtonListener(apodData.title, apodData.imageUrl, apodData.imageUrlHd))
+            shareButton.setOnClickListener(shareButtonListener(dateString, apodData.title, apodData.imageUrl, apodData.imageUrlHd))
             if (prefsHelper.getLastPulledDateString() == dateString) {
                 val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
                 metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
@@ -138,14 +138,12 @@ class HomeFragment : Fragment() {
             .commit()
     }
 
-    private fun shareButtonListener(title: String, url: String, hdUrl: String) = View.OnClickListener {
+    private fun shareButtonListener(date: String, title: String, url: String, hdUrl: String) = View.OnClickListener {
         AlertDialog.Builder(activity!!)
             .setTitle("How would you like to share \"$title\"?")
             .setPositiveButton("HD URL") { _, _ -> shareUrl(title, hdUrl)}
             .setNegativeButton("URL") { _, _ -> shareUrl(title, url)}
-            .setNeutralButton("Image") { _, _ ->
-                Toast.makeText(activity!!, "Image", Toast.LENGTH_SHORT).show()
-            }
+            .setNeutralButton("Image") { _, _ -> FileSystemHelper(activity!!).shareImage(date)}
             .show()
     }
 

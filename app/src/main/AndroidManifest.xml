@@ -28,8 +28,15 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".fragments.ImageFragment">
-        </activity>
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="uk.co.jakelee.apodwallpaper.fileprovider"
+                android:grantUriPermissions="true"
+                android:exported="false">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>
