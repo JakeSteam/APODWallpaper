@@ -28,11 +28,11 @@ class TaskSchedulerHelper : JobService() {
 
     companion object {
         fun canRecheck(context: Context) =
-            System.currentTimeMillis() - PreferenceHelper(context).getLastCheckedDate() > TimeUnit.MINUTES.toMillis(10)
+            System.currentTimeMillis() - PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) > TimeUnit.MINUTES.toMillis(10)
 
         fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<ResponseApodProcessed> {
             val prefHelper = PreferenceHelper(context)
-            prefHelper.updateLastCheckedDate()
+            prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
             prefHelper.updateLastRunDate(manualCheck)
             return Single
                 .fromCallable {
@@ -54,8 +54,8 @@ class TaskSchedulerHelper : JobService() {
                         FileSystemHelper(context).saveImage(it.image, it.date)
                     }
                     // If we're pulling the latest image, and it's different to the current latest
-                    if (pullingLatest && it.date != prefHelper.getLastPulledDateString()) {
-                        prefHelper.updateLastPulledDateString(it.date)
+                    if (pullingLatest && it.date != prefHelper.getStringPref(PreferenceHelper.StringPref2.last_pulled)) {
+                        prefHelper.setStringPref(PreferenceHelper.StringPref2.last_pulled, it.date)
                         if (SettingsHelper.setWallpaper) {
                             WallpaperHelper(context).updateWallpaper(it.image)
                         }

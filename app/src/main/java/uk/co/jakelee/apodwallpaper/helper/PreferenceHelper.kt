@@ -30,18 +30,6 @@ class PreferenceHelper(val context: Context) {
 
     fun doesDataExist(context: Context, date: String) = FileSystemHelper(context).getImage(date).exists()
 
-    fun updateLastPulledDateString(date: String) = prefs.edit()
-        .putString("last_pulled", date)
-        .apply()
-
-    fun getLastPulledDateString() = prefs.getString("last_pulled", "")!!
-
-    fun updateLastCheckedDate() = prefs.edit()
-        .putLong("last_checked", System.currentTimeMillis())
-        .apply()
-
-    fun getLastCheckedDate() = prefs.getLong("last_checked", 0)
-
     fun updateLastRunDate(manual: Boolean) = prefs.edit()
         .putLong(getLastRunPref(manual), System.currentTimeMillis())
         .apply()
@@ -59,16 +47,20 @@ class PreferenceHelper(val context: Context) {
     enum class BooleanPref(val prefId: Int, val defaultId: Int) {
         automatic_enabled(R.string.automatic_enabled, R.bool.automatic_enabled_default),
         automatic_check_wifi(R.string.automatic_check_wifi, R.bool.automatic_check_wifi_default),
-        show_description(R.string.show_description, R.bool.show_description_default),
+        show_description(R.string.show_description, R.bool.show_description_default)
     }
+    fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(context.getString(pref.prefId), context.resources.getBoolean(pref.defaultId))
+    fun setBooleanPref(pref: BooleanPref, value: Boolean) = prefs.edit().putBoolean(context.getString(pref.prefId), value).commit()
 
-    fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(
-        context.getString(pref.prefId),
-        context.resources.getBoolean(pref.defaultId)
-    )
+    enum class StringPref2(val prefId: Int, val defaultId: Int) {
+        last_pulled(R.string.last_pulled, R.string.empty_string)
+    }
+    fun getStringPref(pref: StringPref2) = prefs.getString(context.getString(pref.prefId), context.getString(pref.defaultId))
+    fun setStringPref(pref: StringPref2, value: String) = prefs.edit().putString(context.getString(pref.prefId), value).commit()
 
-    fun setBooleanPref(pref: BooleanPref, value: Boolean) = prefs.edit().putBoolean(
-        context.getString(pref.prefId),
-        value
-    ).commit()
+    enum class LongPref(val prefId: Int, val defaultId: Int) {
+        last_checked(R.string.last_checked, R.integer.empty_int),
+    }
+    fun getLongPref(pref: LongPref) = prefs.getLong(context.getString(pref.prefId), context.resources.getInteger(pref.defaultId).toLong())
+    fun setLongPref(pref: LongPref, value: Long) = prefs.edit().putLong(context.getString(pref.prefId), value).commit()
 }

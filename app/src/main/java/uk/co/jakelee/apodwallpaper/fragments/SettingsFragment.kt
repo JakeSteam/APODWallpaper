@@ -70,8 +70,8 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
             .setPositiveButton("OK") { _, _ -> }
             .show()
         val prefHelper = PreferenceHelper(activity!!)
-        dialog.findViewById<TextView>(R.id.last_checked)!!.text = CalendarHelper.millisToString(prefHelper.getLastCheckedDate(), true)
-        dialog.findViewById<TextView>(R.id.last_pulled)!!.text = prefHelper.getLastPulledDateString()
+        dialog.findViewById<TextView>(R.id.last_checked)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_checked), true)
+        dialog.findViewById<TextView>(R.id.last_pulled)!!.text = prefHelper.getStringPref(PreferenceHelper.StringPref2.last_pulled)
         dialog.findViewById<TextView>(R.id.last_automatic_run)!!.text = CalendarHelper.millisToString(prefHelper.getLastRunDate(false), true)
         dialog.findViewById<TextView>(R.id.last_automatic_success)!!.text = CalendarHelper.millisToString(prefHelper.getLastSetDate(false), true)
         dialog.findViewById<TextView>(R.id.last_manual_run)!!.text = CalendarHelper.millisToString(prefHelper.getLastRunDate(true), true)
