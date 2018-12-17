@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
         hideApod()
-        displayApod(PreferenceHelper(activity!!).getStringPref(PreferenceHelper.StringPref2.last_pulled))
+        displayApod(PreferenceHelper(activity!!).getStringPref(PreferenceHelper.StringPref.last_pulled))
         if (TaskSchedulerHelper.canRecheck(activity!!)) {
             getApod(TaskSchedulerHelper.getLatestDate(), true, true)
         }
@@ -128,7 +128,7 @@ class HomeFragment : Fragment() {
             descriptionBar.text = apodData.desc
             fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
             shareButton.setOnClickListener(shareButtonListener(dateString, apodData.title, apodData.imageUrl, apodData.imageUrlHd))
-            if (prefsHelper.getStringPref(PreferenceHelper.StringPref2.last_pulled) == dateString) {
+            if (prefsHelper.getStringPref(PreferenceHelper.StringPref.last_pulled) == dateString) {
                 val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLongPref(PreferenceHelper.LongPref.last_checked))
                 metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
             } else {

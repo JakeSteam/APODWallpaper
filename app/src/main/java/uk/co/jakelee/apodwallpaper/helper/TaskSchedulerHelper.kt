@@ -54,8 +54,8 @@ class TaskSchedulerHelper : JobService() {
                         FileSystemHelper(context).saveImage(it.image, it.date)
                     }
                     // If we're pulling the latest image, and it's different to the current latest
-                    if (pullingLatest && it.date != prefHelper.getStringPref(PreferenceHelper.StringPref2.last_pulled)) {
-                        prefHelper.setStringPref(PreferenceHelper.StringPref2.last_pulled, it.date)
+                    if (pullingLatest && it.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
+                        prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, it.date)
                         if (SettingsHelper.setWallpaper) {
                             WallpaperHelper(context).updateWallpaper(it.image)
                         }

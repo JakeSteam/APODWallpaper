@@ -8,23 +8,23 @@ import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
 
 class PreferenceHelper(val context: Context) {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-    enum class StringPref { Title, Desc, Image, ImageHd, Copyright, LastCheckedDate }
+    enum class OldStringPref { Title, Desc, Image, ImageHd, Copyright, LastCheckedDate }
 
     fun saveApodData(response: ResponseApodProcessed) = prefs.edit()
-        .putString("${response.date}_${StringPref.Title.name}", response.title)
-        .putString("${response.date}_${StringPref.Desc.name}", response.desc)
-        .putString("${response.date}_${StringPref.Image.name}", response.imageUrl)
-        .putString("${response.date}_${StringPref.ImageHd.name}", response.imageUrlHd)
-        .putString("${response.date}_${StringPref.Copyright.name}", response.copyright)
+        .putString("${response.date}_${OldStringPref.Title.name}", response.title)
+        .putString("${response.date}_${OldStringPref.Desc.name}", response.desc)
+        .putString("${response.date}_${OldStringPref.Image.name}", response.imageUrl)
+        .putString("${response.date}_${OldStringPref.ImageHd.name}", response.imageUrlHd)
+        .putString("${response.date}_${OldStringPref.Copyright.name}", response.copyright)
         .apply()
 
     fun getApodData(fsh: FileSystemHelper, date: String) = ResponseApodProcessed(
             date,
-            prefs.getString("${date}_${StringPref.Title.name}", "")!!,
-            prefs.getString("${date}_${StringPref.Desc.name}", "")!!,
-            prefs.getString("${date}_${StringPref.Image.name}", "")!!,
-            prefs.getString("${date}_${StringPref.ImageHd.name}", "")!!,
-            prefs.getString("${date}_${StringPref.Copyright.name}", "")!!,
+            prefs.getString("${date}_${OldStringPref.Title.name}", "")!!,
+            prefs.getString("${date}_${OldStringPref.Desc.name}", "")!!,
+            prefs.getString("${date}_${OldStringPref.Image.name}", "")!!,
+            prefs.getString("${date}_${OldStringPref.ImageHd.name}", "")!!,
+            prefs.getString("${date}_${OldStringPref.Copyright.name}", "")!!,
             BitmapFactory.decodeFile(fsh.getImage(date).path)
         )
 
@@ -52,11 +52,11 @@ class PreferenceHelper(val context: Context) {
     fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(context.getString(pref.prefId), context.resources.getBoolean(pref.defaultId))
     fun setBooleanPref(pref: BooleanPref, value: Boolean) = prefs.edit().putBoolean(context.getString(pref.prefId), value).commit()
 
-    enum class StringPref2(val prefId: Int, val defaultId: Int) {
+    enum class StringPref(val prefId: Int, val defaultId: Int) {
         last_pulled(R.string.last_pulled, R.string.empty_string)
     }
-    fun getStringPref(pref: StringPref2) = prefs.getString(context.getString(pref.prefId), context.getString(pref.defaultId))
-    fun setStringPref(pref: StringPref2, value: String) = prefs.edit().putString(context.getString(pref.prefId), value).commit()
+    fun getStringPref(pref: StringPref) = prefs.getString(context.getString(pref.prefId), context.getString(pref.defaultId))
+    fun setStringPref(pref: StringPref, value: String) = prefs.edit().putString(context.getString(pref.prefId), value).commit()
 
     enum class LongPref(val prefId: Int, val defaultId: Int) {
         last_checked(R.string.last_checked, R.integer.empty_int),
