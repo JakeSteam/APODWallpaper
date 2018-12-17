@@ -87,6 +87,7 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private var checkedPreviousDay = false
     fun getApod(dateString: String, pullingLatest: Boolean) {
         if (PreferenceHelper(activity!!).doesDataExist(activity!!, dateString)) {
             displayApod(dateString)
@@ -105,7 +106,8 @@ class HomeFragment : Fragment() {
                     },
                     {
                         Timber.e(it)
-                        if (pullingLatest && it is ApiClient.DateRequestedException) {
+                        if (pullingLatest && it is ApiClient.DateRequestedException && !checkedPreviousDay) {
+                            checkedPreviousDay = true
                             val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
                             Toast.makeText(activity, "Failed to find APOD for $dateString, trying $newDateString", Toast.LENGTH_SHORT).show()
                             updateSelectedDate(newDateString)
