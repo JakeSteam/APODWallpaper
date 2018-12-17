@@ -9,7 +9,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last APOD check"
+                android:text="@string/last_apod_check"
                 android:textStyle="bold"
                 android:padding="5dp"/>
         <TextView
@@ -22,7 +22,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last APOD pulled"
+                android:text="@string/last_apod_pulled"
                 android:textStyle="bold"
                 android:padding="5dp"/>
         <TextView
@@ -35,7 +35,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last automatic task run"
+                android:text="@string/last_automatic_task_run"
                 android:textStyle="bold"
                 android:padding="5dp"/>
         <TextView
@@ -48,7 +48,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last automatic task success"
+                android:text="@string/last_automatic_task_success"
                 android:textStyle="bold"
                 android:padding="5dp"/>
         <TextView
@@ -61,7 +61,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last manual task run"
+                android:text="@string/last_manual_task_run"
                 android:textStyle="bold"
                 android:padding="5dp"/>
         <TextView
@@ -74,7 +74,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Last manual task run"
+                android:text="@string/last_manual_task_success"
                 android:textStyle="bold"
                 android:padding="5dp"/>
         <TextView
@@ -87,7 +87,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Images saved"
+                android:text="@string/images_saved"
                 android:textStyle="bold"
                 android:padding="5dp"/>
         <TextView
@@ -100,7 +100,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Image cache size"
+                android:text="@string/image_cache_size"
                 android:textStyle="bold"
                 android:padding="5dp"/>
         <TextView

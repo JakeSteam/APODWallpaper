@@ -21,8 +21,7 @@ class TaskSchedulerHelper : JobService() {
         downloadApod(
             applicationContext,
             getLatestDate(),
-            true
-        )
+            true, false)
         return true
     }
 
@@ -33,7 +32,10 @@ class TaskSchedulerHelper : JobService() {
         fun canRecheck(context: Context) =
             System.currentTimeMillis() - PreferenceHelper(context).getLastCheckedDate() > TimeUnit.MINUTES.toMillis(10)
 
-        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean): Single<ResponseApodProcessed> {
+        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<ResponseApodProcessed> {
+            val prefHelper = PreferenceHelper(context)
+            prefHelper.updateLastCheckedDate()
+            prefHelper.updateLastRunDate(manualCheck)
             return Single
                 .fromCallable {
                     val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
@@ -47,16 +49,15 @@ class TaskSchedulerHelper : JobService() {
                     throw IOException()
                 }
                 .map {
-                    val prefHelper = PreferenceHelper(context)
                     // If data hasn't been saved before, save it
                     if (!prefHelper.doesDataExist(context, it.date)) {
+                        prefHelper.updateLastSetDate(manualCheck)
                         prefHelper.saveApodData(it)
                         FileSystemHelper(context).saveImage(it.image, it.date)
                     }
                     // If we're pulling the latest image, and it's different to the current latest
                     if (pullingLatest && it.date != prefHelper.getLastPulledDateString()) {
                         prefHelper.updateLastPulledDateString(it.date)
-                        prefHelper.updateLastCheckedDate()
                         if (SettingsHelper.setWallpaper) {
                             WallpaperHelper(context).updateWallpaper(it.image)
                         }

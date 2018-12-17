@@ -4,4 +4,12 @@
     <string name="metadata_bar">APOD for %s © %s</string>
     <string name="loading_message">Loading APOD...</string>
     <string name="checked_too_recently">Checked too recently, please try again in a few minutes!</string>
+    <string name="last_apod_check">Last APOD check</string>
+    <string name="last_apod_pulled">Last APOD pulled</string>
+    <string name="last_automatic_task_run">Last automatic task run</string>
+    <string name="last_automatic_task_success">Last automatic task success</string>
+    <string name="last_manual_task_run">Last manual task run</string>
+    <string name="last_manual_task_success">Last manual task success</string>
+    <string name="images_saved">Images saved</string>
+    <string name="image_cache_size">Image cache size</string>
 </resources>

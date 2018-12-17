@@ -3,9 +3,10 @@ package uk.co.jakelee.apodwallpaper.helper
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.preference.PreferenceManager
+import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
 
-class PreferenceHelper(context: Context) {
+class PreferenceHelper(val context: Context) {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     enum class StringPref { Title, Desc, Image, ImageHd, Copyright, LastCheckedDate }
 
@@ -40,6 +41,18 @@ class PreferenceHelper(context: Context) {
         .apply()
 
     fun getLastCheckedDate() = prefs.getLong("last_checked", 0)
+
+    fun updateLastRunDate(manual: Boolean) = prefs.edit()
+        .putLong(getLastRunPref(manual), System.currentTimeMillis())
+        .apply()
+    fun getLastRunDate(manual: Boolean) = prefs.getLong(getLastRunPref(manual), 0)
+    private fun getLastRunPref(manual: Boolean) = context.getString(if (manual) R.string.last_manual_run else R.string.last_automatic_run)
+
+    fun updateLastSetDate(manual: Boolean) = prefs.edit()
+        .putLong(getLastSetPref(manual), System.currentTimeMillis())
+        .apply()
+    fun getLastSetDate(manual: Boolean) = prefs.getLong(getLastSetPref(manual), 0)
+    private fun getLastSetPref(manual: Boolean) = context.getString(if (manual) R.string.last_manual_set else R.string.last_automatic_set)
 
     fun haveScheduledTask() = false
 }

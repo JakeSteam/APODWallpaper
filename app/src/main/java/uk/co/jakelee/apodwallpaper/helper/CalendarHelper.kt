@@ -5,14 +5,16 @@ import java.util.*
 
 class CalendarHelper {
     companion object {
-        fun stringToTrio(dateString: String): Triple<Int, Int, Int> {
-            val split = dateString.split("-").map { it.toInt() }
-            return Triple(split[0], split[1], split[2])
-        }
+        fun millisToString(millis: Long, includeTime: Boolean) = calendarToString(
+                Calendar.getInstance().apply { timeInMillis = millis}, includeTime
+            )
 
         fun calendarToString(calendar: Calendar, includeTime: Boolean): String {
-            val dateFormat = if (includeTime) "yyyy-MM-dd HH:mm:ss" else "yyyy-MM-dd"
-            return SimpleDateFormat(dateFormat, Locale.US).format(calendar.time)
+            if (calendar.timeInMillis > 0) {
+                val dateFormat = if (includeTime) "yyyy-MM-dd HH:mm:ss" else "yyyy-MM-dd"
+                return SimpleDateFormat(dateFormat, Locale.US).format(calendar.time)
+            }
+            return ""
         }
 
         fun stringToCalendar(dateString: String): Calendar {

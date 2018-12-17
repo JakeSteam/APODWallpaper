@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleRecheckTap(fragment: HomeFragment) {
         if (TaskSchedulerHelper.canRecheck(this)) {
-            fragment.getApod(TaskSchedulerHelper.getLatestDate(), true)
+            fragment.getApod(TaskSchedulerHelper.getLatestDate(), true, true)
         } else {
             Toast.makeText(this, getString(R.string.checked_too_recently), Toast.LENGTH_SHORT).show()
         }

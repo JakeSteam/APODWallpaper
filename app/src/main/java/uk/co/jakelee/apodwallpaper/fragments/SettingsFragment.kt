@@ -14,7 +14,6 @@ import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
 import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-import java.util.*
 
 class SettingsFragment: PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -28,14 +27,12 @@ class SettingsFragment: PreferenceFragmentCompat() {
                 .setPositiveButton("OK") { _, _ -> }
                 .show()
             val prefHelper = PreferenceHelper(activity!!)
-            dialog.findViewById<TextView>(R.id.last_checked)!!.text = CalendarHelper.calendarToString(
-                Calendar.getInstance().apply { timeInMillis = prefHelper.getLastCheckedDate()}, true
-            )
+            dialog.findViewById<TextView>(R.id.last_checked)!!.text = CalendarHelper.millisToString(prefHelper.getLastCheckedDate(), true)
             dialog.findViewById<TextView>(R.id.last_pulled)!!.text = prefHelper.getLastPulledDateString()
-            dialog.findViewById<TextView>(R.id.last_automatic_run)!!.text = ""
-            dialog.findViewById<TextView>(R.id.last_automatic_success)!!.text = ""
-            dialog.findViewById<TextView>(R.id.last_manual_run)!!.text = ""
-            dialog.findViewById<TextView>(R.id.last_manual_success)!!.text = ""
+            dialog.findViewById<TextView>(R.id.last_automatic_run)!!.text = CalendarHelper.millisToString(prefHelper.getLastRunDate(false), true)
+            dialog.findViewById<TextView>(R.id.last_automatic_success)!!.text = CalendarHelper.millisToString(prefHelper.getLastSetDate(false), true)
+            dialog.findViewById<TextView>(R.id.last_manual_run)!!.text = CalendarHelper.millisToString(prefHelper.getLastRunDate(true), true)
+            dialog.findViewById<TextView>(R.id.last_manual_success)!!.text = CalendarHelper.millisToString(prefHelper.getLastSetDate(true), true)
 
             var count = 0
             var size = 0L

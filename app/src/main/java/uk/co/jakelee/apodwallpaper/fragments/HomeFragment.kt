@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
         selectedDay = day
         getApod("$selectedYear" + "-" +
                 selectedMonth.toString().padStart(2, '0') + "-" +
-                selectedDay.toString().padStart(2, '0'), false)
+                selectedDay.toString().padStart(2, '0'), false, true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,18 +51,17 @@ class HomeFragment : Fragment() {
         hideApod()
         displayApod(PreferenceHelper(activity!!).getLastPulledDateString())
         if (TaskSchedulerHelper.canRecheck(activity!!)) {
-            getApod(TaskSchedulerHelper.getLatestDate(), true)
+            getApod(TaskSchedulerHelper.getLatestDate(), true, true)
         }
     }
 
     private var checkedPreviousDay = false
-    fun getApod(dateString: String, pullingLatest: Boolean) {
+    fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean) {
         val prefHelper = PreferenceHelper(activity!!)
         if (prefHelper.doesDataExist(activity!!, dateString)) {
             displayApod(dateString)
         } else {
-            prefHelper.updateLastCheckedDate()
-            disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest)
+            disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest, manual)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -77,7 +76,7 @@ class HomeFragment : Fragment() {
                             val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
                             Toast.makeText(activity, "Failed to find APOD for $dateString, trying $newDateString", Toast.LENGTH_SHORT).show()
                             updateSelectedDate(newDateString)
-                            getApod(newDateString, true)
+                            getApod(newDateString, true, true)
                         } else {
                             Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
                         }

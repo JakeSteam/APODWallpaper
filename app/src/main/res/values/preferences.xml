@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Internal only -->
-    <string name="last_automatic_execution">last_automatic_execution</string>
+    <string name="last_automatic_run">last_automatic_run</string>
     <string name="last_automatic_set">last_automatic_set</string>
+    <string name="last_manual_run">last_manual_run</string>
     <string name="last_manual_set">last_manual_set</string>
 
     <!-- Automatic section -->
