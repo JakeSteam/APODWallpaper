@@ -54,6 +54,16 @@ class HomeFragment : Fragment() {
         if (TaskSchedulerHelper.canRecheck(activity!!)) {
             getApod(TaskSchedulerHelper.getLatestDate(), true, true)
         }
+        descriptionBar.setOnClickListener {
+            val prefs = PreferenceHelper(activity!!)
+            prefs.setShowDescription(!prefs.shouldShowDescription())
+            descriptionBar.setSingleLine(!PreferenceHelper(activity!!).shouldShowDescription())
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        descriptionBar.setSingleLine(!PreferenceHelper(activity!!).shouldShowDescription())
     }
 
     private var checkedPreviousDay = false

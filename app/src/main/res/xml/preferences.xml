@@ -1,4 +1,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="App options">
+        <SwitchPreference
+                android:key="@string/show_description"
+                android:defaultValue="@bool/show_description_default"
+                android:title="Show full description"
+                android:icon="@drawable/ic_settings_description"
+                android:summary="When enabled, the full APOD description will be shown. Tap description to toggle!" />
+    </PreferenceCategory>
     <PreferenceCategory android:title="Automatic checking">
         <SwitchPreference
                 android:key="@string/automatic_enabled"
