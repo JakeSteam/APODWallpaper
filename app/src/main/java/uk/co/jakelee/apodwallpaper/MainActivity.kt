@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_settings -> handleSettingsTap()
                 R.id.nav_calendar -> handleCalendarTap(fragment)
-                R.id.nav_recheck -> handleRecheckTap(fragment)
+                R.id.nav_recheck -> handleRecheckTap(item, fragment)
             }
         } else if (item.itemId == android.R.id.home) {
             supportFragmentManager.popBackStack()
@@ -56,9 +56,9 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun handleRecheckTap(fragment: HomeFragment) {
+    private fun handleRecheckTap(item: MenuItem, fragment: HomeFragment) {
         if (TaskSchedulerHelper.canRecheck(this)) {
-            fragment.getApod(TaskSchedulerHelper.getLatestDate(), true, true)
+            fragment.getApod(TaskSchedulerHelper.getLatestDate(), true, true, item)
         } else {
             Toast.makeText(this, getString(R.string.checked_too_recently), Toast.LENGTH_SHORT).show()
         }

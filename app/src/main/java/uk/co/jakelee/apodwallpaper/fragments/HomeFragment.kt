@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -64,17 +65,27 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         descriptionBar.setSingleLine(!PreferenceHelper(activity!!).shouldShowDescription())
+        descriptionBar.setSingleLine(!PreferenceHelper(activity!!).shouldShowDescription())
     }
 
+    private fun toggleRecheckIfNecessary(menuItem: MenuItem?, enabled: Boolean) = menuItem?.let {
+            it.icon.alpha = if (enabled) 255 else 100
+            it.isEnabled = enabled
+        }
+
     private var checkedPreviousDay = false
-    fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean) {
+    fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean, menuItem: MenuItem? = null) {
+        toggleRecheckIfNecessary(menuItem, false)
         val prefHelper = PreferenceHelper(activity!!)
         if (prefHelper.doesDataExist(activity!!, dateString)) {
             displayApod(dateString)
+            toggleRecheckIfNecessary(menuItem, true)
+            Toast.makeText(activity, "APOD already exists, no need to recheck!", Toast.LENGTH_SHORT).show()
         } else {
             disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest, manual)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally { toggleRecheckIfNecessary(menuItem, true) }
                 .subscribe(
                     {
                         updateSelectedDate(dateString)
