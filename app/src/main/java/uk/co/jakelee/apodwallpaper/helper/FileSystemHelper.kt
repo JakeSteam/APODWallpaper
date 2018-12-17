@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import androidx.core.content.FileProvider
+import uk.co.jakelee.apodwallpaper.BuildConfig
 import java.io.File
 import java.io.FileOutputStream
 
@@ -21,16 +22,15 @@ class FileSystemHelper(private val context: Context) {
     fun getImage(date: String) = File(getImageDirectory(), "$date.png")
 
     fun shareImage(date: String, title: String) {
-        val contentUri = FileProvider.getUriForFile(context, "uk.co.jakelee.apodwallpaper.fileprovider", getImage(date))
-        if (contentUri != null) {
-            // Share via content provider, giving receiver permission to read stream
+        val authority = "${BuildConfig.APPLICATION_ID}.fileprovider"
+        FileProvider.getUriForFile(context, authority, getImage(date))?.let {
             val shareIntent = Intent()
-            shareIntent.action = Intent.ACTION_SEND
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            shareIntent.setDataAndType(contentUri, context.contentResolver.getType(contentUri))
-            shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
-            shareIntent.putExtra(Intent.EXTRA_TEXT, title)
-            context.startActivity(Intent.createChooser(shareIntent, "Share \"$title\" to..."))
+                .setAction(Intent.ACTION_SEND)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                .setDataAndType(it, context.contentResolver.getType(it))
+                .putExtra(Intent.EXTRA_STREAM, it)
+                .putExtra(Intent.EXTRA_TEXT, title)
+            context.startActivity(Intent.createChooser(shareIntent, "Share \"$title\" to:"))
         }
     }
 }
