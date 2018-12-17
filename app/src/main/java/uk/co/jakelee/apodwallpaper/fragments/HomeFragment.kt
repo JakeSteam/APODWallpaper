@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
         hideApod()
-        displayApod(PreferenceHelper(activity!!).getLastPulledDate())
+        displayApod(PreferenceHelper(activity!!).getLastPulledDateString())
         if (TaskSchedulerHelper.canRecheck(activity!!)) {
             getApod(TaskSchedulerHelper.getLatestDate(), true)
         }
@@ -84,7 +84,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    fun updateSelectedDate(dateString: String) {
+    private fun updateSelectedDate(dateString: String) {
         val date = CalendarHelper.stringToCalendar(dateString)
         selectedYear = date.get(Calendar.YEAR)
         selectedMonth = date.get(Calendar.MONTH) + 1
@@ -106,7 +106,7 @@ class HomeFragment : Fragment() {
             descriptionBar.text = apodData.desc
             fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
             shareButton.setOnClickListener(shareButtonListener(apodData.title, apodData.imageUrl))
-            if (prefsHelper.getLastPulledDate() == dateString) {
+            if (prefsHelper.getLastPulledDateString() == dateString) {
                 val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
                 metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
             } else {

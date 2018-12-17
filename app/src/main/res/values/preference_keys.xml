@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="automatic_enabled">automatic_enabled</string>
+    <bool name="automatic_enabled_default">false</bool>
+    <string name="automatic_check_wifi">automatic_check_wifi</string>
+    <bool name="automatic_check_wifi_default">false</bool>
+    <string name="automatic_check_frequency">automatic_check_frequency</string>
+    <integer name="automatic_check_frequency_default">24</integer>
+    <string name="automatic_check_variance">automatic_check_variance</string>
+    <integer name="automatic_check_variance_default">5</integer>
+</resources>

@@ -1,32 +1,32 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Automatic checking">
         <SwitchPreference
-                android:key="enable_automatic_checking"
-                android:defaultValue="true"
+                android:key="@string/automatic_enabled"
+                android:defaultValue="@bool/automatic_enabled_default"
                 android:title="Enable"
                 android:icon="@drawable/ic_settings_checking"
                 android:summary="When enabled, new wallpapers will be regularly checked for." />
         <SwitchPreference
-                android:key="automatic_check_wifi"
-                android:defaultValue="false"
+                android:key="@string/automatic_check_wifi"
+                android:defaultValue="@bool/automatic_check_wifi_default"
                 android:title="WiFi only"
                 android:icon="@drawable/ic_settings_wifi"
-                android:dependency="enable_automatic_checking"
+                android:dependency="@string/automatic_enabled"
                 android:summary="When enabled, checks will only occur when on WiFi." />
         <SeekBarPreference
-                android:key="automatic_check_frequency"
-                android:defaultValue="24"
+                android:key="@string/automatic_check_frequency"
+                android:defaultValue="@integer/automatic_check_frequency_default"
                 android:title="Frequency (hours)"
                 android:icon="@drawable/ic_settings_frequency"
-                android:dependency="enable_automatic_checking"
+                android:dependency="@string/automatic_enabled"
                 android:summary="Determines how often checks will be performed."
                 android:max="48"/>
         <SeekBarPreference
-                android:key="automatic_check_variance"
-                android:defaultValue="5"
+                android:key="@string/automatic_check_variance"
+                android:defaultValue="@integer/automatic_check_variance_default"
                 android:title="Variance (hours)"
                 android:icon="@drawable/ic_settings_variance"
-                android:dependency="enable_automatic_checking"
+                android:dependency="@string/automatic_enabled"
                 android:summary="Determines how many hours the OS can modify the check time by. Higher = better battery."
                 android:max="12"/>
     </PreferenceCategory>

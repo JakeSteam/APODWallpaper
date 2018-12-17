@@ -19,21 +19,21 @@ class PreferenceHelper(context: Context) {
 
     fun getApodData(fsh: FileSystemHelper, date: String) = ResponseApodProcessed(
             date,
-            prefs.getString("${date}_${StringPref.Title.name}", ""),
-            prefs.getString("${date}_${StringPref.Desc.name}", ""),
-            prefs.getString("${date}_${StringPref.Image.name}", ""),
-            prefs.getString("${date}_${StringPref.ImageHd.name}", ""),
-            prefs.getString("${date}_${StringPref.Copyright.name}", ""),
+            prefs.getString("${date}_${StringPref.Title.name}", "")!!,
+            prefs.getString("${date}_${StringPref.Desc.name}", "")!!,
+            prefs.getString("${date}_${StringPref.Image.name}", "")!!,
+            prefs.getString("${date}_${StringPref.ImageHd.name}", "")!!,
+            prefs.getString("${date}_${StringPref.Copyright.name}", "")!!,
             BitmapFactory.decodeFile(fsh.getImage(date).path)
         )
 
     fun doesDataExist(context: Context, date: String) = FileSystemHelper(context).getImage(date).exists()
 
-    fun updateLastPulledDate(date: String) = prefs.edit()
+    fun updateLastPulledDateString(date: String) = prefs.edit()
         .putString("last_pulled", date)
         .apply()
 
-    fun getLastPulledDate() = prefs.getString("last_pulled", "")
+    fun getLastPulledDateString() = prefs.getString("last_pulled", "")!!
 
     fun updateLastCheckedDate() = prefs.edit()
         .putLong("last_checked", System.currentTimeMillis())
@@ -41,9 +41,5 @@ class PreferenceHelper(context: Context) {
 
     fun getLastCheckedDate() = prefs.getLong("last_checked", 0)
 
-    fun setScheduledTask() = prefs.edit()
-        .putBoolean("scheduled_tasks", true)
-        .apply()
-
-    fun haveScheduledTask() = prefs.getBoolean("scheduled_tasks", false)
+    fun haveScheduledTask() = false
 }
