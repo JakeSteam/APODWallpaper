@@ -57,9 +57,11 @@ class HomeFragment : Fragment() {
 
     private var checkedPreviousDay = false
     fun getApod(dateString: String, pullingLatest: Boolean) {
-        if (PreferenceHelper(activity!!).doesDataExist(activity!!, dateString)) {
+        val prefHelper = PreferenceHelper(activity!!)
+        if (prefHelper.doesDataExist(activity!!, dateString)) {
             displayApod(dateString)
         } else {
+            prefHelper.updateLastCheckedDate()
             disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

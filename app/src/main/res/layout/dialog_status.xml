@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:padding="10dp"
+             android:stretchColumns="*"
+             android:shrinkColumns="*">
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last APOD check"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/last_checked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last APOD pulled"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/last_pulled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last automatic task run"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/last_automatic_run"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last automatic task success"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/last_automatic_success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last manual task run"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/last_manual_run"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last manual task run"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/last_manual_success"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Images saved"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/images_saved"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Image cache size"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/images_cache"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+</TableLayout>

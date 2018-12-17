@@ -14,5 +14,7 @@ class FileSystemHelper(val context: Context) {
         stream.close()
     }
 
-    fun getImage(date: String) = File(File(context.filesDir, "images"), "$date.png")
+    fun getImageDirectory() = File(context.filesDir, "images")
+
+    fun getImage(date: String) = File(getImageDirectory(), "$date.png")
 }

@@ -68,7 +68,7 @@ class TaskSchedulerHelper : JobService() {
                 }
         }
 
-        fun getLatestDate() = CalendarHelper.calendarToString(Calendar.getInstance())
+        fun getLatestDate() = CalendarHelper.calendarToString(Calendar.getInstance(), false)
 
         fun scheduleJob(context: Context) {
             /*val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))

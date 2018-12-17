@@ -115,12 +115,12 @@
     <PreferenceCategory
             android:title="Additional actions">
         <Preference
-                android:key="view_log"
-                android:title="View log"
-                android:icon="@drawable/ic_settings_log"
-                android:summary="View last 100 actions taken by app." />
+                android:key="@string/view_status"
+                android:title="View status"
+                android:icon="@drawable/ic_settings_history"
+                android:summary="View current status of the app." />
         <Preference
-                android:key="view_quota"
+                android:key="@string/view_quota"
                 android:title="View quota"
                 android:icon="@drawable/ic_settings_quota"
                 android:summary="View current API quota." />

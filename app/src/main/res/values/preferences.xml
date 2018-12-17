@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Internal only -->
+    <string name="last_automatic_execution">last_automatic_execution</string>
+    <string name="last_automatic_set">last_automatic_set</string>
+    <string name="last_manual_set">last_manual_set</string>
+
     <!-- Automatic section -->
     <string name="automatic_enabled">automatic_enabled</string>
     <bool name="automatic_enabled_default">false</bool>
@@ -48,4 +53,8 @@
 
     <string name="notifications_preview">notifications_preview</string>
     <bool name="notifications_preview_default">true</bool>
+
+    <!-- Additional section -->
+    <string name="view_status">view_history</string>
+    <string name="view_quota">view_quota</string>
 </resources>
