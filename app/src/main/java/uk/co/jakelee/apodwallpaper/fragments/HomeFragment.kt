@@ -140,10 +140,10 @@ class HomeFragment : Fragment() {
 
     private fun shareButtonListener(date: String, title: String, url: String, hdUrl: String) = View.OnClickListener {
         AlertDialog.Builder(activity!!)
-            .setTitle("How would you like to share \"$title\"?")
-            .setPositiveButton("HD URL") { _, _ -> shareUrl(title, hdUrl)}
-            .setNegativeButton("URL") { _, _ -> shareUrl(title, url)}
-            .setNeutralButton("Image") { _, _ -> FileSystemHelper(activity!!).shareImage(date, title)}
+            .setTitle(String.format(getString(R.string.sharing_question), title))
+            .setPositiveButton(getString(R.string.sharing_url_hd)) { _, _ -> shareUrl(title, hdUrl)}
+            .setNegativeButton(getString(R.string.sharing_url)) { _, _ -> shareUrl(title, url)}
+            .setNeutralButton(getString(R.string.sharing_image)) { _, _ -> FileSystemHelper(activity!!).shareImage(date, title)}
             .show()
     }
 
@@ -153,6 +153,6 @@ class HomeFragment : Fragment() {
             putExtra(Intent.EXTRA_SUBJECT, title)
             putExtra(Intent.EXTRA_TEXT, url)
         }
-        activity!!.startActivity(Intent.createChooser(intent, "Send $title to..."))
+        activity!!.startActivity(Intent.createChooser(intent, String.format(getString(R.string.sharing_title), title)))
     }
 }
