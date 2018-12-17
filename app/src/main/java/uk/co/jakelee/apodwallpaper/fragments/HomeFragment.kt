@@ -36,7 +36,7 @@ class HomeFragment : Fragment() {
     }
 
     val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-        resetApod()
+        hideApod()
         selectedYear = year
         selectedMonth = (month + 1)
         selectedDay = day
@@ -48,42 +48,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
-        resetApod()
+        hideApod()
         displayApod(PreferenceHelper(activity!!).getLastPulledDate())
         if (TaskSchedulerHelper.canRecheck(activity!!)) {
             getApod(TaskSchedulerHelper.getLatestDate(), true)
-        }
-    }
-
-    private fun setUpFullscreenButton(title: String, dateString: String){
-        fullscreenButton.setOnClickListener {
-            val imageFile = FileSystemHelper(activity!!).getImage(dateString)
-            val bundle = Bundle().apply {
-                putString("image", imageFile.path)
-                putString("title", title)
-            }
-            val fragment = ImageFragment().apply { arguments = bundle }
-            activity!!.supportFragmentManager.beginTransaction()
-                .setCustomAnimations(
-                    R.anim.enter_from_right,
-                    R.anim.exit_to_left,
-                    R.anim.enter_from_left,
-                    R.anim.exit_to_right
-                )
-                .replace(R.id.mainFrame, fragment, "image_fragment")
-                .addToBackStack(null)
-                .commit()
-        }
-    }
-
-    private fun setUpShareButton(title: String, url: String) {
-        shareButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, title)
-                putExtra(Intent.EXTRA_TEXT, url)
-            }
-            activity!!.startActivity(Intent.createChooser(intent, "Send $title to..."))
         }
     }
 
@@ -92,11 +60,7 @@ class HomeFragment : Fragment() {
         if (PreferenceHelper(activity!!).doesDataExist(activity!!, dateString)) {
             displayApod(dateString)
         } else {
-            disposable = TaskSchedulerHelper.downloadApod(
-                activity!!,
-                dateString,
-                pullingLatest
-            )
+            disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -120,14 +84,14 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun updateSelectedDate(dateString: String) {
+    fun updateSelectedDate(dateString: String) {
         val date = CalendarHelper.stringToCalendar(dateString)
         selectedYear = date.get(Calendar.YEAR)
         selectedMonth = date.get(Calendar.MONTH) + 1
         selectedDay = date.get(Calendar.DAY_OF_MONTH)
     }
 
-    private fun resetApod() {
+    private fun hideApod() {
         backgroundImage.setImageResource(R.color.colorPrimary)
         titleBar.text = activity!!.getString(R.string.loading_message)
         metadataGroup.visibility = View.GONE
@@ -140,8 +104,8 @@ class HomeFragment : Fragment() {
             backgroundImage.setImageBitmap(apodData.image)
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
-            setUpFullscreenButton(apodData.title, dateString)
-            setUpShareButton(apodData.title, apodData.imageUrl)
+            fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
+            shareButton.setOnClickListener(shareButtonListener(apodData.title, apodData.imageUrl))
             if (prefsHelper.getLastPulledDate() == dateString) {
                 val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
                 metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
@@ -150,5 +114,34 @@ class HomeFragment : Fragment() {
             }
             metadataGroup.visibility = View.VISIBLE
         }
+    }
+
+
+    private fun fullscreenButtonListener(title: String, dateString: String) = View.OnClickListener {
+        val imageFile = FileSystemHelper(activity!!).getImage(dateString)
+        val bundle = Bundle().apply {
+            putString("image", imageFile.path)
+            putString("title", title)
+        }
+        val fragment = ImageFragment().apply { arguments = bundle }
+        activity!!.supportFragmentManager.beginTransaction()
+            .setCustomAnimations(
+                R.anim.enter_from_right,
+                R.anim.exit_to_left,
+                R.anim.enter_from_left,
+                R.anim.exit_to_right
+            )
+            .replace(R.id.mainFrame, fragment, "image_fragment")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun shareButtonListener(title: String, url: String) = View.OnClickListener {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, title)
+            putExtra(Intent.EXTRA_TEXT, url)
+        }
+        activity!!.startActivity(Intent.createChooser(intent, "Send $title to..."))
     }
 }
