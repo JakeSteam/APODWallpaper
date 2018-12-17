@@ -1,13 +1,11 @@
 package uk.co.jakelee.apodwallpaper.helper
 
 import android.content.Context
-import com.firebase.jobdispatcher.FirebaseJobDispatcher
-import com.firebase.jobdispatcher.GooglePlayDriver
-import com.firebase.jobdispatcher.JobParameters
-import com.firebase.jobdispatcher.JobService
+import com.firebase.jobdispatcher.*
 import io.reactivex.Single
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.BuildConfig
+import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
 import java.io.IOException
@@ -72,17 +70,24 @@ class TaskSchedulerHelper : JobService() {
         fun getLatestDate() = CalendarHelper.calendarToString(Calendar.getInstance(), false)
 
         fun scheduleJob(context: Context) {
-            /*val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
+            val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
+            val prefsHelper = PreferenceHelper(context)
+            val targetHours = prefsHelper.prefs.getInt(context.getString(R.string.automatic_check_frequency), 24)
+            val varianceHours = prefsHelper.prefs.getInt(context.getString(R.string.automatic_check_variance), 5)
+            val wifiOnly = prefsHelper.prefs.getBoolean(context.getString(R.string.automatic_check_wifi), false)
             val exampleJob = dispatcher.newJobBuilder()
-                .setService(JobScheduler::class.java)
-                .setTag("job tag")
+                .setService(TaskSchedulerHelper::class.java)
+                .setTag(BuildConfig.APPLICATION_ID)
                 .setRecurring(true)
                 .setLifetime(Lifetime.FOREVER)
                 .setReplaceCurrent(true)
                 .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
-                .setTrigger(Trigger.executionWindow(5, 10))
+                .setConstraints(if (wifiOnly) Constraint.ON_UNMETERED_NETWORK else 0)
+                .setTrigger(Trigger.executionWindow(
+                    TimeUnit.HOURS.toSeconds((targetHours - varianceHours).toLong()).toInt(),
+                    TimeUnit.HOURS.toSeconds((targetHours + varianceHours).toLong()).toInt()))
             dispatcher.mustSchedule(exampleJob.build())
-            Timber.d("Scheduled job")*/
+            Timber.d("Scheduled job")
         }
 
         fun cancelJobs(context: Context) {

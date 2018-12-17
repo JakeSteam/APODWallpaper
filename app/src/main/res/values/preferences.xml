@@ -60,6 +60,6 @@
     <bool name="notifications_preview_default">true</bool>
 
     <!-- Additional section -->
-    <string name="view_status">view_history</string>
+    <string name="view_status">view_status</string>
     <string name="view_quota">view_quota</string>
 </resources>
