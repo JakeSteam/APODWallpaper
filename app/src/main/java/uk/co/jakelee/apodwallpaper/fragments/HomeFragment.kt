@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -106,7 +107,7 @@ class HomeFragment : Fragment() {
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
             fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
-            shareButton.setOnClickListener(shareButtonListener(apodData.title, apodData.imageUrl))
+            shareButton.setOnClickListener(shareButtonListener(apodData.title, apodData.imageUrl, apodData.imageUrlHd))
             if (prefsHelper.getLastPulledDateString() == dateString) {
                 val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLastCheckedDate())
                 metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
@@ -137,7 +138,18 @@ class HomeFragment : Fragment() {
             .commit()
     }
 
-    private fun shareButtonListener(title: String, url: String) = View.OnClickListener {
+    private fun shareButtonListener(title: String, url: String, hdUrl: String) = View.OnClickListener {
+        AlertDialog.Builder(activity!!)
+            .setTitle("How would you like to share \"$title\"?")
+            .setPositiveButton("HD URL") { _, _ -> shareUrl(title, hdUrl)}
+            .setNegativeButton("URL") { _, _ -> shareUrl(title, url)}
+            .setNeutralButton("Image") { _, _ ->
+                Toast.makeText(activity!!, "Image", Toast.LENGTH_SHORT).show()
+            }
+            .show()
+    }
+
+    private fun shareUrl(title: String, url: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_SUBJECT, title)
