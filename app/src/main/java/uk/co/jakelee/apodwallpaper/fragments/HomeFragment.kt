@@ -143,7 +143,7 @@ class HomeFragment : Fragment() {
             .setTitle("How would you like to share \"$title\"?")
             .setPositiveButton("HD URL") { _, _ -> shareUrl(title, hdUrl)}
             .setNegativeButton("URL") { _, _ -> shareUrl(title, url)}
-            .setNeutralButton("Image") { _, _ -> FileSystemHelper(activity!!).shareImage(date)}
+            .setNeutralButton("Image") { _, _ -> FileSystemHelper(activity!!).shareImage(date, title)}
             .show()
     }
 
