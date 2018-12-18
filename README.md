@@ -1,4 +1,6 @@
-#Daily Apod Wallpaper
+# Daily Apod Wallpaper
+
+----
 
 To build:
 1. Check out the repo.

@@ -75,8 +75,7 @@ class HomeFragment : Fragment() {
     private var checkedPreviousDay = false
     fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean, menuItem: MenuItem? = null) {
         toggleRecheckIfNecessary(menuItem, false)
-        val prefHelper = PreferenceHelper(activity!!)
-        if (prefHelper.doesDataExist(activity!!, dateString)) {
+        if (FileSystemHelper(activity!!).getImage(dateString).exists()) {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
             Toast.makeText(activity, "APOD already exists, no need to recheck!", Toast.LENGTH_SHORT).show()

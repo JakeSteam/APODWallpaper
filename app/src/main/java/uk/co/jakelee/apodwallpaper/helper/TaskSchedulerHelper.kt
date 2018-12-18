@@ -49,11 +49,11 @@ class TaskSchedulerHelper : JobService() {
                 }
                 .map {
                     // If data hasn't been saved before, save it
-                    if (!prefHelper.doesDataExist(context, it.date)) {
-                        val lastSetPref = if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
-                        prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
+                    if (!FileSystemHelper(context).getImage(it.date).exists()) {
                         prefHelper.saveApodData(it)
                         FileSystemHelper(context).saveImage(it.image, it.date)
+                        val lastSetPref = if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
+                        prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
                     }
                     // If we're pulling the latest image, and it's different to the current latest
                     if (pullingLatest && it.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
