@@ -22,19 +22,19 @@
                 android:dependency="@string/pref_automatic_enabled"
                 android:summary="When enabled, checks will only occur when on WiFi." />
         <SeekBarPreference
-                android:key="@string/automatic_check_frequency"
+                android:key="@string/pref_automatic_check_frequency"
                 android:defaultValue="@integer/automatic_check_frequency_default"
                 android:title="Frequency (hours)"
                 android:icon="@drawable/ic_settings_frequency"
-                android:dependency="@string/automatic_enabled"
+                android:dependency="@string/pref_automatic_enabled"
                 android:summary="Determines how often checks will be performed."
                 android:max="48"/>
         <SeekBarPreference
-                android:key="@string/automatic_check_variance"
+                android:key="@string/pref_automatic_check_variance"
                 android:defaultValue="@integer/automatic_check_variance_default"
                 android:title="Variance (hours)"
                 android:icon="@drawable/ic_settings_variance"
-                android:dependency="@string/automatic_enabled"
+                android:dependency="@string/pref_automatic_enabled"
                 android:summary="Determines how many hours the OS can modify the check time by. Higher = better battery."
                 android:max="12"/>
     </PreferenceCategory>
@@ -46,19 +46,19 @@
                 android:icon="@drawable/ic_settings_filter"
                 android:summary="When enabled, images will be quality checked before being applied." />
         <SeekBarPreference
-                android:key="@string/filtering_width"
+                android:key="@string/pref_filtering_width"
                 android:defaultValue="@integer/filtering_width_default"
                 android:title="Minimum width (px)"
                 android:icon="@drawable/ic_settings_width"
-                android:dependency="@string/filtering_enabled"
+                android:dependency="@string/pref_filtering_enabled"
                 android:summary="How many pixels wide must an image be, to be applied."
                 android:max="10000"/>
         <SeekBarPreference
-                android:key="@string/filtering_height"
+                android:key="@string/pref_filtering_height"
                 android:defaultValue="@integer/filtering_height_default"
                 android:title="Minimum height (px)"
                 android:icon="@drawable/ic_settings_height"
-                android:dependency="@string/filtering_enabled"
+                android:dependency="@string/pref_filtering_enabled"
                 android:summary="How many pixels high must an image be, to be applied."
                 android:max="10000"/>
         <SwitchPreference
@@ -69,10 +69,10 @@
                 android:dependency="@string/pref_filtering_enabled"
                 android:summary="Enable filtering images by height to width ratio." />
         <SeekBarPreference
-                android:key="@string/filtering_ratio"
+                android:key="@string/pref_filtering_ratio"
                 android:defaultValue="@integer/filtering_ratio_default"
                 android:title="Minimum ratio"
-                android:dependency="@string/filtering_ratio_enabled"
+                android:dependency="@string/pref_filtering_ratio_enabled"
                 android:summary="Ratio of width / height.. somehow"
                 android:max="5"/>
     </PreferenceCategory>
