@@ -78,7 +78,7 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         dialog.findViewById<TextView>(R.id.last_manual_success)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_manual), true)
         var count = 0
         var size = 0L
-        FileSystemHelper(activity!!).getImageDirectory().listFiles().forEach {
+        FileSystemHelper(activity!!).getImagesDirectory().listFiles().forEach {
             count++
             size += it.length()
         }

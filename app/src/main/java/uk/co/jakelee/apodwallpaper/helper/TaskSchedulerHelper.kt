@@ -7,7 +7,7 @@ import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
-import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
+import uk.co.jakelee.apodwallpaper.api.Apod
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -30,7 +30,7 @@ class TaskSchedulerHelper : JobService() {
         fun canRecheck(context: Context) =
             System.currentTimeMillis() - PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) > TimeUnit.MINUTES.toMillis(10)
 
-        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<ResponseApodProcessed> {
+        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<Apod> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
@@ -41,17 +41,17 @@ class TaskSchedulerHelper : JobService() {
                     ApiClient(url).getApodResponse()
                 }
                 .map {
-                    val bitmap = it.pullRemoteImage()
                     if (it.isValid()) {
-                        return@map ResponseApodProcessed(it, bitmap)
+                        return@map Apod(it)
                     }
                     throw IOException()
                 }
                 .map {
                     // If data hasn't been saved before, save it
-                    if (!FileSystemHelper(context).getImage(it.date).exists()) {
+                    val image = it.pullRemoteImage()
+                    if (!FileSystemHelper(context).getImagePath(it.date).exists()) {
                         prefHelper.saveApodData(it)
-                        FileSystemHelper(context).saveImage(it.image, it.date)
+                        FileSystemHelper(context).saveImage(image, it.date)
                         val lastSetPref = if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
                         prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
                     }
@@ -59,10 +59,10 @@ class TaskSchedulerHelper : JobService() {
                     if (pullingLatest && it.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
                         prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, it.date)
                         if (SettingsHelper.setWallpaper) {
-                            WallpaperHelper(context).updateWallpaper(it.image)
+                            WallpaperHelper(context).updateWallpaper(image)
                         }
                         if (SettingsHelper.setLockScreen) {
-                            WallpaperHelper(context).updateLockScreen(FileSystemHelper(context).getImage(it.date))
+                            WallpaperHelper(context).updateLockScreen(FileSystemHelper(context).getImagePath(it.date))
                         }
                     }
                     return@map it

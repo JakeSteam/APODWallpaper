@@ -3,6 +3,7 @@ package uk.co.jakelee.apodwallpaper.helper
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.core.content.FileProvider
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import java.io.File
@@ -17,13 +18,15 @@ class FileSystemHelper(private val context: Context) {
         stream.close()
     }
 
-    fun getImageDirectory() = File(context.cacheDir, "images")
+    fun getImagesDirectory() = File(context.cacheDir, "images")
 
-    fun getImage(date: String) = File(getImageDirectory(), "$date.png")
+    fun getImagePath(date: String) = File(getImagesDirectory(), "$date.png")
+
+    fun getImage(date: String) = BitmapFactory.decodeFile(getImagePath(date).path)
 
     fun shareImage(date: String, title: String) {
         val authority = "${BuildConfig.APPLICATION_ID}.fileprovider"
-        FileProvider.getUriForFile(context, authority, getImage(date))?.let {
+        FileProvider.getUriForFile(context, authority, getImagePath(date))?.let {
             val shareIntent = Intent()
                 .setAction(Intent.ACTION_SEND)
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

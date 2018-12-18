@@ -1,16 +1,15 @@
 package uk.co.jakelee.apodwallpaper.helper
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.preference.PreferenceManager
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.api.ResponseApodProcessed
+import uk.co.jakelee.apodwallpaper.api.Apod
 
 class PreferenceHelper(val context: Context) {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
     enum class OldStringPref { Title, Desc, Image, ImageHd, Copyright, LastCheckedDate }
 
-    fun saveApodData(response: ResponseApodProcessed) = prefs.edit()
+    fun saveApodData(response: Apod) = prefs.edit()
         .putString("${response.date}_${OldStringPref.Title.name}", response.title)
         .putString("${response.date}_${OldStringPref.Desc.name}", response.desc)
         .putString("${response.date}_${OldStringPref.Image.name}", response.imageUrl)
@@ -18,15 +17,13 @@ class PreferenceHelper(val context: Context) {
         .putString("${response.date}_${OldStringPref.Copyright.name}", response.copyright)
         .apply()
 
-    fun getApodData(fsh: FileSystemHelper, date: String) = ResponseApodProcessed(
+    fun getApodData(date: String) = Apod(
             date,
             prefs.getString("${date}_${OldStringPref.Title.name}", "")!!,
             prefs.getString("${date}_${OldStringPref.Desc.name}", "")!!,
             prefs.getString("${date}_${OldStringPref.Image.name}", "")!!,
             prefs.getString("${date}_${OldStringPref.ImageHd.name}", "")!!,
-            prefs.getString("${date}_${OldStringPref.Copyright.name}", "")!!,
-            BitmapFactory.decodeFile(fsh.getImage(date).path)
-        )
+            prefs.getString("${date}_${OldStringPref.Copyright.name}", "")!!)
 
     enum class BooleanPref(val prefId: Int, val defaultId: Int) {
         automatic_enabled(R.string.pref_automatic_enabled, R.bool.automatic_enabled_default),

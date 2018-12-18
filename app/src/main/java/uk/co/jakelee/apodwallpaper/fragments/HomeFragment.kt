@@ -75,7 +75,7 @@ class HomeFragment : Fragment() {
     private var checkedPreviousDay = false
     fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean, menuItem: MenuItem? = null) {
         toggleRecheckIfNecessary(menuItem, false)
-        if (FileSystemHelper(activity!!).getImage(dateString).exists()) {
+        if (FileSystemHelper(activity!!).getImagePath(dateString).exists()) {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
             Toast.makeText(activity, "APOD already exists, no need to recheck!", Toast.LENGTH_SHORT).show()
@@ -121,8 +121,8 @@ class HomeFragment : Fragment() {
     private fun displayApod(dateString: String) {
         if (dateString.isNotEmpty()) {
             val prefsHelper = PreferenceHelper(activity!!)
-            val apodData = prefsHelper.getApodData(FileSystemHelper(activity!!), dateString)
-            backgroundImage.setImageBitmap(apodData.image)
+            val apodData = prefsHelper.getApodData(dateString)
+            backgroundImage.setImageBitmap(FileSystemHelper(activity!!).getImage(apodData.date))
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
             fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
@@ -139,7 +139,7 @@ class HomeFragment : Fragment() {
 
 
     private fun fullscreenButtonListener(title: String, dateString: String) = View.OnClickListener {
-        val imageFile = FileSystemHelper(activity!!).getImage(dateString)
+        val imageFile = FileSystemHelper(activity!!).getImagePath(dateString)
         val bundle = Bundle().apply {
             putString("image", imageFile.path)
             putString("title", title)
