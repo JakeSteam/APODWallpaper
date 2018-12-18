@@ -5,67 +5,67 @@
     <integer name="empty_int">0</integer>
 
     <!-- Internal only -->
-    <string name="last_automatic_run">last_automatic_run</string>
-    <string name="last_automatic_set">last_automatic_set</string>
-    <string name="last_manual_run">last_manual_run</string>
-    <string name="last_manual_set">last_manual_set</string>
-    <string name="last_pulled">last_pulled</string>
-    <string name="last_checked">last_checked</string>
+    <string name="pref_last_automatic_run">last_automatic_run</string>
+    <string name="pref_last_automatic_set">last_automatic_set</string>
+    <string name="pref_last_manual_run">last_manual_run</string>
+    <string name="pref_last_manual_set">last_manual_set</string>
+    <string name="pref_last_pulled">last_pulled</string>
+    <string name="pref_last_checked">last_checked</string>
 
     <!-- App options section -->
-    <string name="show_description">show_description</string>
+    <string name="pref_show_description">show_description</string>
     <bool name="show_description_default">true</bool>
 
     <!-- Automatic section -->
-    <string name="automatic_enabled">automatic_enabled</string>
+    <string name="pref_automatic_enabled">automatic_enabled</string>
     <bool name="automatic_enabled_default">false</bool>
 
-    <string name="automatic_check_wifi">automatic_check_wifi</string>
+    <string name="pref_automatic_check_wifi">automatic_check_wifi</string>
     <bool name="automatic_check_wifi_default">false</bool>
 
-    <string name="automatic_check_frequency">automatic_check_frequency</string>
+    <string name="pref_automatic_check_frequency">automatic_check_frequency</string>
     <integer name="automatic_check_frequency_default">24</integer>
 
-    <string name="automatic_check_variance">automatic_check_variance</string>
+    <string name="pref_automatic_check_variance">automatic_check_variance</string>
     <integer name="automatic_check_variance_default">5</integer>
 
     <!-- Filtering section -->
-    <string name="filtering_enabled">filtering_enabled</string>
+    <string name="pref_filtering_enabled">filtering_enabled</string>
     <bool name="filtering_enabled_default">false</bool>
 
-    <string name="filtering_width">filtering_width</string>
+    <string name="pref_filtering_width">filtering_width</string>
     <integer name="filtering_width_default">500</integer>
 
-    <string name="filtering_height">filtering_height</string>
+    <string name="pref_filtering_height">filtering_height</string>
     <integer name="filtering_height_default">500</integer>
 
-    <string name="filtering_ratio_enabled">filtering_ratio_enabled</string>
+    <string name="pref_filtering_ratio_enabled">filtering_ratio_enabled</string>
     <bool name="filtering_ratio_enabled_default">false</bool>
 
-    <string name="filtering_ratio">filtering_ratio</string>
+    <string name="pref_filtering_ratio">filtering_ratio</string>
     <integer name="filtering_ratio_default">1</integer>
 
     <!-- Targets section -->
-    <string name="wallpaper_enabled">wallpaper_enabled</string>
+    <string name="pref_wallpaper_enabled">wallpaper_enabled</string>
     <bool name="wallpaper_enabled_default">true</bool>
 
-    <string name="lockscreen_enabled">lockscreen_enabled</string>
+    <string name="pref_lockscreen_enabled">lockscreen_enabled</string>
     <bool name="lockscreen_enabled_default">true</bool>
 
     <!-- Notifications section -->
-    <string name="notifications_enabled">notifications_enabled</string>
+    <string name="pref_notifications_enabled">notifications_enabled</string>
     <bool name="notifications_enabled_default">true</bool>
 
-    <string name="notifications_led">notifications_led</string>
+    <string name="pref_notifications_led">notifications_led</string>
     <bool name="notifications_led_default">true</bool>
 
-    <string name="notifications_sound">notifications_sound</string>
+    <string name="pref_notifications_sound">notifications_sound</string>
     <bool name="notifications_sound_default">false</bool>
 
-    <string name="notifications_preview">notifications_preview</string>
+    <string name="pref_notifications_preview">notifications_preview</string>
     <bool name="notifications_preview_default">true</bool>
 
     <!-- Additional section -->
-    <string name="view_status">view_status</string>
-    <string name="view_quota">view_quota</string>
+    <string name="pref_view_status">view_status</string>
+    <string name="pref_view_quota">view_quota</string>
 </resources>

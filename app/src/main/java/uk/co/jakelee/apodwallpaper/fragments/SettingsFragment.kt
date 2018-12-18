@@ -30,8 +30,8 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         (activity as AppCompatActivity).supportActionBar!!.title = "Settings"
         setHasOptionsMenu(true)
         addPreferencesFromResource(R.xml.preferences_ui)
-        findPreference(getString(R.string.view_status)).onPreferenceClickListener = viewStatusListener
-        findPreference(getString(R.string.view_quota)).onPreferenceClickListener = viewQuotaListener
+        findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
+        findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
     }
 
     override fun onResume() {
@@ -47,16 +47,16 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         val pref = findPreference(key)
         when {
-            key == getString(R.string.automatic_enabled) && pref is SwitchPreference -> {
+            key == getString(R.string.pref_automatic_enabled) && pref is SwitchPreference -> {
                 if (pref.isChecked) {
                     TaskSchedulerHelper.scheduleJob(activity!!)
                 } else {
                     TaskSchedulerHelper.cancelJobs(activity!!)
                 }
             }
-            key == getString(R.string.automatic_check_wifi)
-                    || key == getString(R.string.automatic_check_frequency)
-                    || key == getString(R.string.automatic_check_variance) -> {
+            key == getString(R.string.pref_automatic_check_wifi)
+                    || key == getString(R.string.pref_automatic_check_frequency)
+                    || key == getString(R.string.pref_automatic_check_variance) -> {
                 TaskSchedulerHelper.scheduleJob(activity!!)
             }
         }
@@ -72,10 +72,10 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         val prefHelper = PreferenceHelper(activity!!)
         dialog.findViewById<TextView>(R.id.last_checked)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_checked), true)
         dialog.findViewById<TextView>(R.id.last_pulled)!!.text = prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
-        dialog.findViewById<TextView>(R.id.last_automatic_run)!!.text = CalendarHelper.millisToString(prefHelper.getLastRunDate(false), true)
-        dialog.findViewById<TextView>(R.id.last_automatic_success)!!.text = CalendarHelper.millisToString(prefHelper.getLastSetDate(false), true)
-        dialog.findViewById<TextView>(R.id.last_manual_run)!!.text = CalendarHelper.millisToString(prefHelper.getLastRunDate(true), true)
-        dialog.findViewById<TextView>(R.id.last_manual_success)!!.text = CalendarHelper.millisToString(prefHelper.getLastSetDate(true), true)
+        dialog.findViewById<TextView>(R.id.last_automatic_run)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_run_automatic), true)
+        dialog.findViewById<TextView>(R.id.last_automatic_success)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_automatic), true)
+        dialog.findViewById<TextView>(R.id.last_manual_run)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_run_manual), true)
+        dialog.findViewById<TextView>(R.id.last_manual_success)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_manual), true)
         var count = 0
         var size = 0L
         FileSystemHelper(activity!!).getImageDirectory().listFiles().forEach {

@@ -32,8 +32,9 @@ class TaskSchedulerHelper : JobService() {
 
         fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<ResponseApodProcessed> {
             val prefHelper = PreferenceHelper(context)
+            val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
+            prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
             prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
-            prefHelper.updateLastRunDate(manualCheck)
             return Single
                 .fromCallable {
                     val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
@@ -49,7 +50,8 @@ class TaskSchedulerHelper : JobService() {
                 .map {
                     // If data hasn't been saved before, save it
                     if (!prefHelper.doesDataExist(context, it.date)) {
-                        prefHelper.updateLastSetDate(manualCheck)
+                        val lastSetPref = if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
+                        prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
                         prefHelper.saveApodData(it)
                         FileSystemHelper(context).saveImage(it.image, it.date)
                     }
@@ -72,9 +74,9 @@ class TaskSchedulerHelper : JobService() {
         fun scheduleJob(context: Context) {
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
             val prefsHelper = PreferenceHelper(context)
-            val targetHours = prefsHelper.prefs.getInt(context.getString(R.string.automatic_check_frequency), 24)
-            val varianceHours = prefsHelper.prefs.getInt(context.getString(R.string.automatic_check_variance), 5)
-            val wifiOnly = prefsHelper.prefs.getBoolean(context.getString(R.string.automatic_check_wifi), false)
+            val targetHours = prefsHelper.prefs.getInt(context.getString(R.string.pref_automatic_check_frequency), 24)
+            val varianceHours = prefsHelper.prefs.getInt(context.getString(R.string.pref_automatic_check_variance), 5)
+            val wifiOnly = prefsHelper.prefs.getBoolean(context.getString(R.string.pref_automatic_check_wifi), false)
             val exampleJob = dispatcher.newJobBuilder()
                 .setService(TaskSchedulerHelper::class.java)
                 .setTag(BuildConfig.APPLICATION_ID)

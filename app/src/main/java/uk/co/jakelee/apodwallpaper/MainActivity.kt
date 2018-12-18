@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (!PreferenceHelper(this).haveScheduledTask()) {
+        if (!PreferenceHelper(this).getBooleanPref(PreferenceHelper.BooleanPref.automatic_enabled)) {
             TaskSchedulerHelper.scheduleJob(this)
         }
         val ft = supportFragmentManager.beginTransaction()
