@@ -1,6 +1,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="App options">
         <SwitchPreference
+                android:key="@string/pref_custom_key_enabled"
+                android:defaultValue="@bool/custom_key_enabled_default"
+                android:title="Use custom APOD API key"
+                android:icon="@drawable/ic_settings_custom_key_enable"
+                android:summary="A custom API key ensures reliability, as no usage limits will be reached." />
+        <EditTextPreference
+                android:key="@string/pref_custom_key"
+                android:defaultValue="@string/custom_key_default"
+                android:icon="@drawable/ic_settings_custom_key"
+                android:title="No key set, tap to change"
+                android:dependency="@string/pref_custom_key_enabled"
+                android:summary="Your custom API key can be requested from\nhttps://api.nasa.gov/" />
+        <SwitchPreference
                 android:key="@string/pref_show_description"
                 android:defaultValue="@bool/show_description_default"
                 android:title="Show full description"

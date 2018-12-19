@@ -37,7 +37,11 @@ class TaskSchedulerHelper : JobService() {
             prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
             return Single
                 .fromCallable {
-                    val url = "https://api.nasa.gov/planetary/apod?api_key=${BuildConfig.APOD_API_KEY}&date=$dateString&hd=true"
+                    var apiKey = BuildConfig.APOD_API_KEY
+                    if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)) {
+                        apiKey = prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key)
+                    }
+                    val url = "https://api.nasa.gov/planetary/apod?api_key=$apiKey&date=$dateString&hd=true"
                     ApiClient(url).getApodResponse()
                 }
                 .map {

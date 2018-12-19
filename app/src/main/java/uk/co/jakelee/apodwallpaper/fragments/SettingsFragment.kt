@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
@@ -32,6 +33,10 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         addPreferencesFromResource(R.xml.preferences_ui)
         findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
         findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
+        val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
+        if (customKeyPref.text.isNotEmpty()) {
+            customKeyPref.title = customKeyPref.text
+        }
     }
 
     override fun onResume() {
@@ -58,6 +63,15 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
                     || key == getString(R.string.pref_automatic_check_frequency)
                     || key == getString(R.string.pref_automatic_check_variance) -> {
                 TaskSchedulerHelper.scheduleJob(activity!!)
+            }
+            key == getString(R.string.pref_custom_key) && pref is EditTextPreference -> {
+                if (pref.text.length < 40) {
+                    pref.text = ""
+                    Toast.makeText(activity!!, "Invalid API key! Please try entering it again", Toast.LENGTH_SHORT).show()
+                    pref.title = "No key set, tap to change"
+                } else {
+                    pref.title = pref.text
+                }
             }
         }
 
