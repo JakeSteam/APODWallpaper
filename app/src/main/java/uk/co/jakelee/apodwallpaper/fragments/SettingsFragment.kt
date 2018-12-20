@@ -102,7 +102,13 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
     }
 
     private val viewQuotaListener = Preference.OnPreferenceClickListener {
-        Toast.makeText(activity, "View quota...", Toast.LENGTH_SHORT).show()
+        val prefHelper = PreferenceHelper(activity!!)
+        val remaining = prefHelper.getIntPref(PreferenceHelper.IntPref.api_quota)
+        if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)) {
+            Toast.makeText(activity, "Your API key has $remaining requests left this hour.", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(activity, "There are $remaining requests remaining this hour for the default API key. Use a custom one for increased reliability!", Toast.LENGTH_SHORT).show()
+        }
         true
     }
 }

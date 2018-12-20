@@ -8,9 +8,10 @@ data class ApiResponse(
     val media_type: String,
     val service_version: String,
     val title: String,
-    val url: String
+    val url: String,
+    var quota: Int?
 ) {
 
     fun isValid() =
-        this.media_type == "image" && this.title.isNotEmpty() && !this.url.isEmpty()
+        this.media_type == "image" && this.title.isNotEmpty() && this.url.isNotEmpty() && this.quota != null
 }

@@ -14,8 +14,10 @@ class ApiClient(val url: String) {
             .build()
         val response = httpClient.newCall(request).execute()
         if (response.isSuccessful) {
+            val quota = response.headers("X-RateLimit-Remaining")?.first()
             response.body()?.string()?.let {
-                return Gson().fromJson(it, ApiResponse::class.java)
+                val apiResponse = Gson().fromJson(it, ApiResponse::class.java)
+                return apiResponse.apply { this.quota = quota?.toIntOrNull() }
             }
             throw IOException()
         } else {

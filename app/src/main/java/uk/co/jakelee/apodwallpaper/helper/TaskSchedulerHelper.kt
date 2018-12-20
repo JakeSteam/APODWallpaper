@@ -27,8 +27,10 @@ class TaskSchedulerHelper : JobService() {
 
 
     companion object {
-        fun canRecheck(context: Context) =
-            System.currentTimeMillis() - PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) > TimeUnit.MINUTES.toMillis(10)
+        fun getNextRecheckTime(context: Context) =
+            PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) + TimeUnit.MINUTES.toMillis(10)
+
+        fun canRecheck(context: Context) = getNextRecheckTime(context) <= System.currentTimeMillis()
 
         fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<Apod> {
             val prefHelper = PreferenceHelper(context)
@@ -46,30 +48,31 @@ class TaskSchedulerHelper : JobService() {
                 }
                 .map {
                     if (it.isValid()) {
-                        return@map Apod(it)
+                        return@map Pair(Apod(it), it.quota!!)
                     }
                     throw IOException()
                 }
                 .map {
+                    prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.second)
                     // If data hasn't been saved before, save it
-                    val image = it.pullRemoteImage()
-                    if (!FileSystemHelper(context).getImagePath(it.date).exists()) {
-                        prefHelper.saveApodData(it)
-                        FileSystemHelper(context).saveImage(image, it.date)
+                    val image = it.first.pullRemoteImage()
+                    if (!FileSystemHelper(context).getImagePath(it.first.date).exists()) {
+                        prefHelper.saveApodData(it.first)
+                        FileSystemHelper(context).saveImage(image, it.first.date)
                         val lastSetPref = if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
                         prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
                     }
                     // If we're pulling the latest image, and it's different to the current latest
-                    if (pullingLatest && it.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
-                        prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, it.date)
+                    if (pullingLatest && it.first.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
+                        prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, it.first.date)
                         if (SettingsHelper.setWallpaper) {
                             WallpaperHelper(context).updateWallpaper(image)
                         }
                         if (SettingsHelper.setLockScreen) {
-                            WallpaperHelper(context).updateLockScreen(FileSystemHelper(context).getImagePath(it.date))
+                            WallpaperHelper(context).updateLockScreen(FileSystemHelper(context).getImagePath(it.first.date))
                         }
                     }
-                    return@map it
+                    return@map it.first
                 }
         }
 

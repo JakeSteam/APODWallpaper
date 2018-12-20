@@ -2,6 +2,7 @@ package uk.co.jakelee.apodwallpaper
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -60,7 +61,9 @@ class MainActivity : AppCompatActivity() {
         if (TaskSchedulerHelper.canRecheck(this)) {
             fragment.getApod(TaskSchedulerHelper.getLatestDate(), true, true, item)
         } else {
-            Toast.makeText(this, getString(R.string.checked_too_recently), Toast.LENGTH_SHORT).show()
+            val recheckTime = DateUtils.getRelativeTimeSpanString(TaskSchedulerHelper.getNextRecheckTime(this))
+            val recheckText = String.format(getString(R.string.checked_too_recently), recheckTime.toString().toLowerCase())
+            Toast.makeText(this, recheckText, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -50,4 +50,10 @@ class PreferenceHelper(val context: Context) {
     }
     fun getLongPref(pref: LongPref) = prefs.getLong(context.getString(pref.prefId), context.resources.getInteger(pref.defaultId).toLong())
     fun setLongPref(pref: LongPref, value: Long) = prefs.edit().putLong(context.getString(pref.prefId), value).commit()
+
+    enum class IntPref(val prefId: Int, val defaultId: Int) {
+        api_quota(R.string.pref_api_quota, R.integer.empty_int)
+    }
+    fun getIntPref(pref: IntPref) = prefs.getInt(context.getString(pref.prefId), context.resources.getInteger(pref.defaultId).toInt())
+    fun setIntPref(pref: IntPref, value: Int) = prefs.edit().putInt(context.getString(pref.prefId), value).commit()
 }
