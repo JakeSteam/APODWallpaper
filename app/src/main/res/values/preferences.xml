@@ -75,4 +75,5 @@
     <!-- Additional section -->
     <string name="pref_view_status">view_status</string>
     <string name="pref_view_quota">view_quota</string>
+    <string name="pref_manually_set">manually_set</string>
 </resources>

@@ -136,6 +136,11 @@
     <PreferenceCategory
             android:title="Additional actions">
         <Preference
+                android:key="@string/pref_manually_set"
+                android:title="Manually set wallpaper"
+                android:icon="@drawable/ic_settings_manual_apply"
+                android:summary="Manually apply wallpaper and/or lock screen now (depending on above settings)." />
+        <Preference
                 android:key="@string/pref_view_status"
                 android:title="View status"
                 android:icon="@drawable/ic_settings_history"

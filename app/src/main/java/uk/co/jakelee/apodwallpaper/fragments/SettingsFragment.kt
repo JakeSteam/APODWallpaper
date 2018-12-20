@@ -15,10 +15,7 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
-import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
-import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-import uk.co.jakelee.apodwallpaper.helper.TaskSchedulerHelper
+import uk.co.jakelee.apodwallpaper.helper.*
 
 
 class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -33,6 +30,7 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         addPreferencesFromResource(R.xml.preferences_ui)
         findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
         findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
+        findPreference(getString(R.string.pref_manually_set)).onPreferenceClickListener = manuallySetListener
         val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
         if (customKeyPref.text.isNotEmpty()) {
             customKeyPref.title = customKeyPref.text
@@ -108,6 +106,15 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
             Toast.makeText(activity, "Your API key has $remaining requests left this hour.", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(activity, "There are $remaining requests remaining this hour for the default API key. Use a custom one for increased reliability!", Toast.LENGTH_SHORT).show()
+        }
+        true
+    }
+
+    private val manuallySetListener = Preference.OnPreferenceClickListener {
+        val prefHelper = PreferenceHelper(activity!!)
+        val latestPulled = prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
+        if (!latestPulled.isNullOrEmpty()) {
+            WallpaperHelper(activity!!, prefHelper).applyRequired(latestPulled!!)
         }
         true
     }

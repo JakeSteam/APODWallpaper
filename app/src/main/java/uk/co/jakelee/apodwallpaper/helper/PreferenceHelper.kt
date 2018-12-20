@@ -29,7 +29,9 @@ class PreferenceHelper(val context: Context) {
         automatic_enabled(R.string.pref_automatic_enabled, R.bool.automatic_enabled_default),
         automatic_check_wifi(R.string.pref_automatic_check_wifi, R.bool.automatic_check_wifi_default),
         show_description(R.string.pref_show_description, R.bool.show_description_default),
-        custom_key_enabled(R.string.pref_custom_key_enabled, R.bool.custom_key_enabled_default)
+        custom_key_enabled(R.string.pref_custom_key_enabled, R.bool.custom_key_enabled_default),
+        wallpaper_enabled(R.string.pref_wallpaper_enabled, R.bool.wallpaper_enabled_default),
+        lockscreen_enabled(R.string.pref_lockscreen_enabled, R.bool.lockscreen_enabled_default)
     }
     fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(context.getString(pref.prefId), context.resources.getBoolean(pref.defaultId))
     fun setBooleanPref(pref: BooleanPref, value: Boolean) = prefs.edit().putBoolean(context.getString(pref.prefId), value).commit()
