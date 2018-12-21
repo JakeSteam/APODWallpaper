@@ -13,3 +13,5 @@
 gradle\.properties
 
 \.idea/assetWizardSettings\.xml
+
+app/google-services\.json
