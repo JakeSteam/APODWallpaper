@@ -31,6 +31,7 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
         findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
         findPreference(getString(R.string.pref_manually_set)).onPreferenceClickListener = manuallySetListener
+        findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener = previewNotificationListener
         val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
         if (customKeyPref.text.isNotEmpty()) {
             customKeyPref.title = customKeyPref.text
@@ -116,6 +117,11 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         if (!latestPulled.isNullOrEmpty()) {
             WallpaperHelper(activity!!, prefHelper).applyRequired(latestPulled!!)
         }
+        true
+    }
+
+    private val previewNotificationListener = Preference.OnPreferenceClickListener {
+        NotificationHelper(context!!).displayLatest()
         true
     }
 }

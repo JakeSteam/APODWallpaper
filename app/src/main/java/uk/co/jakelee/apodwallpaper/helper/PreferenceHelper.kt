@@ -31,7 +31,12 @@ class PreferenceHelper(val context: Context) {
         show_description(R.string.pref_show_description, R.bool.show_description_default),
         custom_key_enabled(R.string.pref_custom_key_enabled, R.bool.custom_key_enabled_default),
         wallpaper_enabled(R.string.pref_wallpaper_enabled, R.bool.wallpaper_enabled_default),
-        lockscreen_enabled(R.string.pref_lockscreen_enabled, R.bool.lockscreen_enabled_default)
+        lockscreen_enabled(R.string.pref_lockscreen_enabled, R.bool.lockscreen_enabled_default),
+        notifications_enabled(R.string.pref_notifications_enabled, R.bool.notifications_enabled_default),
+        notifications_led(R.string.pref_notifications_led, R.bool.notifications_led_default),
+        notifications_sound(R.string.pref_notifications_sound, R.bool.notifications_sound_default),
+        notifications_vibrate(R.string.pref_notifications_vibrate, R.bool.notifications_vibrate_default),
+        notifications_preview(R.string.pref_notifications_preview, R.bool.notifications_preview_default)
     }
     fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(context.getString(pref.prefId), context.resources.getBoolean(pref.defaultId))
     fun setBooleanPref(pref: BooleanPref, value: Boolean) = prefs.edit().putBoolean(context.getString(pref.prefId), value).commit()

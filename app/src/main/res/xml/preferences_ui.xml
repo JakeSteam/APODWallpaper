@@ -111,6 +111,12 @@
                 android:title="Enable"
                 android:icon="@drawable/ic_settings_notifications"
                 android:summary="When enabled, you will receive notifications when a new image has been downloaded." />
+        <Preference
+                android:key="@string/pref_notifications_instant"
+                android:title="Preview notification"
+                android:icon="@drawable/ic_settings_instant_notif"
+                android:dependency="@string/pref_notifications_enabled"
+                android:summary="Display a notification now to check your settings." />
         <SwitchPreference
                 android:key="@string/pref_notifications_led"
                 android:defaultValue="@bool/notifications_led_default"
@@ -125,6 +131,13 @@
                 android:icon="@drawable/ic_settings_sound"
                 android:dependency="@string/pref_notifications_enabled"
                 android:summary="When enabled, the notification will make a little beep noise." />
+        <SwitchPreference
+                android:key="@string/pref_notifications_vibrate"
+                android:defaultValue="@bool/notifications_vibrate_default"
+                android:title="Vibrate"
+                android:icon="@drawable/ic_settings_vibrate"
+                android:dependency="@string/pref_notifications_enabled"
+                android:summary="When enabled, the notification will vibrate once." />
         <SwitchPreference
                 android:key="@string/pref_notifications_preview"
                 android:defaultValue="@bool/notifications_preview_default"

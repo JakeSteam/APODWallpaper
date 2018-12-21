@@ -18,4 +18,5 @@
     <string name="sharing_url">URL</string>
     <string name="sharing_image">Image</string>
     <string name="sharing_title">Share "%s" to:</string>
+    <string name="notification_channel_name">Daily APOD notifications</string>
 </resources>
