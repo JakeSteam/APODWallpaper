@@ -27,9 +27,10 @@ class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
 
     fun applyRequired(dateString: String, image: Bitmap, bypassFilters: Boolean) {
         val filterResponse = applyFilters(image)
+        var displayOverrideMessage = false
         if (filterResponse != FilterResponse.Success) {
             if (bypassFilters) {
-                Toast.makeText(context, "Image wouldn't usually be set due to ${filterResponse.name}, applying anyway!", Toast.LENGTH_SHORT).show()
+                displayOverrideMessage = true
             } else {
                 prefHelper.setStringPref(PreferenceHelper.StringPref.last_filtered_date, dateString)
                 prefHelper.setStringPref(PreferenceHelper.StringPref.last_filtered_reason, filterResponse.name)
@@ -41,6 +42,9 @@ class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
         }
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.lockscreen_enabled)) {
             updateLockScreen(FileSystemHelper(context).getImagePath(dateString))
+        }
+        if (displayOverrideMessage) {
+            Toast.makeText(context, "Image wouldn't usually be set due to ${filterResponse.name}, applying anyway!", Toast.LENGTH_SHORT).show()
         }
     }
 
