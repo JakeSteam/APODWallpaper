@@ -98,6 +98,8 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         dialog.findViewById<TextView>(R.id.last_automatic_success)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_automatic), true)
         dialog.findViewById<TextView>(R.id.last_manual_run)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_run_manual), true)
         dialog.findViewById<TextView>(R.id.last_manual_success)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_manual), true)
+        dialog.findViewById<TextView>(R.id.last_filtered_date)!!.text = prefHelper.getStringPref(PreferenceHelper.StringPref.last_filtered_date)
+        dialog.findViewById<TextView>(R.id.last_filtered_reason)!!.text = prefHelper.getStringPref(PreferenceHelper.StringPref.last_filtered_reason)
         var count = 0
         var size = 0L
         FileSystemHelper(activity!!).getImagesDirectory().listFiles().forEach {

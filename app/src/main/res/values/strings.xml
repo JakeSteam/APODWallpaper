@@ -10,6 +10,8 @@
     <string name="last_automatic_task_success">Last automatic task success</string>
     <string name="last_manual_task_run">Last manual task run</string>
     <string name="last_manual_task_success">Last manual task success</string>
+    <string name="last_filtered_date">Last rejected APOD</string>
+    <string name="last_filtered_reason">Last rejection reason</string>
     <string name="images_saved">Images saved</string>
     <string name="image_cache_size">Image cache size</string>
 
@@ -19,4 +21,10 @@
     <string name="sharing_image">Image</string>
     <string name="sharing_title">Share "%s" to:</string>
     <string name="notification_channel_name">Daily APOD notifications</string>
+    <string name="apod_not_image">%s\n\nUnfortunately this APOD isn\'t an image, so cannot be shown in %s. Here\'s the associated URL:\n%s</string>
+    <string name="manual_set_title">Choose target</string>
+    <string name="manual_set_message">What do you want to use "%s" for?\nMake sure to turn off "Automatic checking" in the settings if you don\'t want it to be replaced!</string>
+    <string name="manual_set_lockscreen">Lock Screen</string>
+    <string name="manual_set_wallpaper">Wallpaper</string>
+    <string name="manual_set_cancel">Cancel</string>
 </resources>

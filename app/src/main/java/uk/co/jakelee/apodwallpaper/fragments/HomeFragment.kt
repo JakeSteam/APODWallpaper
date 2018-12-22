@@ -77,7 +77,6 @@ class HomeFragment : Fragment() {
         if (!PreferenceHelper(activity!!).getApodData(dateString).isImage || FileSystemHelper(activity!!).getImagePath(dateString).exists()) {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
-            Toast.makeText(activity, "APOD already exists, no need to recheck!", Toast.LENGTH_SHORT).show()
         } else {
             disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest, manual)
                 .subscribeOn(Schedulers.io())
@@ -152,8 +151,7 @@ class HomeFragment : Fragment() {
                 )
                 manuallySetButton.setOnClickListener(manuallySetButtonListener(apodData.date, image, apodData.title))
             } else {
-                val string = "%s\n\nUnfortunately this APOD isn't an image, so cannot be shown in %s. Here's the associated URL:\n%s"
-                descriptionBar.text = String.format(string, descriptionBar.text, getString(R.string.app_name), apodData.imageUrl)
+                descriptionBar.text = String.format(getString(R.string.apod_not_image), descriptionBar.text, getString(R.string.app_name), apodData.imageUrl)
                 bottomButtonsGroup.visibility = View.GONE
             }
         }
@@ -163,11 +161,11 @@ class HomeFragment : Fragment() {
         val wallpaperHelper = WallpaperHelper(activity!!, PreferenceHelper(activity!!))
         val imagePath = FileSystemHelper(activity!!).getImagePath(dateString)
         AlertDialog.Builder(activity!!)
-            .setTitle("Choose target")
-            .setMessage("What do you want to use \"$title\" for?\nMake sure to turn off \"Automatic checking\" in the settings if you don't want it to be replaced!")
-            .setPositiveButton("Lock Screen") { _, _ -> wallpaperHelper.updateLockScreen(imagePath)}
-            .setNegativeButton("Wallpaper") { _, _ -> wallpaperHelper.updateWallpaper(image)}
-            .setNeutralButton("Cancel") { _, _ -> }
+            .setTitle(getString(R.string.manual_set_title))
+            .setMessage(String.format(getString(R.string.manual_set_message), title))
+            .setPositiveButton(getString(R.string.manual_set_lockscreen)) { _, _ -> wallpaperHelper.updateLockScreen(imagePath)}
+            .setNegativeButton(getString(R.string.manual_set_wallpaper)) { _, _ -> wallpaperHelper.updateWallpaper(image)}
+            .setNeutralButton(getString(R.string.manual_set_cancel)) { _, _ -> }
             .show()
     }
 

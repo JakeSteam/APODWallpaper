@@ -109,4 +109,30 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"/>
     </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_filtered_date"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/last_filtered_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
+    <TableRow>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_filtered_reason"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+        <TextView
+                android:id="@+id/last_filtered_reason"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"/>
+    </TableRow>
 </TableLayout>

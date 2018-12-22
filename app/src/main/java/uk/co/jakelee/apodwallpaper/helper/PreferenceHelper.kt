@@ -49,8 +49,8 @@ class PreferenceHelper(val context: Context) {
     enum class StringPref(val prefId: Int, val defaultId: Int) {
         last_pulled(R.string.pref_last_pulled, R.string.empty_string),
         custom_key(R.string.pref_custom_key, R.string.custom_key_default),
-        last_filtered_date(R.string.pref_custom_key, R.string.custom_key_default),
-        last_filtered_reason(R.string.pref_custom_key, R.string.custom_key_default)
+        last_filtered_date(R.string.pref_last_filtered_date, R.string.custom_key_default),
+        last_filtered_reason(R.string.pref_last_filtered_reason, R.string.custom_key_default)
     }
     fun getStringPref(pref: StringPref) = prefs.getString(context.getString(pref.prefId), context.getString(pref.defaultId))
     fun setStringPref(pref: StringPref, value: String) = prefs.edit().putString(context.getString(pref.prefId), value).commit()
