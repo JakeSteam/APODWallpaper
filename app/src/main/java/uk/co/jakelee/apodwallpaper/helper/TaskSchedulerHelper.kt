@@ -47,30 +47,36 @@ class TaskSchedulerHelper : JobService() {
                     ApiClient(url).getApodResponse()
                 }
                 .map {
-                    if (it.isValid()) {
-                        return@map Pair(Apod(it), it.quota!!)
+                    if (!it.isValid()) {
+                        throw IOException("Invalid response")
                     }
-                    throw IOException()
-                }
-                .map {
-                    prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.second)
+                    val apod = Apod(it)
+                    prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.quota!!)
+                    val fsh = FileSystemHelper(context)
+
                     // If data hasn't been saved before, save it
-                    val image = it.first.pullRemoteImage()
-                    if (!FileSystemHelper(context).getImagePath(it.first.date).exists()) {
-                        prefHelper.saveApodData(it.first)
-                        FileSystemHelper(context).saveImage(image, it.first.date)
+                    if (!fsh.getImagePath(apod.date).exists()) {
+                        prefHelper.saveApodData(apod)
                         val lastSetPref = if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
                         prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
-                    }
-                    // If we're pulling the latest image, and it's different to the current latest
-                    if (pullingLatest && it.first.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
-                        if (!manualCheck) {
-                            NotificationHelper(context).display(prefHelper, it.first, image)
+                        if (apod.isImage) {
+                            val image = apod.pullRemoteImage()
+                            fsh.saveImage(image, apod.date)
                         }
-                        prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, it.first.date)
-                        WallpaperHelper(context, prefHelper).applyRequired(it.first.date, image, false)
                     }
-                    return@map it.first
+
+                    // If we're pulling the latest image, and it's different to the current latest
+                    if (pullingLatest && apod.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
+                        if (apod.isImage) {
+                            val image = fsh.getImage(apod.date)
+                            if (!manualCheck) {
+                                NotificationHelper(context).display(prefHelper, apod, image)
+                            }
+                            WallpaperHelper(context, prefHelper).applyRequired(apod.date, image, false)
+                        }
+                        prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, apod.date)
+                    }
+                    return@map apod
                 }
         }
 

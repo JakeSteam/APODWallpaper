@@ -11,15 +11,7 @@ import java.io.File
 class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
     val manager = WallpaperManager.getInstance(context)
 
-    fun updateWallpaper(bitmap: Bitmap) = manager.setBitmap(bitmap)
-
-    fun updateLockScreen(file: File) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            manager.setStream(file.inputStream(), null, false, WallpaperManager.FLAG_LOCK)
-        } else {
-            Timber.i("Can't set lock screen!")
-        }
-    }
+    enum class FilterResponse { Success, MinWidth, MinHeight, Ratio }
 
     fun applyRequired(dateString: String, bypassFilters: Boolean) {
         applyRequired(dateString, FileSystemHelper(context).getImage(dateString), bypassFilters)
@@ -62,5 +54,13 @@ class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
         return FilterResponse.Success
     }
 
-    enum class FilterResponse { Success, MinWidth, MinHeight, Ratio }
+    fun updateWallpaper(bitmap: Bitmap) = manager.setBitmap(bitmap)
+
+    fun updateLockScreen(file: File) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            manager.setStream(file.inputStream(), null, false, WallpaperManager.FLAG_LOCK)
+        } else {
+            Timber.i("Can't set lock screen!")
+        }
+    }
 }

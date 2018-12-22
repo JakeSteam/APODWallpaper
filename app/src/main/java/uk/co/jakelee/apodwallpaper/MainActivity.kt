@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         val datePicker = DatePickerDialog(
             this, fragment.dateSetListener,
             fragment.selectedYear,
-            fragment.selectedMonth,
+            fragment.selectedMonth - 1,
             fragment.selectedDay
         )
         val cal = Calendar.getInstance()
@@ -93,6 +93,7 @@ class MainActivity : AppCompatActivity() {
             set(Calendar.DAY_OF_MONTH, 20)
         }.timeInMillis
         datePicker.datePicker.maxDate = System.currentTimeMillis()
+        //datePicker.updateDate(fragment.selectedYear, fragment.selectedMonth, fragment.selectedDay)
         datePicker.show()
     }
 

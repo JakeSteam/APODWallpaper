@@ -27,7 +27,7 @@ import java.util.*
 class HomeFragment : Fragment() {
     private var disposable: Disposable? = null
     var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
-    var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
+    var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1
     var selectedDay: Int = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +73,8 @@ class HomeFragment : Fragment() {
     private var checkedPreviousDay = false
     fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean, menuItem: MenuItem? = null) {
         toggleRecheckIfNecessary(menuItem, false)
-        if (FileSystemHelper(activity!!).getImagePath(dateString).exists()) {
+        // If it's not an image, or the image exists, display the content
+        if (!PreferenceHelper(activity!!).getApodData(dateString).isImage || FileSystemHelper(activity!!).getImagePath(dateString).exists()) {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
             Toast.makeText(activity, "APOD already exists, no need to recheck!", Toast.LENGTH_SHORT).show()
@@ -120,20 +121,37 @@ class HomeFragment : Fragment() {
         if (dateString.isNotEmpty()) {
             val prefsHelper = PreferenceHelper(activity!!)
             val apodData = prefsHelper.getApodData(dateString)
-            val image = FileSystemHelper(activity!!).getImage(apodData.date)
-            backgroundImage.setImageBitmap(image)
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
-            fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
-            shareButton.setOnClickListener(shareButtonListener(dateString, apodData.title, apodData.imageUrl, apodData.imageUrlHd))
-            manuallySetButton.setOnClickListener(manuallySetButtonListener(apodData.date, image, apodData.title))
-            if (prefsHelper.getStringPref(PreferenceHelper.StringPref.last_pulled) == dateString) {
-                val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLongPref(PreferenceHelper.LongPref.last_checked))
-                metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
+            if (apodData.isImage) {
+                val image = FileSystemHelper(activity!!).getImage(apodData.date)
+                backgroundImage.setImageBitmap(image)
+                fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
+                shareButton.setOnClickListener(
+                    shareButtonListener(
+                        dateString,
+                        apodData.title,
+                        apodData.imageUrl,
+                        apodData.imageUrlHd
+                    )
+                )
+                manuallySetButton.setOnClickListener(manuallySetButtonListener(apodData.date, image, apodData.title))
+                if (prefsHelper.getStringPref(PreferenceHelper.StringPref.last_pulled) == dateString) {
+                    val lastChecked =
+                        DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLongPref(PreferenceHelper.LongPref.last_checked))
+                    metadataBar.text = String.format(
+                        getString(R.string.metadata_bar_checked),
+                        dateString,
+                        lastChecked,
+                        apodData.copyright
+                    )
+                } else {
+                    metadataBar.text = String.format(getString(R.string.metadata_bar), dateString, apodData.copyright)
+                }
+                metadataGroup.visibility = View.VISIBLE
             } else {
-                metadataBar.text = String.format(getString(R.string.metadata_bar), dateString, apodData.copyright)
+                backgroundImage.setImageResource(R.drawable.ic_settings_wallpaper)
             }
-            metadataGroup.visibility = View.VISIBLE
         }
     }
 

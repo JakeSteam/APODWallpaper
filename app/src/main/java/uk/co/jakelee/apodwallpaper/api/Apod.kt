@@ -9,7 +9,8 @@ data class Apod(
     val desc: String,
     val imageUrl: String,
     val imageUrlHd: String,
-    val copyright: String
+    val copyright: String,
+    val isImage: Boolean
 ) {
     constructor(response: ApiResponse) : this(
         response.date,
@@ -17,7 +18,8 @@ data class Apod(
         response.explanation,
         response.url,
         response.hdurl ?: response.url,
-        response.copyright ?: "NASA"
+        response.copyright ?: "NASA",
+        response.media_type == "image"
     )
 
     fun pullRemoteImage() = BitmapFactory.decodeStream(URL(this.imageUrl).openStream())

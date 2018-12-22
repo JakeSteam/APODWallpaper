@@ -11,7 +11,5 @@ data class ApiResponse(
     val url: String,
     var quota: Int?
 ) {
-
-    fun isValid() =
-        this.media_type == "image" && this.title.isNotEmpty() && this.url.isNotEmpty() && this.quota != null
+    fun isValid() = this.title.isNotEmpty() && this.url.isNotEmpty() && this.quota != null
 }
