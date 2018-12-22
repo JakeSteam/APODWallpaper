@@ -5,6 +5,8 @@
     <integer name="empty_int">0</integer>
 
     <!-- Internal only -->
+    <string name="pref_first_time_setup">first_time_setup</string>
+    <bool name="first_time_setup_default">false</bool>
     <string name="pref_last_automatic_run">last_automatic_run</string>
     <string name="pref_last_automatic_set">last_automatic_set</string>
     <string name="pref_last_manual_run">last_manual_run</string>
@@ -32,19 +34,32 @@
 
     <string name="pref_automatic_check_frequency">automatic_check_frequency</string>
     <integer name="automatic_check_frequency_default">24</integer>
+    <integer name="automatic_check_frequency_min">12</integer>
+    <integer name="automatic_check_frequency_max">36</integer>
+    <integer name="automatic_check_frequency_step">1</integer>
 
     <string name="pref_automatic_check_variance">automatic_check_variance</string>
     <integer name="automatic_check_variance_default">5</integer>
+    <integer name="automatic_check_variance_min">1</integer>
+    <integer name="automatic_check_variance_max">12</integer>
+    <integer name="automatic_check_variance_step">1</integer>
+
 
     <!-- Filtering section -->
     <string name="pref_filtering_enabled">filtering_enabled</string>
     <bool name="filtering_enabled_default">false</bool>
 
     <string name="pref_filtering_width">filtering_width</string>
-    <integer name="filtering_width_default">500</integer>
+    <integer name="filtering_width_default">1000</integer>
+    <integer name="filtering_width_min">100</integer>
+    <integer name="filtering_width_max">3000</integer>
+    <integer name="filtering_width_step">100</integer>
 
     <string name="pref_filtering_height">filtering_height</string>
-    <integer name="filtering_height_default">500</integer>
+    <integer name="filtering_height_default">1000</integer>
+    <integer name="filtering_height_min">100</integer>
+    <integer name="filtering_height_max">3000</integer>
+    <integer name="filtering_height_step">100</integer>
 
     <string name="pref_filtering_ratio_enabled">filtering_ratio_enabled</string>
     <bool name="filtering_ratio_enabled_default">false</bool>

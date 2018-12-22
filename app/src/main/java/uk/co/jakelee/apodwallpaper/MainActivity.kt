@@ -7,6 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import uk.co.jakelee.apodwallpaper.fragments.HomeFragment
 import uk.co.jakelee.apodwallpaper.fragments.SettingsFragment
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
@@ -19,13 +21,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (!PreferenceHelper(this).getBooleanPref(PreferenceHelper.BooleanPref.automatic_enabled)) {
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, Crashlytics())
+        }
+        val prefHelper = PreferenceHelper(this)
+        if (shouldPerformSetup(prefHelper)) {
             TaskSchedulerHelper.scheduleJob(this)
+            prefHelper.setBooleanPref(PreferenceHelper.BooleanPref.first_time_setup, true)
         }
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.mainFrame, HomeFragment(), HomeFragmentTag).commit()
         supportFragmentManager.addOnBackStackChangedListener(backStackChangedListener)
     }
+
+    private fun shouldPerformSetup(prefHelper: PreferenceHelper) =
+        (!prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.first_time_setup)
+                && prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_enabled))
 
     private val backStackChangedListener = {
             val stackHeight = supportFragmentManager.backStackEntryCount
@@ -61,7 +72,8 @@ class MainActivity : AppCompatActivity() {
         if (TaskSchedulerHelper.canRecheck(this)) {
             fragment.getApod(TaskSchedulerHelper.getLatestDate(), true, true, item)
         } else {
-            val recheckTime = DateUtils.getRelativeTimeSpanString(TaskSchedulerHelper.getNextRecheckTime(this))
+            val recheck = TaskSchedulerHelper.getNextRecheckTime(this)
+            val recheckTime = DateUtils.getRelativeTimeSpanString(recheck, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
             val recheckText = String.format(getString(R.string.checked_too_recently), recheckTime.toString().toLowerCase())
             Toast.makeText(this, recheckText, Toast.LENGTH_SHORT).show()
         }

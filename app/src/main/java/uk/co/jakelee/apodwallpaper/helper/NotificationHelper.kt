@@ -17,7 +17,6 @@ import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.Apod
 
 
-
 class NotificationHelper(val context: Context) {
     private val channelId = "${BuildConfig.APPLICATION_ID}.channel"
     private val notificationId = 14321
@@ -42,14 +41,22 @@ class NotificationHelper(val context: Context) {
         notifManager.notify(notificationId, notification)
     }
 
-    private fun getBasicNotification(apod: Apod) = NotificationCompat.Builder(context, channelId)
+    private fun getBasicNotification(apod: Apod): NotificationCompat.Builder {
+        val date = CalendarHelper.convertFormats(
+            apod.date,
+            CalendarHelper.Companion.FORMAT.date,
+            CalendarHelper.Companion.FORMAT.friendlyDate)
+        return NotificationCompat.Builder(context, channelId)
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(apod.title)
+            .setContentTitle("$date: ${apod.title}")
             .setContentText(apod.desc.take(100))
-            .setContentIntent(PendingIntent.getActivity(
-                context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT
-            ))
+            .setContentIntent(
+                PendingIntent.getActivity(
+                    context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            )
+    }
 
     private fun applyNotificationPreferences(prefHelper: PreferenceHelper, notif: NotificationCompat.Builder, image:Bitmap): Notification {
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_led)) {

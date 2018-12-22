@@ -36,7 +36,8 @@ class PreferenceHelper(val context: Context) {
         notifications_led(R.string.pref_notifications_led, R.bool.notifications_led_default),
         notifications_sound(R.string.pref_notifications_sound, R.bool.notifications_sound_default),
         notifications_vibrate(R.string.pref_notifications_vibrate, R.bool.notifications_vibrate_default),
-        notifications_preview(R.string.pref_notifications_preview, R.bool.notifications_preview_default)
+        notifications_preview(R.string.pref_notifications_preview, R.bool.notifications_preview_default),
+        first_time_setup(R.string.pref_first_time_setup, R.bool.first_time_setup_default)
     }
     fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(context.getString(pref.prefId), context.resources.getBoolean(pref.defaultId))
     fun setBooleanPref(pref: BooleanPref, value: Boolean) = prefs.edit().putBoolean(context.getString(pref.prefId), value).commit()

@@ -10,10 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.EditTextPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
+import androidx.preference.*
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.helper.*
 
@@ -32,10 +29,21 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
         findPreference(getString(R.string.pref_manually_set)).onPreferenceClickListener = manuallySetListener
         findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener = previewNotificationListener
+        setupSeekbar(R.string.pref_automatic_check_frequency, R.integer.automatic_check_frequency_step, R.integer.automatic_check_frequency_min, R.integer.automatic_check_frequency_max)
+        setupSeekbar(R.string.pref_automatic_check_variance, R.integer.automatic_check_variance_step, R.integer.automatic_check_variance_min, R.integer.automatic_check_variance_max)
+        setupSeekbar(R.string.pref_filtering_width, R.integer.filtering_width_step, R.integer.filtering_width_min, R.integer.filtering_width_max)
+        setupSeekbar(R.string.pref_filtering_height, R.integer.filtering_height_step, R.integer.filtering_height_min, R.integer.filtering_height_max)
         val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
         if (customKeyPref.text.isNotEmpty()) {
             customKeyPref.title = customKeyPref.text
         }
+    }
+
+    fun setupSeekbar(id: Int, step: Int, min: Int, max: Int) {
+        val seekbar = findPreference(getString(id)) as SeekBarPreference
+        seekbar.seekBarIncrement = resources.getInteger(step)
+        seekbar.min = resources.getInteger(min)
+        seekbar.max = resources.getInteger(max)
     }
 
     override fun onResume() {

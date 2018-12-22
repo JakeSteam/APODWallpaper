@@ -40,16 +40,14 @@
                 android:title="Frequency (hours)"
                 android:icon="@drawable/ic_settings_frequency"
                 android:dependency="@string/pref_automatic_enabled"
-                android:summary="Determines how often checks will be performed."
-                android:max="48"/>
+                android:summary="Determines how often checks will be performed."/>
         <SeekBarPreference
                 android:key="@string/pref_automatic_check_variance"
                 android:defaultValue="@integer/automatic_check_variance_default"
                 android:title="Variance (hours)"
                 android:icon="@drawable/ic_settings_variance"
                 android:dependency="@string/pref_automatic_enabled"
-                android:summary="Determines how many hours the OS can modify the check time by. Higher = better battery."
-                android:max="12"/>
+                android:summary="Determines how many hours the OS can modify the check time by. Higher = better battery."/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Image filtering">
         <SwitchPreference
