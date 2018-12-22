@@ -74,7 +74,7 @@
                 android:key="@string/pref_filtering_ratio_enabled"
                 android:defaultValue="@bool/filtering_ratio_enabled_default"
                 android:title="Enable ratio filtering"
-                android:icon="@drawable/ic_settings_ratio"
+                android:icon="@drawable/ic_settings_enable_ratio"
                 android:dependency="@string/pref_filtering_enabled"
                 android:summary="Enable filtering images by maximum width/height ratio." />
         <SeekBarPreference
