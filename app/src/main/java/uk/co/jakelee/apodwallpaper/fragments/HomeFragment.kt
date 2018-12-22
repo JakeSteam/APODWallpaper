@@ -114,6 +114,7 @@ class HomeFragment : Fragment() {
     private fun hideApod() {
         backgroundImage.setImageResource(R.color.colorPrimary)
         titleBar.text = activity!!.getString(R.string.loading_message)
+        bottomButtonsGroup.visibility = View.GONE
         metadataGroup.visibility = View.GONE
     }
 
@@ -123,7 +124,21 @@ class HomeFragment : Fragment() {
             val apodData = prefsHelper.getApodData(dateString)
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
+            if (prefsHelper.getStringPref(PreferenceHelper.StringPref.last_pulled) == dateString) {
+                val lastChecked =
+                    DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLongPref(PreferenceHelper.LongPref.last_checked))
+                metadataBar.text = String.format(
+                    getString(R.string.metadata_bar_checked),
+                    dateString,
+                    lastChecked,
+                    apodData.copyright
+                )
+            } else {
+                metadataBar.text = String.format(getString(R.string.metadata_bar), dateString, apodData.copyright)
+            }
+            metadataGroup.visibility = View.VISIBLE
             if (apodData.isImage) {
+                bottomButtonsGroup.visibility = View.VISIBLE
                 val image = FileSystemHelper(activity!!).getImage(apodData.date)
                 backgroundImage.setImageBitmap(image)
                 fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
@@ -136,21 +151,10 @@ class HomeFragment : Fragment() {
                     )
                 )
                 manuallySetButton.setOnClickListener(manuallySetButtonListener(apodData.date, image, apodData.title))
-                if (prefsHelper.getStringPref(PreferenceHelper.StringPref.last_pulled) == dateString) {
-                    val lastChecked =
-                        DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLongPref(PreferenceHelper.LongPref.last_checked))
-                    metadataBar.text = String.format(
-                        getString(R.string.metadata_bar_checked),
-                        dateString,
-                        lastChecked,
-                        apodData.copyright
-                    )
-                } else {
-                    metadataBar.text = String.format(getString(R.string.metadata_bar), dateString, apodData.copyright)
-                }
-                metadataGroup.visibility = View.VISIBLE
             } else {
-                backgroundImage.setImageResource(R.drawable.ic_settings_wallpaper)
+                val string = "%s\n\nUnfortunately this APOD isn't an image, so cannot be shown in %s. Here's the associated URL:\n%s"
+                descriptionBar.text = String.format(string, descriptionBar.text, getString(R.string.app_name), apodData.imageUrl)
+                bottomButtonsGroup.visibility = View.GONE
             }
         }
     }

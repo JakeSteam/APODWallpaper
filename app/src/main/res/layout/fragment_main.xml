@@ -42,6 +42,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/fullscreenButton"
             app:layout_constraintVertical_bias="0.0"
+            android:autoLink="web|email"
+            android:textColorLink="@color/mdtp_red"
             android:ellipsize="end"/>
     <ImageView
             android:id="@+id/manuallySetButton"
@@ -86,7 +88,12 @@
     <androidx.constraintlayout.widget.Group
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:id="@+id/bottomButtonsGroup"
+            app:constraint_referenced_ids="fullscreenButton,shareButton,manuallySetButton" />
+    <androidx.constraintlayout.widget.Group
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
             android:id="@+id/metadataGroup"
-            app:constraint_referenced_ids="descriptionBar,fullscreenButton,shareButton,manuallySetButton,metadataBar" />
+            app:constraint_referenced_ids="descriptionBar,metadataBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
