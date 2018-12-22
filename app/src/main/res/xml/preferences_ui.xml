@@ -62,30 +62,27 @@
                 android:title="Minimum width (px)"
                 android:icon="@drawable/ic_settings_width"
                 android:dependency="@string/pref_filtering_enabled"
-                android:summary="How many pixels wide must an image be, to be applied."
-                android:max="10000"/>
+                android:summary="How many pixels wide must an image be, to be applied."/>
         <SeekBarPreference
                 android:key="@string/pref_filtering_height"
                 android:defaultValue="@integer/filtering_height_default"
                 android:title="Minimum height (px)"
                 android:icon="@drawable/ic_settings_height"
                 android:dependency="@string/pref_filtering_enabled"
-                android:summary="How many pixels high must an image be, to be applied."
-                android:max="10000"/>
+                android:summary="How many pixels high must an image be, to be applied."/>
         <SwitchPreference
                 android:key="@string/pref_filtering_ratio_enabled"
                 android:defaultValue="@bool/filtering_ratio_enabled_default"
                 android:title="Enable ratio filtering"
                 android:icon="@drawable/ic_settings_ratio"
                 android:dependency="@string/pref_filtering_enabled"
-                android:summary="Enable filtering images by height to width ratio." />
+                android:summary="Enable filtering images by maximum width/height ratio." />
         <SeekBarPreference
                 android:key="@string/pref_filtering_ratio"
                 android:defaultValue="@integer/filtering_ratio_default"
-                android:title="Minimum ratio"
+                android:title="Maximum width/height ratio"
                 android:dependency="@string/pref_filtering_ratio_enabled"
-                android:summary="Ratio of width / height.. somehow"
-                android:max="5"/>
+                android:summary="50: Width = 0.5x height. 100: Width = 1x height. 200: Width = 2x height."/>
     </PreferenceCategory>
     <PreferenceCategory android:title="Targets">
         <SwitchPreference

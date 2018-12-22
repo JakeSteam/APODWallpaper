@@ -33,6 +33,7 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         setupSeekbar(R.string.pref_automatic_check_variance, R.integer.automatic_check_variance_step, R.integer.automatic_check_variance_min, R.integer.automatic_check_variance_max)
         setupSeekbar(R.string.pref_filtering_width, R.integer.filtering_width_step, R.integer.filtering_width_min, R.integer.filtering_width_max)
         setupSeekbar(R.string.pref_filtering_height, R.integer.filtering_height_step, R.integer.filtering_height_min, R.integer.filtering_height_max)
+        setupSeekbar(R.string.pref_filtering_ratio, R.integer.filtering_ratio_step, R.integer.filtering_ratio_min, R.integer.filtering_ratio_max)
         val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
         if (customKeyPref.text.isNotEmpty()) {
             customKeyPref.title = customKeyPref.text
@@ -123,7 +124,7 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         val prefHelper = PreferenceHelper(activity!!)
         val latestPulled = prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
         if (!latestPulled.isNullOrEmpty()) {
-            WallpaperHelper(activity!!, prefHelper).applyRequired(latestPulled!!)
+            WallpaperHelper(activity!!, prefHelper).applyRequired(latestPulled!!, true)
         }
         true
     }

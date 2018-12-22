@@ -37,6 +37,8 @@ class PreferenceHelper(val context: Context) {
         notifications_sound(R.string.pref_notifications_sound, R.bool.notifications_sound_default),
         notifications_vibrate(R.string.pref_notifications_vibrate, R.bool.notifications_vibrate_default),
         notifications_preview(R.string.pref_notifications_preview, R.bool.notifications_preview_default),
+        filtering_enabled(R.string.pref_filtering_enabled, R.bool.filtering_enabled_default),
+        filtering_ratio_enabled(R.string.pref_filtering_ratio_enabled, R.bool.filtering_ratio_enabled_default),
         first_time_setup(R.string.pref_first_time_setup, R.bool.first_time_setup_default)
     }
     fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(context.getString(pref.prefId), context.resources.getBoolean(pref.defaultId))
@@ -44,7 +46,9 @@ class PreferenceHelper(val context: Context) {
 
     enum class StringPref(val prefId: Int, val defaultId: Int) {
         last_pulled(R.string.pref_last_pulled, R.string.empty_string),
-        custom_key(R.string.pref_custom_key, R.string.custom_key_default)
+        custom_key(R.string.pref_custom_key, R.string.custom_key_default),
+        last_filtered_date(R.string.pref_custom_key, R.string.custom_key_default),
+        last_filtered_reason(R.string.pref_custom_key, R.string.custom_key_default)
     }
     fun getStringPref(pref: StringPref) = prefs.getString(context.getString(pref.prefId), context.getString(pref.defaultId))
     fun setStringPref(pref: StringPref, value: String) = prefs.edit().putString(context.getString(pref.prefId), value).commit()
@@ -60,7 +64,10 @@ class PreferenceHelper(val context: Context) {
     fun setLongPref(pref: LongPref, value: Long) = prefs.edit().putLong(context.getString(pref.prefId), value).commit()
 
     enum class IntPref(val prefId: Int, val defaultId: Int) {
-        api_quota(R.string.pref_api_quota, R.integer.empty_int)
+        api_quota(R.string.pref_api_quota, R.integer.empty_int),
+        minimum_width(R.string.pref_filtering_width, R.integer.filtering_width_default),
+        minimum_height(R.string.pref_filtering_height, R.integer.filtering_height_default),
+        filtering_ratio(R.string.pref_filtering_ratio, R.integer.filtering_ratio_default)
     }
     fun getIntPref(pref: IntPref) = prefs.getInt(context.getString(pref.prefId), context.resources.getInteger(pref.defaultId).toInt())
     fun setIntPref(pref: IntPref, value: Int) = prefs.edit().putInt(context.getString(pref.prefId), value).commit()

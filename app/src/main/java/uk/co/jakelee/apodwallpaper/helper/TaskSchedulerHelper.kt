@@ -68,7 +68,7 @@ class TaskSchedulerHelper : JobService() {
                             NotificationHelper(context).display(prefHelper, it.first, image)
                         }
                         prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, it.first.date)
-                        WallpaperHelper(context, prefHelper).applyRequired(it.first.date, image)
+                        WallpaperHelper(context, prefHelper).applyRequired(it.first.date, image, false)
                     }
                     return@map it.first
                 }
