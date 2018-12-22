@@ -144,7 +144,7 @@
                 android:title="Rich previews"
                 android:icon="@drawable/ic_settings_preview"
                 android:dependency="@string/pref_notifications_enabled"
-                android:summary="When enabled, the notification will contain the APOD itself." />
+                android:summary="When enabled, the notification can be expanded to view the image." />
     </PreferenceCategory>
     <PreferenceCategory
             android:title="Additional actions">

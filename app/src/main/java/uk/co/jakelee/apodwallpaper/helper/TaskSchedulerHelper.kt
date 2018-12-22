@@ -64,6 +64,9 @@ class TaskSchedulerHelper : JobService() {
                     }
                     // If we're pulling the latest image, and it's different to the current latest
                     if (pullingLatest && it.first.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
+                        if (!manualCheck) {
+                            NotificationHelper(context).display(prefHelper, it.first, image)
+                        }
                         prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, it.first.date)
                         WallpaperHelper(context, prefHelper).applyRequired(it.first.date, image)
                     }

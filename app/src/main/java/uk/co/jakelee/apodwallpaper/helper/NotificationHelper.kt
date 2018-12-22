@@ -1,16 +1,22 @@
 package uk.co.jakelee.apodwallpaper.helper
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import uk.co.jakelee.apodwallpaper.BuildConfig
+import uk.co.jakelee.apodwallpaper.MainActivity
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.Apod
+
+
 
 class NotificationHelper(val context: Context) {
     private val channelId = "${BuildConfig.APPLICATION_ID}.channel"
@@ -31,11 +37,21 @@ class NotificationHelper(val context: Context) {
             return
         }
         val notifManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notif = NotificationCompat.Builder(context, "channelID")
+        val notification = applyNotificationPreferences(prefHelper, getBasicNotification(apod), image)
+        createNotifChannelIfNeeded(notifManager)
+        notifManager.notify(notificationId, notification)
+    }
+
+    private fun getBasicNotification(apod: Apod) = NotificationCompat.Builder(context, channelId)
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(apod.title)
             .setContentText(apod.desc.take(100))
+            .setContentIntent(PendingIntent.getActivity(
+                context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT
+            ))
+
+    private fun applyNotificationPreferences(prefHelper: PreferenceHelper, notif: NotificationCompat.Builder, image:Bitmap): Notification {
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_led)) {
             notif.setLights(Color.WHITE, 1000, 3000)
         }
@@ -43,13 +59,16 @@ class NotificationHelper(val context: Context) {
             notif.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
         }
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_vibrate)) {
-            notif.setVibrate(longArrayOf(200))
+            notif.setVibrate(longArrayOf(0, 400))
         }
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_preview)) {
-
+            notif.setStyle(NotificationCompat.BigPictureStyle()
+                .bigPicture(image)
+                .bigLargeIcon(null))
+        } else {
+            notif.setLargeIcon(image)
         }
-        createNotifChannelIfNeeded(notifManager)
-        notifManager.notify(notificationId, notif.build())
+        return notif.build()
     }
 
     private fun createNotifChannelIfNeeded(notifManager: NotificationManager) {
