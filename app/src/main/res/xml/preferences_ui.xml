@@ -81,6 +81,7 @@
                 android:key="@string/pref_filtering_ratio"
                 android:defaultValue="@integer/filtering_ratio_default"
                 android:title="Maximum width/height ratio"
+                android:icon="@drawable/ic_settings_ratio"
                 android:dependency="@string/pref_filtering_ratio_enabled"
                 android:summary="50: Width = 0.5x height. 100: Width = 1x height. 200: Width = 2x height."/>
     </PreferenceCategory>

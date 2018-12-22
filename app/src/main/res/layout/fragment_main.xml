@@ -44,6 +44,16 @@
             app:layout_constraintVertical_bias="0.0"
             android:ellipsize="end"/>
     <ImageView
+            android:id="@+id/manuallySetButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="6dp"
+            app:layout_constraintBottom_toTopOf="@id/metadataBar"
+            app:layout_constraintEnd_toStartOf="@id/shareButton"
+            app:layout_constraintVertical_bias="1.0"
+            android:src="@drawable/ic_manually_set"
+            android:background="@color/textBackground"/>
+    <ImageView
             android:id="@+id/shareButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -77,6 +87,6 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/metadataGroup"
-            app:constraint_referenced_ids="descriptionBar,fullscreenButton,shareButton,metadataBar" />
+            app:constraint_referenced_ids="descriptionBar,fullscreenButton,shareButton,manuallySetButton,metadataBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package uk.co.jakelee.apodwallpaper.fragments
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.LayoutInflater
@@ -19,10 +20,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
-import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
-import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
-import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-import uk.co.jakelee.apodwallpaper.helper.TaskSchedulerHelper
+import uk.co.jakelee.apodwallpaper.helper.*
 import java.util.*
 
 
@@ -122,11 +120,13 @@ class HomeFragment : Fragment() {
         if (dateString.isNotEmpty()) {
             val prefsHelper = PreferenceHelper(activity!!)
             val apodData = prefsHelper.getApodData(dateString)
-            backgroundImage.setImageBitmap(FileSystemHelper(activity!!).getImage(apodData.date))
+            val image = FileSystemHelper(activity!!).getImage(apodData.date)
+            backgroundImage.setImageBitmap(image)
             titleBar.text = apodData.title
             descriptionBar.text = apodData.desc
             fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
             shareButton.setOnClickListener(shareButtonListener(dateString, apodData.title, apodData.imageUrl, apodData.imageUrlHd))
+            manuallySetButton.setOnClickListener(manuallySetButtonListener(apodData.date, image, apodData.title))
             if (prefsHelper.getStringPref(PreferenceHelper.StringPref.last_pulled) == dateString) {
                 val lastChecked = DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLongPref(PreferenceHelper.LongPref.last_checked))
                 metadataBar.text = String.format(getString(R.string.metadata_bar_checked), dateString, lastChecked, apodData.copyright)
@@ -137,6 +137,17 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun manuallySetButtonListener(dateString: String, image: Bitmap, title: String) = View.OnClickListener {
+        val wallpaperHelper = WallpaperHelper(activity!!, PreferenceHelper(activity!!))
+        val imagePath = FileSystemHelper(activity!!).getImagePath(dateString)
+        AlertDialog.Builder(activity!!)
+            .setTitle("Choose target")
+            .setMessage("What do you want to use \"$title\" for?\nMake sure to turn off \"Automatic checking\" in the settings if you don't want it to be replaced!")
+            .setPositiveButton("Lock Screen") { _, _ -> wallpaperHelper.updateLockScreen(imagePath)}
+            .setNegativeButton("Wallpaper") { _, _ -> wallpaperHelper.updateWallpaper(image)}
+            .setNeutralButton("Cancel") { _, _ -> }
+            .show()
+    }
 
     private fun fullscreenButtonListener(title: String, dateString: String) = View.OnClickListener {
         val imageFile = FileSystemHelper(activity!!).getImagePath(dateString)
