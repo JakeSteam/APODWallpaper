@@ -49,19 +49,20 @@ class TaskSchedulerHelper : JobService() {
                     try {
                         return@fromCallable ApiClient(getUrl(apiKey, dateString)).getApodResponse()
                     } catch (e: ApiClient.DateRequestedException) {
+                        // Retry previous day, due to time differences / delay in releases!
                         if (pullingLatest && !checkedPreviousDay) {
                             checkedPreviousDay = true
                             val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
                             Timber.i("Trying $newDateString as $dateString was not available")
                             return@fromCallable ApiClient(getUrl(apiKey, newDateString)).getApodResponse()
                         } else {
-                            throw IOException()
+                            throw ApiClient.DateRequestedException()
                         }
                     }
                 }
                 .map {
                     if (!it.isValid()) {
-                        throw IOException("Invalid response")
+                        throw IOException("Returned APOD isn't formatted correctly!")
                     }
                     val apod = Apod(it)
                     prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.quota!!)

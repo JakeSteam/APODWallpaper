@@ -19,8 +19,10 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.R
+import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.helper.*
 import java.util.*
+import java.util.concurrent.TimeoutException
 
 
 class HomeFragment : Fragment() {
@@ -87,7 +89,13 @@ class HomeFragment : Fragment() {
                     },
                     {
                         Timber.e(it)
-                        Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                        if (it is ApiClient.TooManyRequestsException) {
+                            Toast.makeText(activity, "Your API key is currently at capacity! Please use a custom key in settings, or wait an hour.", Toast.LENGTH_SHORT).show()
+                        } else if (it is TimeoutException) {
+                            Toast.makeText(activity, "The APOD API failed to respond! Please try again later.", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(activity, "Failed to retrieve APOD: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 )
         }

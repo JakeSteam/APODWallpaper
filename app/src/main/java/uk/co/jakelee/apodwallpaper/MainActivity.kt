@@ -89,8 +89,8 @@ class MainActivity : AppCompatActivity() {
         val cal = Calendar.getInstance()
         datePicker.datePicker.minDate = cal.apply {
             set(Calendar.YEAR, 1995)
-            set(Calendar.MONTH, 5)
-            set(Calendar.DAY_OF_MONTH, 20)
+            set(Calendar.MONTH, 6)
+            set(Calendar.DAY_OF_MONTH, 16)
         }.timeInMillis
         datePicker.datePicker.maxDate = System.currentTimeMillis()
         //datePicker.updateDate(fragment.selectedYear, fragment.selectedMonth, fragment.selectedDay)

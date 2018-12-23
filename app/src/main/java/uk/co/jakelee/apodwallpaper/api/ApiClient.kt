@@ -1,10 +1,12 @@
 package uk.co.jakelee.apodwallpaper.api
 
+import android.accounts.NetworkErrorException
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 class ApiClient(val url: String) {
     fun getApodResponse(): ApiResponse {
@@ -21,11 +23,17 @@ class ApiClient(val url: String) {
             }
             throw IOException()
         } else {
-            throw DateRequestedException()
+            when (response.code()) {
+                400 -> throw DateRequestedException()
+                429 -> throw TooManyRequestsException()
+                503 -> throw TimeoutException()
+                else -> throw NetworkErrorException()
+            }
         }
     }
 
     class DateRequestedException : Exception()
+    class TooManyRequestsException : Exception()
 
     private val httpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
