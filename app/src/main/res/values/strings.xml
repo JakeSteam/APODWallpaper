@@ -23,11 +23,12 @@
     <string name="notification_channel_name">Daily APOD notifications</string>
     <string name="apod_not_image">%s\n\nUnfortunately this APOD isn\'t an image, so cannot be shown in %s. Here\'s the associated URL:\n%s</string>
     <string name="manual_set_title">Choose target</string>
-    <string name="manual_set_message">What do you want to use "%s" for?\nMake sure to turn off "Automatic checking" in the settings if you don\'t want it to be replaced!</string>
+    <string name="manual_set_message">What do you want to use \"%s\" for?\n\nMake sure to turn off \"Automatic checking\" in the settings if you don\'t want it to be replaced!</string>
     <string name="manual_set_lockscreen">Lock Screen</string>
     <string name="manual_set_wallpaper">Wallpaper</string>
     <string name="manual_set_cancel">Cancel</string>
     <string name="error_quota_hit">Your API key is currently at capacity! Please use a custom key in settings, or wait an hour.</string>
     <string name="error_no_response">The APOD API failed to respond! Please try again later.</string>
     <string name="error_generic_retrieval_failure">Failed to retrieve APOD: %s</string>
+    <string name="error_image_too_large">Image is too large to be displayed (> 100MB)! Try turning off HD images &amp; clearing cache!</string>
 </resources>

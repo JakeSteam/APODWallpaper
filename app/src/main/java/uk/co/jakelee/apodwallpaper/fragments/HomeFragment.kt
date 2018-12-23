@@ -137,7 +137,11 @@ class HomeFragment : Fragment() {
             if (apodData.isImage) {
                 bottomButtonsGroup.visibility = View.VISIBLE
                 val image = FileSystemHelper(activity!!).getImage(apodData.date)
-                backgroundImage.setImageBitmap(image)
+                if (image.byteCount > 100 * 1024 * 1024) {
+                    Toast.makeText(activity!!, getString(R.string.error_image_too_large), Toast.LENGTH_SHORT).show()
+                } else {
+                    backgroundImage.setImageBitmap(image)
+                }
                 fullscreenButton.setOnClickListener(fullscreenButtonListener(apodData.title, dateString))
                 shareButton.setOnClickListener(
                     shareButtonListener(

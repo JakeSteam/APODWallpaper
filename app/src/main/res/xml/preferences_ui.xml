@@ -23,8 +23,8 @@
                 android:key="@string/pref_use_hd_images"
                 android:defaultValue="@bool/use_hd_images_default"
                 android:title="Use HD images"
-                android:icon="@drawable/ic_settings_description"
-                android:summary="When enabled, HD images will be used. These can be massive, and can crash the app!" />
+                android:icon="@drawable/ic_settings_hd"
+                android:summary="When enabled, HD images will be used. Some of these are too large to be displayed in the app, but still work as wallpapers!" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Automatic checking">
         <SwitchPreference

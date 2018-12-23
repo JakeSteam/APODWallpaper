@@ -88,8 +88,9 @@ class TaskSchedulerHelper : JobService() {
                 val lastSetPref =
                     if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
                 prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
+                val useHd = prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.use_hd_images)
                 if (apod.isImage) {
-                    val image = apod.pullRemoteImage()
+                    val image = apod.pullRemoteImage(useHd)
                     fsh.saveImage(image, apod.date)
                 }
             }
