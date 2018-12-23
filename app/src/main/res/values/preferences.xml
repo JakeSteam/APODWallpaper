@@ -27,6 +27,9 @@
     <string name="pref_show_description">show_description</string>
     <bool name="show_description_default">true</bool>
 
+    <string name="pref_use_hd_images">use_hd_images</string>
+    <bool name="use_hd_images_default">false</bool>
+
     <!-- Automatic section -->
     <string name="pref_automatic_enabled">automatic_enabled</string>
     <bool name="automatic_enabled_default">true</bool>
@@ -45,7 +48,6 @@
     <integer name="automatic_check_variance_min">1</integer>
     <integer name="automatic_check_variance_max">12</integer>
     <integer name="automatic_check_variance_step">1</integer>
-
 
     <!-- Filtering section -->
     <string name="pref_filtering_enabled">filtering_enabled</string>

@@ -19,6 +19,12 @@
                 android:title="Show full description"
                 android:icon="@drawable/ic_settings_description"
                 android:summary="When enabled, the full APOD description will be shown. Tap description to toggle!" />
+        <SwitchPreference
+                android:key="@string/pref_use_hd_images"
+                android:defaultValue="@bool/use_hd_images_default"
+                android:title="Use HD images"
+                android:icon="@drawable/ic_settings_description"
+                android:summary="When enabled, HD images will be used. These can be massive, and can crash the app!" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Automatic checking">
         <SwitchPreference

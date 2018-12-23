@@ -27,26 +27,35 @@ android {
 }
 
 dependencies {
-    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
-    implementation 'com.jsibbold:zoomage:1.2.0'
-    implementation 'com.wdullaer:materialdatetimepicker:4.1.0'
-    implementation 'com.android.support:design:28.0.0'
+    // Core
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
+    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // Android UI libraries
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'com.android.support:preference-v7:28.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation 'com.android.support:design:28.0.0'
+
+    // Additional UI libraries
+    implementation 'com.jsibbold:zoomage:1.2.0'
+    implementation 'com.wdullaer:materialdatetimepicker:4.1.0'
+
+    // Networking
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
+
+    // Threading
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+
+    // Logging
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

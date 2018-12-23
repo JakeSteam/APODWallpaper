@@ -90,11 +90,11 @@ class HomeFragment : Fragment() {
                     {
                         Timber.e(it)
                         if (it is ApiClient.TooManyRequestsException) {
-                            Toast.makeText(activity, "Your API key is currently at capacity! Please use a custom key in settings, or wait an hour.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.error_quota_hit), Toast.LENGTH_SHORT).show()
                         } else if (it is TimeoutException) {
-                            Toast.makeText(activity, "The APOD API failed to respond! Please try again later.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, getString(R.string.error_no_response), Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(activity, "Failed to retrieve APOD: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity, String.format(getString(R.string.error_generic_retrieval_failure), it.localizedMessage), Toast.LENGTH_SHORT).show()
                         }
                     }
                 )

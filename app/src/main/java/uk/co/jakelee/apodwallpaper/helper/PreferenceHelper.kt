@@ -41,7 +41,8 @@ class PreferenceHelper(val context: Context) {
         notifications_preview(R.string.pref_notifications_preview, R.bool.notifications_preview_default),
         filtering_enabled(R.string.pref_filtering_enabled, R.bool.filtering_enabled_default),
         filtering_ratio_enabled(R.string.pref_filtering_ratio_enabled, R.bool.filtering_ratio_enabled_default),
-        first_time_setup(R.string.pref_first_time_setup, R.bool.first_time_setup_default)
+        first_time_setup(R.string.pref_first_time_setup, R.bool.first_time_setup_default),
+        use_hd_images(R.string.pref_use_hd_images, R.bool.use_hd_images_default)
     }
     fun getBooleanPref(pref: BooleanPref) = prefs.getBoolean(context.getString(pref.prefId), context.resources.getBoolean(pref.defaultId))
     fun setBooleanPref(pref: BooleanPref, value: Boolean) = prefs.edit().putBoolean(context.getString(pref.prefId), value).commit()

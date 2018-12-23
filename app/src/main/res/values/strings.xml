@@ -27,4 +27,7 @@
     <string name="manual_set_lockscreen">Lock Screen</string>
     <string name="manual_set_wallpaper">Wallpaper</string>
     <string name="manual_set_cancel">Cancel</string>
+    <string name="error_quota_hit">Your API key is currently at capacity! Please use a custom key in settings, or wait an hour.</string>
+    <string name="error_no_response">The APOD API failed to respond! Please try again later.</string>
+    <string name="error_generic_retrieval_failure">Failed to retrieve APOD: %s</string>
 </resources>

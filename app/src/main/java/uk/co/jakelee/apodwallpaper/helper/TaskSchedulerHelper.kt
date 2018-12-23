@@ -16,15 +16,11 @@ class TaskSchedulerHelper : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
-        downloadApod(
-            applicationContext,
-            getLatestDate(),
-            true, false)
+        downloadApod(applicationContext, getLatestDate(), true, false)
         return true
     }
 
     override fun onStopJob(job: JobParameters?) = true
-
 
     companion object {
         fun getNextRecheckTime(context: Context) =
@@ -64,34 +60,56 @@ class TaskSchedulerHelper : JobService() {
                     if (!it.isValid()) {
                         throw IOException("Returned APOD isn't formatted correctly!")
                     }
+                    val fsh = FileSystemHelper(context)
                     val apod = Apod(it)
                     prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.quota!!)
-                    val fsh = FileSystemHelper(context)
 
-                    // If data hasn't been saved before, save it
-                    if (!fsh.getImagePath(apod.date).exists()) {
-                        prefHelper.saveApodData(apod)
-                        val lastSetPref = if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
-                        prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
-                        if (apod.isImage) {
-                            val image = apod.pullRemoteImage()
-                            fsh.saveImage(image, apod.date)
-                        }
-                    }
-
+                    saveDataIfNecessary(apod, fsh, prefHelper, manualCheck)
                     // If we're pulling the latest image, and it's different to the current latest
                     if (pullingLatest && apod.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
-                        if (apod.isImage) {
-                            val image = fsh.getImage(apod.date)
-                            if (!manualCheck) {
-                                NotificationHelper(context).display(prefHelper, apod, image)
-                            }
-                            WallpaperHelper(context, prefHelper).applyRequired(apod.date, image, false)
-                        }
-                        prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, apod.date)
+                        handleNewLatestApod(apod, fsh, manualCheck, context, prefHelper)
                     }
                     return@map apod
                 }
+        }
+
+        // If data hasn't been saved before, save it
+        // For images, check if image exists. For others, check if title pref set.
+        private fun saveDataIfNecessary(
+            apod: Apod,
+            fsh: FileSystemHelper,
+            prefHelper: PreferenceHelper,
+            manualCheck: Boolean
+        ) {
+            if (apod.isImage && !fsh.getImagePath(apod.date).exists()
+                || (!apod.isImage && prefHelper.getApodData(apod.date).title.isEmpty())
+            ) {
+                prefHelper.saveApodData(apod)
+                val lastSetPref =
+                    if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
+                prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
+                if (apod.isImage) {
+                    val image = apod.pullRemoteImage()
+                    fsh.saveImage(image, apod.date)
+                }
+            }
+        }
+
+        private fun handleNewLatestApod(
+            apod: Apod,
+            fsh: FileSystemHelper,
+            manualCheck: Boolean,
+            context: Context,
+            prefHelper: PreferenceHelper
+        ) {
+            if (apod.isImage) {
+                val image = fsh.getImage(apod.date)
+                if (!manualCheck) {
+                    NotificationHelper(context).display(prefHelper, apod, image)
+                }
+                WallpaperHelper(context, prefHelper).applyRequired(apod.date, image, false)
+            }
+            prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, apod.date)
         }
 
         fun getLatestDate() = CalendarHelper.calendarToString(Calendar.getInstance(), false)
