@@ -84,8 +84,8 @@ class HomeFragment : Fragment() {
                 .doFinally { toggleRecheckIfNecessary(menuItem, true) }
                 .subscribe(
                     {
-                        updateSelectedDate(dateString)
-                        displayApod(dateString)
+                        updateSelectedDate(it.date)
+                        displayApod(it.date)
                     },
                     {
                         Timber.e(it)
@@ -93,7 +93,6 @@ class HomeFragment : Fragment() {
                             checkedPreviousDay = true
                             val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
                             Toast.makeText(activity, "Failed to find APOD for $dateString, trying $newDateString", Toast.LENGTH_SHORT).show()
-                            updateSelectedDate(newDateString)
                             getApod(newDateString, true, true)
                         } else {
                             Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
@@ -152,6 +151,7 @@ class HomeFragment : Fragment() {
                 manuallySetButton.setOnClickListener(manuallySetButtonListener(apodData.date, image, apodData.title))
             } else {
                 descriptionBar.text = String.format(getString(R.string.apod_not_image), descriptionBar.text, getString(R.string.app_name), apodData.imageUrl)
+                backgroundImage.setImageResource(R.color.colorPrimary)
                 bottomButtonsGroup.visibility = View.GONE
             }
         }
