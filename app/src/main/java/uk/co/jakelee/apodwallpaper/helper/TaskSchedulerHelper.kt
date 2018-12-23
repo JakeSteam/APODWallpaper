@@ -32,6 +32,8 @@ class TaskSchedulerHelper : JobService() {
 
         fun canRecheck(context: Context) = getNextRecheckTime(context) <= System.currentTimeMillis()
 
+        fun getUrl(apiKey: String, date: String) = "https://api.nasa.gov/planetary/apod?api_key=$apiKey&date=$date&hd=true"
+
         fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<Apod> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
@@ -44,8 +46,18 @@ class TaskSchedulerHelper : JobService() {
                     if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)) {
                         apiKey = prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key)
                     }
-                    val url = "https://api.nasa.gov/planetary/apod?api_key=$apiKey&date=$dateString&hd=true"
-                    ApiClient(url).getApodResponse()
+                    try {
+                        return@fromCallable ApiClient(getUrl(apiKey, dateString)).getApodResponse()
+                    } catch (e: ApiClient.DateRequestedException) {
+                        if (pullingLatest && !checkedPreviousDay) {
+                            checkedPreviousDay = true
+                            val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
+                            Timber.i("Trying $newDateString as $dateString was not available")
+                            return@fromCallable ApiClient(getUrl(apiKey, newDateString)).getApodResponse()
+                        } else {
+                            throw IOException()
+                        }
+                    }
                 }
                 .map {
                     if (!it.isValid()) {
@@ -78,16 +90,6 @@ class TaskSchedulerHelper : JobService() {
                         prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, apod.date)
                     }
                     return@map apod
-                }
-                .doOnError {
-                    if (pullingLatest && it is ApiClient.DateRequestedException && !checkedPreviousDay) {
-                        checkedPreviousDay = true
-                        val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
-                        Timber.i("Trying $newDateString as $dateString was not available")
-                        downloadApod(context, newDateString, pullingLatest, manualCheck)
-                    } else {
-                        Timber.e("Failed to retrieve: ${it.localizedMessage}")
-                    }
                 }
         }
 
