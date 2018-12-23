@@ -27,8 +27,8 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         addPreferencesFromResource(R.xml.preferences_ui)
         findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
         findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
-        findPreference(getString(R.string.pref_manually_set)).onPreferenceClickListener = manuallySetListener
         findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener = previewNotificationListener
+        findPreference(getString(R.string.pref_delete_images)).onPreferenceClickListener = deleteImagesListener
         setupSeekbar(R.string.pref_automatic_check_frequency, R.integer.automatic_check_frequency_step, R.integer.automatic_check_frequency_min, R.integer.automatic_check_frequency_max)
         setupSeekbar(R.string.pref_automatic_check_variance, R.integer.automatic_check_variance_step, R.integer.automatic_check_variance_min, R.integer.automatic_check_variance_max)
         setupSeekbar(R.string.pref_filtering_width, R.integer.filtering_width_step, R.integer.filtering_width_min, R.integer.filtering_width_max)
@@ -82,7 +82,12 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
                 }
             }
         }
+    }
 
+    private val deleteImagesListener = Preference.OnPreferenceClickListener {
+        FileSystemHelper(context!!).deleteAllPastImages()
+        Toast.makeText(context!!, getString(R.string.deleted_all_images), Toast.LENGTH_SHORT).show()
+        true
     }
 
     private val viewStatusListener = Preference.OnPreferenceClickListener { _ ->
@@ -118,15 +123,6 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
             Toast.makeText(activity, "Your API key has $remaining requests left this hour.", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(activity, "There are $remaining requests remaining this hour for the default API key. Use a custom one for increased reliability!", Toast.LENGTH_SHORT).show()
-        }
-        true
-    }
-
-    private val manuallySetListener = Preference.OnPreferenceClickListener {
-        val prefHelper = PreferenceHelper(activity!!)
-        val latestPulled = prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
-        if (!latestPulled.isNullOrEmpty()) {
-            WallpaperHelper(activity!!, prefHelper).applyRequired(latestPulled!!, true)
         }
         true
     }

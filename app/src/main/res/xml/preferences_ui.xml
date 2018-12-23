@@ -151,10 +151,10 @@
     <PreferenceCategory
             android:title="Additional actions">
         <Preference
-                android:key="@string/pref_manually_set"
-                android:title="Manually set wallpaper"
-                android:icon="@drawable/ic_settings_manual_apply"
-                android:summary="Manually apply wallpaper and/or lock screen now (depending on above settings)." />
+                android:key="@string/pref_delete_images"
+                android:title="Delete all saved images"
+                android:icon="@drawable/ic_settings_delete"
+                android:summary="Delete all saved images (except current) to free up space." />
         <Preference
                 android:key="@string/pref_view_status"
                 android:title="View status"

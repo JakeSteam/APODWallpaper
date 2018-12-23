@@ -100,7 +100,7 @@
     <bool name="notifications_preview_default">true</bool>
 
     <!-- Additional section -->
+    <string name="pref_delete_images">delete_images</string>
     <string name="pref_view_status">view_status</string>
     <string name="pref_view_quota">view_quota</string>
-    <string name="pref_manually_set">manually_set</string>
 </resources>

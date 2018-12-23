@@ -31,4 +31,5 @@
     <string name="error_no_response">The APOD API failed to respond! Please try again later.</string>
     <string name="error_generic_retrieval_failure">Failed to retrieve APOD: %s</string>
     <string name="error_image_too_large">Image is too large to be displayed (> 100MB)! Try turning off HD images &amp; clearing cache!</string>
+    <string name="deleted_all_images">Deleted all past images!</string>
 </resources>

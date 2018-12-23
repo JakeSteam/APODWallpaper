@@ -36,4 +36,12 @@ class FileSystemHelper(private val context: Context) {
             context.startActivity(Intent.createChooser(shareIntent, "Share \"$title\" to:"))
         }
     }
+
+    fun deleteAllPastImages() {
+        val lastPulled = PreferenceHelper(context).getStringPref(PreferenceHelper.StringPref.last_pulled)
+        val files = getImagesDirectory().listFiles { dir, filename -> !filename.startsWith(lastPulled) }
+        files.forEach {
+            it.delete()
+        }
+    }
 }
