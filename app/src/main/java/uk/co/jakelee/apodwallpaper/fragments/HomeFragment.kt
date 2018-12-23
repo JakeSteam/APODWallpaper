@@ -19,7 +19,6 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.helper.*
 import java.util.*
 
@@ -70,7 +69,6 @@ class HomeFragment : Fragment() {
             it.isEnabled = enabled
         }
 
-    private var checkedPreviousDay = false
     fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean, menuItem: MenuItem? = null) {
         toggleRecheckIfNecessary(menuItem, false)
         // If it's not an image, or the image exists, display the content
@@ -89,14 +87,7 @@ class HomeFragment : Fragment() {
                     },
                     {
                         Timber.e(it)
-                        if (pullingLatest && it is ApiClient.DateRequestedException && !checkedPreviousDay) {
-                            checkedPreviousDay = true
-                            val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
-                            Toast.makeText(activity, "Failed to find APOD for $dateString, trying $newDateString", Toast.LENGTH_SHORT).show()
-                            getApod(newDateString, true, true)
-                        } else {
-                            Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
-                        }
+                        Toast.makeText(activity, "Unknown server error: ${it.localizedMessage}", Toast.LENGTH_SHORT).show()
                     }
                 )
         }

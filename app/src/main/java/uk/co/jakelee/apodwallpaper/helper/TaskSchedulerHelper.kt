@@ -37,6 +37,7 @@ class TaskSchedulerHelper : JobService() {
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
             prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
+            var checkedPreviousDay = false
             return Single
                 .fromCallable {
                     var apiKey = BuildConfig.APOD_API_KEY
@@ -77,6 +78,16 @@ class TaskSchedulerHelper : JobService() {
                         prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, apod.date)
                     }
                     return@map apod
+                }
+                .doOnError {
+                    if (pullingLatest && it is ApiClient.DateRequestedException && !checkedPreviousDay) {
+                        checkedPreviousDay = true
+                        val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
+                        Timber.i("Trying $newDateString as $dateString was not available")
+                        downloadApod(context, newDateString, pullingLatest, manualCheck)
+                    } else {
+                        Timber.e("Failed to retrieve: ${it.localizedMessage}")
+                    }
                 }
         }
 
