@@ -12,11 +12,12 @@ import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+// adb shell dumpsys activity service GcmService --endpoints uk.co.jakelee.apodwallpaper
 class TaskSchedulerHelper : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
-        downloadApod(applicationContext, getLatestDate(), true, false)
+        downloadApod(applicationContext, getLatestDate(), true, false) { jobFinished(job, false )}
         return true
     }
 
@@ -30,7 +31,7 @@ class TaskSchedulerHelper : JobService() {
 
         fun getUrl(apiKey: String, date: String) = "https://api.nasa.gov/planetary/apod?api_key=$apiKey&date=$date&hd=true"
 
-        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<Apod> {
+        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean, postJobTask: () -> Unit): Single<Apod> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
@@ -69,6 +70,7 @@ class TaskSchedulerHelper : JobService() {
                     if (pullingLatest && apod.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
                         handleNewLatestApod(apod, fsh, manualCheck, context, prefHelper)
                     }
+                    postJobTask.invoke()
                     return@map apod
                 }
         }

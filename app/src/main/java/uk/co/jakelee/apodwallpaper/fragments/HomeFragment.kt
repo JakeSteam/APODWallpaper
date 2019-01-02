@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
         } else {
-            disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest, manual)
+            disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest, manual) {}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { toggleRecheckIfNecessary(menuItem, true) }
@@ -166,8 +166,14 @@ class HomeFragment : Fragment() {
         AlertDialog.Builder(activity!!)
             .setTitle(getString(R.string.manual_set_title))
             .setMessage(String.format(getString(R.string.manual_set_message), title))
-            .setPositiveButton(getString(R.string.manual_set_lockscreen)) { _, _ -> wallpaperHelper.updateLockScreen(imagePath)}
-            .setNegativeButton(getString(R.string.manual_set_wallpaper)) { _, _ -> wallpaperHelper.updateWallpaper(image)}
+            .setPositiveButton(getString(R.string.manual_set_lockscreen)) { _, _ ->
+                wallpaperHelper.updateLockScreen(imagePath)
+                Toast.makeText(activity!!, "Set \"$title\" as your lock screen!", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton(getString(R.string.manual_set_wallpaper)) { _, _ ->
+                wallpaperHelper.updateWallpaper(image)
+                Toast.makeText(activity!!, "Set \"$title\" as your wallpaper!", Toast.LENGTH_SHORT).show()
+            }
             .setNeutralButton(getString(R.string.manual_set_cancel)) { _, _ -> }
             .show()
     }
