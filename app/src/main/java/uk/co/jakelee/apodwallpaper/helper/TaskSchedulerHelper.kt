@@ -3,6 +3,8 @@ package uk.co.jakelee.apodwallpaper.helper
 import android.content.Context
 import com.firebase.jobdispatcher.*
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
@@ -18,6 +20,9 @@ class TaskSchedulerHelper : JobService() {
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
         downloadApod(applicationContext, getLatestDate(), true, false) { jobFinished(job, false )}
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe()
         return true
     }
 
@@ -129,11 +134,12 @@ class TaskSchedulerHelper : JobService() {
                 .setRecurring(true)
                 .setLifetime(Lifetime.FOREVER)
                 .setReplaceCurrent(true)
-                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
                 .setConstraints(if (wifiOnly) Constraint.ON_UNMETERED_NETWORK else 0)
                 .setTrigger(Trigger.executionWindow(
                     TimeUnit.HOURS.toSeconds((targetHours - varianceHours).toLong()).toInt(),
                     TimeUnit.HOURS.toSeconds((targetHours + varianceHours).toLong()).toInt()))
+                //.setTrigger(Trigger.executionWindow(5, 15))
             dispatcher.mustSchedule(exampleJob.build())
             Timber.d("Scheduled job")
         }
