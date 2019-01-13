@@ -37,7 +37,12 @@ class FileSystemHelper(private val context: Context) {
                 .setDataAndType(it, context.contentResolver.getType(it))
                 .putExtra(Intent.EXTRA_STREAM, it)
                 .putExtra(Intent.EXTRA_TEXT, title)
-            context.startActivity(Intent.createChooser(shareIntent, String.format(context.getString(R.string.share_title), title)))
+            context.startActivity(
+                Intent.createChooser(
+                    shareIntent,
+                    String.format(context.getString(R.string.share_title), title)
+                )
+            )
         }
     }
 

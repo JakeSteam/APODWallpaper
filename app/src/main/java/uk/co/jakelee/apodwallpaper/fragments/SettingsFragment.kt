@@ -13,7 +13,7 @@ import androidx.preference.*
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.helper.*
 
-class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = super.onCreateView(inflater, container, savedInstanceState)
@@ -32,13 +32,39 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         addPreferencesFromResource(R.xml.preferences_ui)
         findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
         findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
-        findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener = previewNotificationListener
+        findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener =
+                previewNotificationListener
         findPreference(getString(R.string.pref_delete_images)).onPreferenceClickListener = deleteImagesListener
-        setupSeekbar(R.string.pref_automatic_check_frequency, R.integer.automatic_check_frequency_step, R.integer.automatic_check_frequency_min, R.integer.automatic_check_frequency_max)
-        setupSeekbar(R.string.pref_automatic_check_variance, R.integer.automatic_check_variance_step, R.integer.automatic_check_variance_min, R.integer.automatic_check_variance_max)
-        setupSeekbar(R.string.pref_filtering_width, R.integer.filtering_width_step, R.integer.filtering_width_min, R.integer.filtering_width_max)
-        setupSeekbar(R.string.pref_filtering_height, R.integer.filtering_height_step, R.integer.filtering_height_min, R.integer.filtering_height_max)
-        setupSeekbar(R.string.pref_filtering_ratio, R.integer.filtering_ratio_step, R.integer.filtering_ratio_min, R.integer.filtering_ratio_max)
+        setupSeekbar(
+            R.string.pref_automatic_check_frequency,
+            R.integer.automatic_check_frequency_step,
+            R.integer.automatic_check_frequency_min,
+            R.integer.automatic_check_frequency_max
+        )
+        setupSeekbar(
+            R.string.pref_automatic_check_variance,
+            R.integer.automatic_check_variance_step,
+            R.integer.automatic_check_variance_min,
+            R.integer.automatic_check_variance_max
+        )
+        setupSeekbar(
+            R.string.pref_filtering_width,
+            R.integer.filtering_width_step,
+            R.integer.filtering_width_min,
+            R.integer.filtering_width_max
+        )
+        setupSeekbar(
+            R.string.pref_filtering_height,
+            R.integer.filtering_height_step,
+            R.integer.filtering_height_min,
+            R.integer.filtering_height_max
+        )
+        setupSeekbar(
+            R.string.pref_filtering_ratio,
+            R.integer.filtering_ratio_step,
+            R.integer.filtering_ratio_min,
+            R.integer.filtering_ratio_max
+        )
         val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
         if (customKeyPref.text.isNotEmpty()) {
             customKeyPref.title = customKeyPref.text
@@ -102,14 +128,26 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
             .setPositiveButton("OK") { _, _ -> }
             .show()
         val prefHelper = PreferenceHelper(activity!!)
-        dialog.findViewById<TextView>(R.id.last_checked)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_checked), true)
-        dialog.findViewById<TextView>(R.id.last_pulled)!!.text = prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
-        dialog.findViewById<TextView>(R.id.last_automatic_run)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_run_automatic), true)
-        dialog.findViewById<TextView>(R.id.last_automatic_success)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_automatic), true)
-        dialog.findViewById<TextView>(R.id.last_manual_run)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_run_manual), true)
-        dialog.findViewById<TextView>(R.id.last_manual_success)!!.text = CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_manual), true)
-        dialog.findViewById<TextView>(R.id.last_filtered_date)!!.text = prefHelper.getStringPref(PreferenceHelper.StringPref.last_filtered_date)
-        dialog.findViewById<TextView>(R.id.last_filtered_reason)!!.text = prefHelper.getStringPref(PreferenceHelper.StringPref.last_filtered_reason)
+        dialog.findViewById<TextView>(R.id.last_checked)!!.text =
+                CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_checked), true)
+        dialog.findViewById<TextView>(R.id.last_pulled)!!.text =
+                prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
+        dialog.findViewById<TextView>(R.id.last_automatic_run)!!.text = CalendarHelper.millisToString(
+            prefHelper.getLongPref(PreferenceHelper.LongPref.last_run_automatic),
+            true
+        )
+        dialog.findViewById<TextView>(R.id.last_automatic_success)!!.text = CalendarHelper.millisToString(
+            prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_automatic),
+            true
+        )
+        dialog.findViewById<TextView>(R.id.last_manual_run)!!.text =
+                CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_run_manual), true)
+        dialog.findViewById<TextView>(R.id.last_manual_success)!!.text =
+                CalendarHelper.millisToString(prefHelper.getLongPref(PreferenceHelper.LongPref.last_set_manual), true)
+        dialog.findViewById<TextView>(R.id.last_filtered_date)!!.text =
+                prefHelper.getStringPref(PreferenceHelper.StringPref.last_filtered_date)
+        dialog.findViewById<TextView>(R.id.last_filtered_reason)!!.text =
+                prefHelper.getStringPref(PreferenceHelper.StringPref.last_filtered_reason)
         var count = 0
         var size = 0L
         FileSystemHelper(activity!!).getImagesDirectory().listFiles().forEach {
@@ -125,9 +163,17 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         val prefHelper = PreferenceHelper(activity!!)
         val remaining = prefHelper.getIntPref(PreferenceHelper.IntPref.api_quota)
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)) {
-            Toast.makeText(activity, String.format(getString(R.string.api_key_custom_remaining), remaining), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                String.format(getString(R.string.api_key_custom_remaining), remaining),
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
-            Toast.makeText(activity, String.format(getString(R.string.api_key_remaining), remaining), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                activity,
+                String.format(getString(R.string.api_key_remaining), remaining),
+                Toast.LENGTH_SHORT
+            ).show()
         }
         true
     }

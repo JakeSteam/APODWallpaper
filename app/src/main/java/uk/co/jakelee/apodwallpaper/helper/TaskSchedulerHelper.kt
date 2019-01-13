@@ -19,7 +19,7 @@ class TaskSchedulerHelper : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
-        downloadApod(applicationContext, getLatestDate(), true, false) { jobFinished(job, false )}
+        downloadApod(applicationContext, getLatestDate(), true, false) { jobFinished(job, false) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
@@ -34,11 +34,19 @@ class TaskSchedulerHelper : JobService() {
 
         fun canRecheck(context: Context) = getNextRecheckTime(context) <= System.currentTimeMillis()
 
-        fun getUrl(apiKey: String, date: String) = "https://api.nasa.gov/planetary/apod?api_key=$apiKey&date=$date&hd=true"
+        fun getUrl(apiKey: String, date: String) =
+            "https://api.nasa.gov/planetary/apod?api_key=$apiKey&date=$date&hd=true"
 
-        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean, postJobTask: () -> Unit): Single<Apod> {
+        fun downloadApod(
+            context: Context,
+            dateString: String,
+            pullingLatest: Boolean,
+            manualCheck: Boolean,
+            postJobTask: () -> Unit
+        ): Single<Apod> {
             val prefHelper = PreferenceHelper(context)
-            val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
+            val lastRunPref =
+                if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
             prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
             var checkedPreviousDay = false
@@ -125,8 +133,14 @@ class TaskSchedulerHelper : JobService() {
         fun scheduleJob(context: Context) {
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
             val prefsHelper = PreferenceHelper(context)
-            val targetHours = prefsHelper.prefs.getInt(context.getString(R.string.pref_automatic_check_frequency), context.resources.getInteger(R.integer.automatic_check_frequency_default))
-            val varianceHours = prefsHelper.prefs.getInt(context.getString(R.string.pref_automatic_check_variance), context.resources.getInteger(R.integer.automatic_check_variance_default))
+            val targetHours = prefsHelper.prefs.getInt(
+                context.getString(R.string.pref_automatic_check_frequency),
+                context.resources.getInteger(R.integer.automatic_check_frequency_default)
+            )
+            val varianceHours = prefsHelper.prefs.getInt(
+                context.getString(R.string.pref_automatic_check_variance),
+                context.resources.getInteger(R.integer.automatic_check_variance_default)
+            )
             val wifiOnly = prefsHelper.prefs.getBoolean(context.getString(R.string.pref_automatic_check_wifi), false)
             val exampleJob = dispatcher.newJobBuilder()
                 .setService(TaskSchedulerHelper::class.java)
@@ -136,10 +150,13 @@ class TaskSchedulerHelper : JobService() {
                 .setReplaceCurrent(true)
                 .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
                 .setConstraints(if (wifiOnly) Constraint.ON_UNMETERED_NETWORK else 0)
-                .setTrigger(Trigger.executionWindow(
-                    TimeUnit.HOURS.toSeconds((targetHours - varianceHours).toLong()).toInt(),
-                    TimeUnit.HOURS.toSeconds((targetHours + varianceHours).toLong()).toInt()))
-                //.setTrigger(Trigger.executionWindow(5, 15))
+                .setTrigger(
+                    Trigger.executionWindow(
+                        TimeUnit.HOURS.toSeconds((targetHours - varianceHours).toLong()).toInt(),
+                        TimeUnit.HOURS.toSeconds((targetHours + varianceHours).toLong()).toInt()
+                    )
+                )
+            //.setTrigger(Trigger.executionWindow(5, 15))
             dispatcher.mustSchedule(exampleJob.build())
             Timber.d("Scheduled job")
         }

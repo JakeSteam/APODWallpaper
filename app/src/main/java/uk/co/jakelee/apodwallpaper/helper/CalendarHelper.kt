@@ -12,8 +12,8 @@ class CalendarHelper {
         }
 
         fun millisToString(millis: Long, includeTime: Boolean) = calendarToString(
-                Calendar.getInstance().apply { timeInMillis = millis}, includeTime
-            )
+            Calendar.getInstance().apply { timeInMillis = millis }, includeTime
+        )
 
         fun calendarToString(calendar: Calendar, includeTime: Boolean): String {
             if (calendar.timeInMillis > 0) {

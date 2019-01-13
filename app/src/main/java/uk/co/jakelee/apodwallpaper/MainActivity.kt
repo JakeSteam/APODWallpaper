@@ -39,15 +39,15 @@ class MainActivity : AppCompatActivity() {
                 && prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_enabled))
 
     private val backStackChangedListener = {
-            val stackHeight = supportFragmentManager.backStackEntryCount
-            if (stackHeight > 0) { // if we have something on the stack (doesn't include the current shown fragment)
-                supportActionBar!!.setHomeButtonEnabled(true)
-                supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-            } else {
-                supportActionBar!!.setDisplayHomeAsUpEnabled(false)
-                supportActionBar!!.setHomeButtonEnabled(false)
-            }
+        val stackHeight = supportFragmentManager.backStackEntryCount
+        if (stackHeight > 0) { // if we have something on the stack (doesn't include the current shown fragment)
+            supportActionBar!!.setHomeButtonEnabled(true)
+            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        } else {
+            supportActionBar!!.setDisplayHomeAsUpEnabled(false)
+            supportActionBar!!.setHomeButtonEnabled(false)
         }
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.top_menu, menu)
@@ -74,8 +74,10 @@ class MainActivity : AppCompatActivity() {
             fragment.getApod(TaskSchedulerHelper.getLatestDate(), true, true, item)
         } else {
             val recheck = TaskSchedulerHelper.getNextRecheckTime(this)
-            val recheckTime = DateUtils.getRelativeTimeSpanString(recheck, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
-            val recheckText = String.format(getString(R.string.checked_too_recently), recheckTime.toString().toLowerCase())
+            val recheckTime =
+                DateUtils.getRelativeTimeSpanString(recheck, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
+            val recheckText =
+                String.format(getString(R.string.checked_too_recently), recheckTime.toString().toLowerCase())
             Toast.makeText(this, recheckText, Toast.LENGTH_SHORT).show()
         }
     }

@@ -30,8 +30,10 @@ class HomeFragment : Fragment() {
     var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1
     var selectedDay: Int = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
@@ -40,9 +42,11 @@ class HomeFragment : Fragment() {
         selectedYear = year
         selectedMonth = (month + 1)
         selectedDay = day
-        getApod("$selectedYear" + "-" +
-                selectedMonth.toString().padStart(2, '0') + "-" +
-                selectedDay.toString().padStart(2, '0'), false, true)
+        getApod(
+            "$selectedYear" + "-" +
+                    selectedMonth.toString().padStart(2, '0') + "-" +
+                    selectedDay.toString().padStart(2, '0'), false, true
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,7 +55,10 @@ class HomeFragment : Fragment() {
         displayApod(PreferenceHelper(activity!!).getStringPref(PreferenceHelper.StringPref.last_pulled))
         descriptionBar.setOnClickListener {
             val prefs = PreferenceHelper(activity!!)
-            prefs.setBooleanPref(PreferenceHelper.BooleanPref.show_description, !prefs.getBooleanPref(PreferenceHelper.BooleanPref.show_description))
+            prefs.setBooleanPref(
+                PreferenceHelper.BooleanPref.show_description,
+                !prefs.getBooleanPref(PreferenceHelper.BooleanPref.show_description)
+            )
             descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
         }
     }
@@ -65,14 +72,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun toggleRecheckIfNecessary(menuItem: MenuItem?, enabled: Boolean) = menuItem?.let {
-            it.icon.alpha = if (enabled) 255 else 100
-            it.isEnabled = enabled
-        }
+        it.icon.alpha = if (enabled) 255 else 100
+        it.isEnabled = enabled
+    }
 
     fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean, menuItem: MenuItem? = null) {
         toggleRecheckIfNecessary(menuItem, false)
         // If it's not an image, or the image exists, display the content
-        if (!PreferenceHelper(activity!!).getApodData(dateString).isImage || FileSystemHelper(activity!!).getImagePath(dateString).exists()) {
+        if (!PreferenceHelper(activity!!).getApodData(dateString).isImage || FileSystemHelper(activity!!).getImagePath(
+                dateString
+            ).exists()
+        ) {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
         } else {
@@ -87,12 +97,14 @@ class HomeFragment : Fragment() {
                     },
                     {
                         Timber.e(it)
-                        if (it is ApiClient.TooManyRequestsException) {
-                            Toast.makeText(activity, getString(R.string.error_quota_hit), Toast.LENGTH_SHORT).show()
-                        } else if (it is TimeoutException) {
-                            Toast.makeText(activity, getString(R.string.error_no_response), Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(activity, String.format(getString(R.string.error_generic_retrieval_failure), it.localizedMessage), Toast.LENGTH_SHORT).show()
+                        when (it) {
+                            is ApiClient.TooManyRequestsException -> Toast.makeText(activity, getString(R.string.error_quota_hit), Toast.LENGTH_SHORT).show()
+                            is TimeoutException -> Toast.makeText(activity, getString(R.string.error_no_response), Toast.LENGTH_SHORT).show()
+                            else -> Toast.makeText(
+                                activity,
+                                String.format(getString(R.string.error_generic_retrieval_failure), it.localizedMessage),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 )
@@ -151,7 +163,12 @@ class HomeFragment : Fragment() {
                 )
                 manuallySetButton.setOnClickListener(manuallySetButtonListener(apodData.date, image, apodData.title))
             } else {
-                descriptionBar.text = String.format(getString(R.string.apod_not_image), descriptionBar.text, getString(R.string.app_name), apodData.imageUrl)
+                descriptionBar.text = String.format(
+                    getString(R.string.apod_not_image),
+                    descriptionBar.text,
+                    getString(R.string.app_name),
+                    apodData.imageUrl
+                )
                 backgroundImage.setImageResource(R.color.colorPrimary)
                 bottomButtonsGroup.visibility = View.GONE
             }
@@ -166,11 +183,13 @@ class HomeFragment : Fragment() {
             .setMessage(String.format(getString(R.string.manual_set_message), title))
             .setPositiveButton(getString(R.string.manual_set_lockscreen)) { _, _ ->
                 wallpaperHelper.updateLockScreen(imagePath)
-                Toast.makeText(activity!!, String.format(getString(R.string.lockscreen_set), title), Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity!!, String.format(getString(R.string.lockscreen_set), title), Toast.LENGTH_SHORT)
+                    .show()
             }
             .setNegativeButton(getString(R.string.manual_set_wallpaper)) { _, _ ->
                 wallpaperHelper.updateWallpaper(image)
-                Toast.makeText(activity!!, String.format(getString(R.string.wallpaper_set), title), Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity!!, String.format(getString(R.string.wallpaper_set), title), Toast.LENGTH_SHORT)
+                    .show()
             }
             .setNeutralButton(getString(R.string.manual_set_cancel)) { _, _ -> }
             .show()
@@ -198,9 +217,14 @@ class HomeFragment : Fragment() {
     private fun shareButtonListener(date: String, title: String, url: String, hdUrl: String) = View.OnClickListener {
         AlertDialog.Builder(activity!!)
             .setTitle(String.format(getString(R.string.sharing_question), title))
-            .setPositiveButton(getString(R.string.sharing_url_hd)) { _, _ -> shareUrl(title, hdUrl)}
-            .setNegativeButton(getString(R.string.sharing_url)) { _, _ -> shareUrl(title, url)}
-            .setNeutralButton(getString(R.string.sharing_image)) { _, _ -> FileSystemHelper(activity!!).shareImage(date, title)}
+            .setPositiveButton(getString(R.string.sharing_url_hd)) { _, _ -> shareUrl(title, hdUrl) }
+            .setNegativeButton(getString(R.string.sharing_url)) { _, _ -> shareUrl(title, url) }
+            .setNeutralButton(getString(R.string.sharing_image)) { _, _ ->
+                FileSystemHelper(activity!!).shareImage(
+                    date,
+                    title
+                )
+            }
             .show()
     }
 

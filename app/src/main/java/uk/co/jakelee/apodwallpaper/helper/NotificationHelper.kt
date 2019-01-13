@@ -45,7 +45,8 @@ class NotificationHelper(val context: Context) {
         val date = CalendarHelper.convertFormats(
             apod.date,
             CalendarHelper.Companion.FORMAT.date,
-            CalendarHelper.Companion.FORMAT.friendlyDate)
+            CalendarHelper.Companion.FORMAT.friendlyDate
+        )
         return NotificationCompat.Builder(context, channelId)
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_notification)
@@ -58,7 +59,11 @@ class NotificationHelper(val context: Context) {
             )
     }
 
-    private fun applyNotificationPreferences(prefHelper: PreferenceHelper, notif: NotificationCompat.Builder, image:Bitmap): Notification {
+    private fun applyNotificationPreferences(
+        prefHelper: PreferenceHelper,
+        notif: NotificationCompat.Builder,
+        image: Bitmap
+    ): Notification {
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_led)) {
             notif.setLights(Color.WHITE, 1000, 3000)
         }
@@ -69,9 +74,11 @@ class NotificationHelper(val context: Context) {
             notif.setVibrate(longArrayOf(0, 400))
         }
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_preview)) {
-            notif.setStyle(NotificationCompat.BigPictureStyle()
-                .bigPicture(image)
-                .bigLargeIcon(null))
+            notif.setStyle(
+                NotificationCompat.BigPictureStyle()
+                    .bigPicture(image)
+                    .bigLargeIcon(null)
+            )
         } else {
             notif.setLargeIcon(image)
         }
