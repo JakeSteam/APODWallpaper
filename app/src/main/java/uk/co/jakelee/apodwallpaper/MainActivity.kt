@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             R.anim.enter_from_left,
             R.anim.exit_to_right
         )
-        .add(R.id.mainFrame, SettingsFragment(), "settings_fragment")
+        .add(R.id.mainFrame, SettingsFragment(), null)
         .addToBackStack(null)
         .commit()
 }

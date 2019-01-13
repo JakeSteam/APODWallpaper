@@ -27,7 +27,7 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        (activity as AppCompatActivity).supportActionBar!!.title = "Settings"
+        (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.settings_title)
         setHasOptionsMenu(true)
         addPreferencesFromResource(R.xml.preferences_ui)
         findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
@@ -69,7 +69,7 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
                 if (pref.isChecked) {
                     TaskSchedulerHelper.scheduleJob(activity!!)
                 } else {
-                    TaskSchedulerHelper.cancelJobs(activity!!)
+                    TaskSchedulerHelper.cancelJob(activity!!)
                 }
             }
             key == getString(R.string.pref_automatic_check_wifi)
@@ -80,8 +80,8 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
             key == getString(R.string.pref_custom_key) && pref is EditTextPreference -> {
                 if (pref.text.length < 40) {
                     pref.text = ""
-                    Toast.makeText(activity!!, "Invalid API key! Please try entering it again", Toast.LENGTH_SHORT).show()
-                    pref.title = "No key set, tap to change"
+                    Toast.makeText(activity!!, getString(R.string.error_invalid_api_key), Toast.LENGTH_SHORT).show()
+                    pref.title = getString(R.string.no_api_key_set)
                 } else {
                     pref.title = pref.text
                 }
@@ -125,9 +125,9 @@ class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPr
         val prefHelper = PreferenceHelper(activity!!)
         val remaining = prefHelper.getIntPref(PreferenceHelper.IntPref.api_quota)
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)) {
-            Toast.makeText(activity, "Your API key has $remaining requests left this hour.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, String.format(getString(R.string.api_key_custom_remaining), remaining), Toast.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(activity, "There are $remaining requests remaining this hour for the default API key. Use a custom one for increased reliability!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, String.format(getString(R.string.api_key_remaining), remaining), Toast.LENGTH_SHORT).show()
         }
         true
     }

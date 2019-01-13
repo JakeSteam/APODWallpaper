@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -50,9 +49,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         hideApod()
         displayApod(PreferenceHelper(activity!!).getStringPref(PreferenceHelper.StringPref.last_pulled))
-        if (TaskSchedulerHelper.canRecheck(activity!!)) {
-            getApod(TaskSchedulerHelper.getLatestDate(), true, true)
-        }
         descriptionBar.setOnClickListener {
             val prefs = PreferenceHelper(activity!!)
             prefs.setBooleanPref(PreferenceHelper.BooleanPref.show_description, !prefs.getBooleanPref(PreferenceHelper.BooleanPref.show_description))
@@ -63,6 +59,9 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
+        if (TaskSchedulerHelper.canRecheck(activity!!)) {
+            getApod(TaskSchedulerHelper.getLatestDate(), true, true)
+        }
     }
 
     private fun toggleRecheckIfNecessary(menuItem: MenuItem?, enabled: Boolean) = menuItem?.let {
@@ -167,11 +166,11 @@ class HomeFragment : Fragment() {
             .setMessage(String.format(getString(R.string.manual_set_message), title))
             .setPositiveButton(getString(R.string.manual_set_lockscreen)) { _, _ ->
                 wallpaperHelper.updateLockScreen(imagePath)
-                Toast.makeText(activity!!, "Set \"$title\" as your lock screen!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity!!, String.format(getString(R.string.lockscreen_set), title), Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton(getString(R.string.manual_set_wallpaper)) { _, _ ->
                 wallpaperHelper.updateWallpaper(image)
-                Toast.makeText(activity!!, "Set \"$title\" as your wallpaper!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity!!, String.format(getString(R.string.wallpaper_set), title), Toast.LENGTH_SHORT).show()
             }
             .setNeutralButton(getString(R.string.manual_set_cancel)) { _, _ -> }
             .show()
@@ -180,8 +179,8 @@ class HomeFragment : Fragment() {
     private fun fullscreenButtonListener(title: String, dateString: String) = View.OnClickListener {
         val imageFile = FileSystemHelper(activity!!).getImagePath(dateString)
         val bundle = Bundle().apply {
-            putString("image", imageFile.path)
-            putString("title", title)
+            putString(ImageFragment.IMAGE_ARG, imageFile.path)
+            putString(ImageFragment.TITLE_ARG, title)
         }
         val fragment = ImageFragment().apply { arguments = bundle }
         activity!!.supportFragmentManager.beginTransaction()
@@ -191,7 +190,7 @@ class HomeFragment : Fragment() {
                 R.anim.enter_from_left,
                 R.anim.exit_to_right
             )
-            .add(R.id.mainFrame, fragment, "image_fragment")
+            .add(R.id.mainFrame, fragment, null)
             .addToBackStack(null)
             .commit()
     }

@@ -64,7 +64,7 @@ class TaskSchedulerHelper : JobService() {
                 }
                 .map {
                     if (!it.isValid()) {
-                        throw IOException("Returned APOD isn't formatted correctly!")
+                        throw IOException(context.getString(R.string.error_returned_apod_format))
                     }
                     val fsh = FileSystemHelper(context)
                     val apod = Apod(it)
@@ -125,8 +125,8 @@ class TaskSchedulerHelper : JobService() {
         fun scheduleJob(context: Context) {
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
             val prefsHelper = PreferenceHelper(context)
-            val targetHours = prefsHelper.prefs.getInt(context.getString(R.string.pref_automatic_check_frequency), 24)
-            val varianceHours = prefsHelper.prefs.getInt(context.getString(R.string.pref_automatic_check_variance), 5)
+            val targetHours = prefsHelper.prefs.getInt(context.getString(R.string.pref_automatic_check_frequency), context.resources.getInteger(R.integer.automatic_check_frequency_default))
+            val varianceHours = prefsHelper.prefs.getInt(context.getString(R.string.pref_automatic_check_variance), context.resources.getInteger(R.integer.automatic_check_variance_default))
             val wifiOnly = prefsHelper.prefs.getBoolean(context.getString(R.string.pref_automatic_check_wifi), false)
             val exampleJob = dispatcher.newJobBuilder()
                 .setService(TaskSchedulerHelper::class.java)
@@ -144,9 +144,7 @@ class TaskSchedulerHelper : JobService() {
             Timber.d("Scheduled job")
         }
 
-        fun cancelJobs(context: Context) {
-            FirebaseJobDispatcher(GooglePlayDriver(context)).cancelAll()
-        }
+        fun cancelJob(context: Context) = FirebaseJobDispatcher(GooglePlayDriver(context)).cancelAll()
     }
 
 }

@@ -6,21 +6,25 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.core.content.FileProvider
 import uk.co.jakelee.apodwallpaper.BuildConfig
+import uk.co.jakelee.apodwallpaper.R
 import java.io.File
 import java.io.FileOutputStream
 
 class FileSystemHelper(private val context: Context) {
+    private val imagesDir = "images"
+    private val suffix = ".png"
+
     fun saveImage(bitmap: Bitmap, date: String) {
-        val filePath = File(context.cacheDir, "images")
+        val filePath = File(context.cacheDir, imagesDir)
         filePath.mkdirs()
-        val stream = FileOutputStream("$filePath/$date.png")
+        val stream = FileOutputStream("$filePath/$date$suffix")
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         stream.close()
     }
 
-    fun getImagesDirectory() = File(context.cacheDir, "images")
+    fun getImagesDirectory() = File(context.cacheDir, imagesDir)
 
-    fun getImagePath(date: String) = File(getImagesDirectory(), "$date.png")
+    fun getImagePath(date: String) = File(getImagesDirectory(), "$date$suffix")
 
     fun getImage(date: String) = BitmapFactory.decodeFile(getImagePath(date).path)
 
@@ -33,7 +37,7 @@ class FileSystemHelper(private val context: Context) {
                 .setDataAndType(it, context.contentResolver.getType(it))
                 .putExtra(Intent.EXTRA_STREAM, it)
                 .putExtra(Intent.EXTRA_TEXT, title)
-            context.startActivity(Intent.createChooser(shareIntent, "Share \"$title\" to:"))
+            context.startActivity(Intent.createChooser(shareIntent, String.format(context.getString(R.string.share_title), title)))
         }
     }
 

@@ -32,4 +32,14 @@
     <string name="error_generic_retrieval_failure">Failed to retrieve APOD: %s</string>
     <string name="error_image_too_large">Image is too large to be displayed (> 100MB)! Try turning off HD images &amp; clearing cache!</string>
     <string name="deleted_all_images">Deleted all past images!</string>
+
+    <string name="lockscreen_set">Set \"%s\" as your lock screen!</string>
+    <string name="wallpaper_set">Set \"%s\" as your wallpaper!</string>
+    <string name="settings_title">Settings</string>
+    <string name="error_invalid_api_key">Invalid API key! Please try entering it again</string>
+    <string name="no_api_key_set">No key set, tap to change</string>
+    <string name="api_key_custom_remaining">Your API key has %s requests left this hour.</string>
+    <string name="api_key_remaining">There are %s requests remaining this hour for the default API key. Use a custom one for increased reliability!</string>
+    <string name="share_title">Share \"%s\" to:</string>
+    <string name="error_returned_apod_format">Returned APOD isn\'t formatted correctly!</string>
 </resources>
