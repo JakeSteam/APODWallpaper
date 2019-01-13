@@ -48,7 +48,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.app_name)
         hideApod()
         displayApod(PreferenceHelper(activity!!).getStringPref(PreferenceHelper.StringPref.last_pulled))
         if (TaskSchedulerHelper.canRecheck(activity!!)) {
@@ -192,7 +191,7 @@ class HomeFragment : Fragment() {
                 R.anim.enter_from_left,
                 R.anim.exit_to_right
             )
-            .replace(R.id.mainFrame, fragment, "image_fragment")
+            .add(R.id.mainFrame, fragment, "image_fragment")
             .addToBackStack(null)
             .commit()
     }

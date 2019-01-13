@@ -56,14 +56,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val fragment = supportFragmentManager.findFragmentByTag(HomeFragmentTag)
-        if (fragment != null && fragment.isVisible && fragment is HomeFragment) {
+        if (item.itemId == android.R.id.home) {
+            supportFragmentManager.popBackStack()
+            supportActionBar!!.title = getString(R.string.app_name)
+        } else if (fragment != null && fragment.isVisible && fragment is HomeFragment) {
             when (item.itemId) {
                 R.id.nav_settings -> handleSettingsTap()
                 R.id.nav_calendar -> handleCalendarTap(fragment)
                 R.id.nav_recheck -> handleRecheckTap(item, fragment)
             }
-        } else if (item.itemId == android.R.id.home) {
-            supportFragmentManager.popBackStack()
         }
         return true
     }
@@ -105,7 +106,7 @@ class MainActivity : AppCompatActivity() {
             R.anim.enter_from_left,
             R.anim.exit_to_right
         )
-        .replace(R.id.mainFrame, SettingsFragment(), "settings_fragment")
+        .add(R.id.mainFrame, SettingsFragment(), "settings_fragment")
         .addToBackStack(null)
         .commit()
 }

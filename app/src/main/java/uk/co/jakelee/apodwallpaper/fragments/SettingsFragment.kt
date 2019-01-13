@@ -1,11 +1,10 @@
 package uk.co.jakelee.apodwallpaper.fragments
 
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.text.format.Formatter
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
+import android.view.*
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -14,8 +13,14 @@ import androidx.preference.*
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.helper.*
 
-
 class SettingsFragment: PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = super.onCreateView(inflater, container, savedInstanceState)
+        view!!.setBackgroundColor(Color.WHITE)
+        return view
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         menu.clear()
