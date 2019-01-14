@@ -1,176 +1,176 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="App options">
+    <PreferenceCategory android:title="@string/category_app_options">
         <SwitchPreference
                 android:key="@string/pref_custom_key_enabled"
                 android:defaultValue="@bool/custom_key_enabled_default"
-                android:title="Use custom APOD API key"
+                android:title="@string/custom_key_enabled_title"
                 android:icon="@drawable/ic_settings_custom_key_enable"
-                android:summary="A custom API key ensures reliability, as no usage limits will be reached."/>
+                android:summary="@string/custom_key_enabled_desc"/>
         <EditTextPreference
                 android:key="@string/pref_custom_key"
                 android:defaultValue="@string/custom_key_default"
                 android:icon="@drawable/ic_settings_custom_key"
-                android:title="No key set, tap to change"
+                android:title="@string/custom_key_title"
                 android:dependency="@string/pref_custom_key_enabled"
-                android:summary="Your custom API key can be requested from\nhttps://api.nasa.gov/"/>
+                android:summary="@string/custom_key_desc"/>
         <SwitchPreference
                 android:key="@string/pref_show_description"
                 android:defaultValue="@bool/show_description_default"
-                android:title="Show full description"
+                android:title="@string/show_description_title"
                 android:icon="@drawable/ic_settings_description"
-                android:summary="When enabled, the full APOD description will be shown. Tap description to toggle!"/>
+                android:summary="@string/show_description_desc"/>
         <SwitchPreference
                 android:key="@string/pref_use_hd_images"
                 android:defaultValue="@bool/use_hd_images_default"
-                android:title="Use HD images"
+                android:title="@string/use_hd_images_title"
                 android:icon="@drawable/ic_settings_hd"
-                android:summary="When enabled, HD images will be used. Some of these are too large to be displayed in the app, but still work as wallpapers!"/>
+                android:summary="@string/use_hd_images_desc"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Automatic checking">
+    <PreferenceCategory android:title="@string/category_automatic_checking">
         <SwitchPreference
                 android:key="@string/pref_automatic_enabled"
                 android:defaultValue="@bool/automatic_enabled_default"
-                android:title="Enable"
+                android:title="@string/automatic_enabled_title"
                 android:icon="@drawable/ic_settings_checking"
-                android:summary="When enabled, new wallpapers will be regularly checked for."/>
+                android:summary="@string/automatic_enabled_desc"/>
         <SwitchPreference
                 android:key="@string/pref_automatic_check_wifi"
                 android:defaultValue="@bool/automatic_check_wifi_default"
-                android:title="WiFi only"
+                android:title="@string/automatic_check_wifi_title"
                 android:icon="@drawable/ic_settings_wifi"
                 android:dependency="@string/pref_automatic_enabled"
-                android:summary="When enabled, checks will only occur when on WiFi."/>
+                android:summary="@string/automatic_check_wifi_desc"/>
         <SeekBarPreference
                 android:key="@string/pref_automatic_check_frequency"
                 android:defaultValue="@integer/automatic_check_frequency_default"
-                android:title="Frequency (hours)"
+                android:title="@string/automatic_check_frequency_title"
                 android:icon="@drawable/ic_settings_frequency"
                 android:dependency="@string/pref_automatic_enabled"
-                android:summary="Determines how often checks will be performed."/>
+                android:summary="@string/automatic_check_frequency_desc"/>
         <SeekBarPreference
                 android:key="@string/pref_automatic_check_variance"
                 android:defaultValue="@integer/automatic_check_variance_default"
-                android:title="Variance (hours)"
+                android:title="@string/automatic_check_variance_title"
                 android:icon="@drawable/ic_settings_variance"
                 android:dependency="@string/pref_automatic_enabled"
-                android:summary="Determines how many hours the OS can modify the check time by. Higher = better battery."/>
+                android:summary="@string/automatic_check_variance_desc"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Image filtering">
+    <PreferenceCategory android:title="@string/category_image_filtering">
         <SwitchPreference
                 android:key="@string/pref_filtering_enabled"
                 android:defaultValue="@bool/filtering_enabled_default"
-                android:title="Enable"
+                android:title="@string/filtering_enabled_title"
                 android:icon="@drawable/ic_settings_filter"
-                android:summary="When enabled, images will be quality checked before being applied."/>
+                android:summary="@string/filtering_enabled_desc"/>
         <SeekBarPreference
                 android:key="@string/pref_filtering_width"
                 android:defaultValue="@integer/filtering_width_default"
-                android:title="Minimum width (px)"
+                android:title="@string/filtering_width_title"
                 android:icon="@drawable/ic_settings_width"
                 android:dependency="@string/pref_filtering_enabled"
-                android:summary="How many pixels wide must an image be, to be applied."/>
+                android:summary="@string/filtering_width_desc"/>
         <SeekBarPreference
                 android:key="@string/pref_filtering_height"
                 android:defaultValue="@integer/filtering_height_default"
-                android:title="Minimum height (px)"
+                android:title="@string/filtering_height_title"
                 android:icon="@drawable/ic_settings_height"
                 android:dependency="@string/pref_filtering_enabled"
-                android:summary="How many pixels high must an image be, to be applied."/>
+                android:summary="@string/filtering_height_desc"/>
         <SwitchPreference
                 android:key="@string/pref_filtering_ratio_enabled"
                 android:defaultValue="@bool/filtering_ratio_enabled_default"
-                android:title="Enable ratio filtering"
+                android:title="@string/filtering_ratio_enabled_title"
                 android:icon="@drawable/ic_settings_enable_ratio"
                 android:dependency="@string/pref_filtering_enabled"
-                android:summary="Enable filtering images by maximum width/height ratio."/>
+                android:summary="@string/filtering_ratio_enabled_desc"/>
         <SeekBarPreference
                 android:key="@string/pref_filtering_ratio"
                 android:defaultValue="@integer/filtering_ratio_default"
-                android:title="Maximum width/height ratio"
+                android:title="@string/filtering_ratio_title"
                 android:icon="@drawable/ic_settings_ratio"
                 android:dependency="@string/pref_filtering_ratio_enabled"
-                android:summary="50: Width = 0.5x height. 100: Width = 1x height. 200: Width = 2x height."/>
+                android:summary="@string/filtering_ratio_desc"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Targets">
+    <PreferenceCategory android:title="@string/category_targets">
         <SwitchPreference
                 android:key="@string/pref_wallpaper_enabled"
                 android:defaultValue="@bool/wallpaper_enabled_default"
-                android:title="Wallpaper"
+                android:title="@string/wallpaper_enabled_title"
                 android:icon="@drawable/ic_settings_wallpaper"
-                android:summary="When enabled, your wallpaper image will be set when a new image is found."/>
+                android:summary="@string/wallpaper_enabled_desc"/>
         <SwitchPreference
                 android:key="@string/pref_lockscreen_enabled"
                 android:defaultValue="@bool/lockscreen_enabled_default"
-                android:title="Lock screen"
+                android:title="@string/lockscreen_enabled_title"
                 android:icon="@drawable/ic_settings_lock"
-                android:summary="When enabled, your lock screen image will be set when a new image is found."/>
+                android:summary="@string/lockscreen_enabled_desc"/>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="Notifications">
+            android:title="@string/category_notifications">
         <SwitchPreference
                 android:key="@string/pref_notifications_enabled"
                 android:defaultValue="@bool/notifications_enabled_default"
-                android:title="Enable"
+                android:title="@string/notifications_enabled_title"
                 android:icon="@drawable/ic_settings_notifications"
-                android:summary="When enabled, you will receive notifications when a new image has been downloaded."/>
+                android:summary="@string/notifications_enabled_desc"/>
         <Preference
                 android:key="@string/pref_notifications_instant"
-                android:title="Preview notification"
+                android:title="@string/notifications_instant_title"
                 android:icon="@drawable/ic_settings_instant_notif"
                 android:dependency="@string/pref_notifications_enabled"
-                android:summary="Display a notification now to check your settings."/>
+                android:summary="@string/notifications_instant_desc"/>
         <SwitchPreference
                 android:key="@string/pref_notifications_led"
                 android:defaultValue="@bool/notifications_led_default"
-                android:title="LED"
+                android:title="@string/notifications_led_title"
                 android:icon="@drawable/ic_settings_led"
                 android:dependency="@string/pref_notifications_enabled"
-                android:summary="When enabled, the notification will light up your LED (if available)."/>
+                android:summary="@string/notifications_led_desc"/>
         <SwitchPreference
                 android:key="@string/pref_notifications_sound"
                 android:defaultValue="@bool/notifications_sound_default"
-                android:title="Sound"
+                android:title="@string/notifications_sound_title"
                 android:icon="@drawable/ic_settings_sound"
                 android:dependency="@string/pref_notifications_enabled"
-                android:summary="When enabled, the notification will make a little beep noise."/>
+                android:summary="@string/notifications_sound_desc"/>
         <SwitchPreference
                 android:key="@string/pref_notifications_vibrate"
                 android:defaultValue="@bool/notifications_vibrate_default"
-                android:title="Vibrate"
+                android:title="@string/notifications_vibrate_title"
                 android:icon="@drawable/ic_settings_vibrate"
                 android:dependency="@string/pref_notifications_enabled"
-                android:summary="When enabled, the notification will vibrate once."/>
+                android:summary="@string/notifications_vibrate_desc"/>
         <SwitchPreference
                 android:key="@string/pref_notifications_preview"
                 android:defaultValue="@bool/notifications_preview_default"
-                android:title="Rich previews"
+                android:title="@string/notifications_preview_title"
                 android:icon="@drawable/ic_settings_preview"
                 android:dependency="@string/pref_notifications_enabled"
-                android:summary="When enabled, the notification can be expanded to view the image."/>
+                android:summary="@string/notifications_preview_desc"/>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="Additional actions">
+            android:title="@string/category_additional_actions">
         <Preference
                 android:key="@string/pref_delete_images"
-                android:title="Delete all saved images"
+                android:title="@string/delete_images_title"
                 android:icon="@drawable/ic_settings_delete"
-                android:summary="Delete all saved images (except current) to free up space."/>
+                android:summary="@string/delete_images_desc"/>
         <Preference
                 android:key="@string/pref_view_status"
-                android:title="View status"
+                android:title="@string/view_status_title"
                 android:icon="@drawable/ic_settings_history"
-                android:summary="View current status of the app."/>
+                android:summary="@string/view_status_desc"/>
         <Preference
                 android:key="@string/pref_view_quota"
-                android:title="View quota"
+                android:title="@string/view_quota_title"
                 android:icon="@drawable/ic_settings_quota"
-                android:summary="View current API quota."/>
+                android:summary="@string/view_quota_desc"/>
         <PreferenceScreen
-                android:title="View source"
+                android:title="@string/view_source_title"
                 android:icon="@drawable/ic_settings_code"
-                android:summary="View complete app source code.">
+                android:summary="@string/view_source_desc">
             <intent android:action="android.intent.action.VIEW"
-                    android:data="https://www.github.com/JakeSteam/APODWallpaper"/>
+                    android:data="@string/repo_url"/>
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

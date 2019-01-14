@@ -39,7 +39,7 @@
 
     <string name="pref_automatic_check_frequency">automatic_check_frequency</string>
     <integer name="automatic_check_frequency_default">24</integer>
-    <integer name="automatic_check_frequency_min">12</integer>
+    <integer name="automatic_check_frequency_min">4</integer>
     <integer name="automatic_check_frequency_max">36</integer>
     <integer name="automatic_check_frequency_step">1</integer>
 

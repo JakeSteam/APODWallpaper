@@ -53,4 +53,70 @@
     <string name="share_title">Share \"%s\" to:</string>
     <string name="error_returned_apod_format">Returned APOD isn\'t formatted correctly!</string>
     <string name="override_preferences">Image wouldn\'t usually be set due to %s, applying anyway!</string>
+    <string name="custom_key_enabled_desc">A custom API key ensures reliability, as no usage limits will be reached.
+    </string>
+    <string name="custom_key_enabled_title">Use custom APOD API key</string>
+    <string name="custom_key_title">No key set, tap to change</string>
+    <string name="custom_key_desc">Your custom API key can be requested from\nhttps://api.nasa.gov/</string>
+    <string name="show_description_title">Show full description</string>
+    <string name="show_description_desc">When enabled, the full APOD description will be shown. Tap description to
+        toggle!
+    </string>
+    <string name="use_hd_images_title">Use HD images</string>
+    <string name="use_hd_images_desc">When enabled, HD images will be used. Some of these are too large to be displayed
+        in the app, but still work as wallpapers!
+    </string>
+    <string name="category_app_options">App options</string>
+    <string name="category_automatic_checking">Automatic checking</string>
+    <string name="automatic_enabled_title">Enable</string>
+    <string name="automatic_enabled_desc">When enabled, new wallpapers will be regularly checked for.</string>
+    <string name="automatic_check_wifi_title">WiFi only</string>
+    <string name="automatic_check_wifi_desc">When enabled, checks will only occur when on WiFi.</string>
+    <string name="automatic_check_frequency_title">Frequency (hours)</string>
+    <string name="automatic_check_frequency_desc">Determines how often checks will be performed.</string>
+    <string name="automatic_check_variance_title">Variance (hours)</string>
+    <string name="automatic_check_variance_desc">Determines how many hours the OS can modify the check time by. Higher = better battery.</string>
+    <string name="category_image_filtering">Image filtering</string>
+    <string name="filtering_enabled_title">Enable</string>
+    <string name="filtering_enabled_desc">When enabled, images will be quality checked before being applied.</string>
+    <string name="filtering_width_title">Minimum width (px)</string>
+    <string name="filtering_width_desc">How many pixels wide must an image be to be applied.</string>
+    <string name="filtering_height_title">Minimum height (px)</string>
+    <string name="filtering_height_desc">How many pixels high must an image be to be applied.</string>
+    <string name="filtering_ratio_enabled_title">Enable ratio filtering</string>
+    <string name="filtering_ratio_enabled_desc">Enable filtering images by maximum width/height ratio.</string>
+    <string name="filtering_ratio_title">Maximum width/height ratio</string>
+    <string name="filtering_ratio_desc">50: Width = 0.5x height. 100: Width = 1x height. 200: Width = 2x height.</string>
+    <string name="category_targets">Targets</string>
+    <string name="wallpaper_enabled_title">Wallpaper</string>
+    <string name="wallpaper_enabled_desc">When enabled, your wallpaper image will be set when a new image is found.
+    </string>
+    <string name="lockscreen_enabled_title">Lock screen</string>
+    <string name="lockscreen_enabled_desc">When enabled, your lock screen image will be set when a new image is found.
+    </string>
+    <string name="category_notifications">Notifications</string>
+    <string name="notifications_enabled_title">Enable</string>
+    <string name="notifications_enabled_desc">When enabled, you will receive notifications when a new image has been
+        downloaded.
+    </string>
+    <string name="notifications_instant_title">Preview notification</string>
+    <string name="notifications_instant_desc">Display a notification now to check your settings.</string>
+    <string name="notifications_led_title">LED</string>
+    <string name="notifications_led_desc">When enabled, the notification will light up your LED (if available).</string>
+    <string name="notifications_sound_title">Sound</string>
+    <string name="notifications_sound_desc">When enabled, the notification will make a little beep noise.</string>
+    <string name="notifications_vibrate_title">Vibrate</string>
+    <string name="notifications_vibrate_desc">When enabled, the notification will vibrate once.</string>
+    <string name="notifications_preview_title">Rich previews</string>
+    <string name="notifications_preview_desc">When enabled, the notification can be expanded to view the image.</string>
+    <string name="category_additional_actions">Additional actions</string>
+    <string name="delete_images_title">Delete all saved images</string>
+    <string name="delete_images_desc">Delete all saved images (except current) to free up space.</string>
+    <string name="view_status_title">View status</string>
+    <string name="view_status_desc">View current status of the app.</string>
+    <string name="view_quota_title">View quota</string>
+    <string name="view_quota_desc">View current API quota.</string>
+    <string name="view_source_title">View source</string>
+    <string name="view_source_desc">View complete app source code.</string>
+    <string name="repo_url">https://www.github.com/JakeSteam/APODWallpaper</string>
 </resources>
