@@ -9,7 +9,7 @@ android {
         applicationId "uk.co.jakelee.apodwallpaper"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 1
+        versionCode 3
         versionName "0.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "APOD_API_KEY", apod_api_key
@@ -32,7 +32,7 @@ dependencies {
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.7'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
     // Android UI libraries
