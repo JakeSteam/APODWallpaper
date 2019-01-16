@@ -22,7 +22,13 @@ class FileSystemHelper(private val context: Context) {
         stream.close()
     }
 
-    fun getImagesDirectory() = File(context.cacheDir, imagesDir)
+    fun getImagesDirectory(): File {
+        val target = File(context.cacheDir, imagesDir)
+        if (!target.exists()) {
+            target.mkdirs()
+        }
+        return target
+    }
 
     fun getImagePath(date: String) = File(getImagesDirectory(), "$date$suffix")
 
