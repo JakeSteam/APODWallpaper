@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             supportActionBar!!.setHomeButtonEnabled(true)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         } else {
+            supportActionBar!!.title = getString(R.string.app_name)
             supportActionBar!!.setDisplayHomeAsUpEnabled(false)
             supportActionBar!!.setHomeButtonEnabled(false)
         }

@@ -1,6 +1,7 @@
 package uk.co.jakelee.apodwallpaper.helper
 
 import android.content.Context
+import com.crashlytics.android.Crashlytics
 import com.firebase.jobdispatcher.*
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -85,6 +86,9 @@ class TaskSchedulerHelper : JobService() {
                     }
                     postJobTask.invoke()
                     return@map apod
+                }
+                .doOnError {
+                    Crashlytics.logException(it)
                 }
         }
 
