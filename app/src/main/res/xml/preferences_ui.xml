@@ -172,5 +172,13 @@
             <intent android:action="android.intent.action.VIEW"
                     android:data="@string/repo_url"/>
         </PreferenceScreen>
+        <Preference
+                android:key="@string/pref_feedback"
+                android:title="@string/feedback_title"
+                android:icon="@drawable/ic_settings_feedback"
+                android:summary="@string/feedback_desc"/>
+        <Preference
+                android:key="@string/pref_version"
+                android:icon="@drawable/ic_settings_version"/>
     </PreferenceCategory>
 </PreferenceScreen>

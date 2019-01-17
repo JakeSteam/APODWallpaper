@@ -1,7 +1,9 @@
 package uk.co.jakelee.apodwallpaper.fragments
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.text.format.Formatter
 import android.view.*
@@ -10,8 +12,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
+import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.helper.*
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -35,6 +41,11 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener =
                 previewNotificationListener
         findPreference(getString(R.string.pref_delete_images)).onPreferenceClickListener = deleteImagesListener
+        findPreference(getString(R.string.pref_feedback)).onPreferenceClickListener = giveFeedbackListener
+        findPreference(getString(R.string.pref_version)).title = "V${BuildConfig.VERSION_NAME}"
+        findPreference(getString(R.string.pref_version)).summary = String.format(getString(R.string.version_summary),
+            BuildConfig.VERSION_CODE,
+            SimpleDateFormat("dd MMM yyy", Locale.US).format(BuildConfig.BUILD_TIME))
         setupSeekbar(
             R.string.pref_automatic_check_frequency,
             R.integer.automatic_check_frequency_step,
@@ -121,11 +132,29 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         true
     }
 
+    private val giveFeedbackListener = Preference.OnPreferenceClickListener {
+        AlertDialog.Builder(activity!!)
+            .setTitle(getString(R.string.give_feedback_title))
+            .setPositiveButton(getString(R.string.give_feedback_playstore)) { _, _ ->
+                startActivity(
+                    Intent(Intent.ACTION_VIEW)
+                        .setData(Uri.parse("market://details?id=${BuildConfig.APPLICATION_ID}"))
+                )
+            }
+            .setNegativeButton(getString(R.string.give_feedback_email)) { _, _ ->
+                val emailIntent = Intent(Intent.ACTION_SENDTO)
+                emailIntent.data = Uri.parse(getString(R.string.give_feedback_email_address))
+                startActivity(Intent.createChooser(emailIntent, getString(R.string.give_feedback_email_title)))
+            }
+            .show()
+        true
+    }
+
     private val viewStatusListener = Preference.OnPreferenceClickListener { _ ->
         val inflater = LayoutInflater.from(activity!!)
         val dialog = AlertDialog.Builder(activity!!)
             .setView(inflater.inflate(R.layout.dialog_status, null))
-            .setPositiveButton("OK") { _, _ -> }
+            .setPositiveButton(getString(R.string.ok)) { _, _ -> }
             .show()
         val prefHelper = PreferenceHelper(activity!!)
         dialog.findViewById<TextView>(R.id.last_checked)!!.text =

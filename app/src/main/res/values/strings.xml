@@ -118,5 +118,14 @@
     <string name="view_quota_desc">View current API quota.</string>
     <string name="view_source_title">View source</string>
     <string name="view_source_desc">View complete app source code.</string>
+    <string name="feedback_title">Give app feedback</string>
+    <string name="feedback_desc">Bugs / suggestions / anything else?</string>
     <string name="repo_url">https://www.github.com/JakeSteam/APODWallpaper</string>
+    <string name="give_feedback_title">How would you like to give feedback?</string>
+    <string name="give_feedback_playstore">Play Store</string>
+    <string name="give_feedback_email">Email</string>
+    <string name="ok">OK</string>
+    <string name="give_feedback_email_title">Send feedback using:</string>
+    <string name="give_feedback_email_address">mailto:apod@jakelee.co.uk</string>
+    <string name="version_summary">Version #%d built on %s</string>
 </resources>
