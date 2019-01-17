@@ -78,7 +78,7 @@
     <string name="automatic_check_variance_desc">Determines how many hours the OS can modify the check time by. Higher = better battery.</string>
     <string name="category_image_filtering">Image filtering</string>
     <string name="filtering_enabled_title">Enable</string>
-    <string name="filtering_enabled_desc">When enabled, images will be quality checked before being applied.</string>
+    <string name="filtering_enabled_desc">When enabled, images will be quality checked before being applied. Make sure to enable \"Use HD images\" if you set high minimum sizes!</string>
     <string name="filtering_width_title">Minimum width (px)</string>
     <string name="filtering_width_desc">How many pixels wide must an image be to be applied.</string>
     <string name="filtering_height_title">Minimum height (px)</string>
