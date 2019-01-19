@@ -128,4 +128,5 @@
     <string name="give_feedback_email_title">Send feedback using:</string>
     <string name="give_feedback_email_address">mailto:apod@jakelee.co.uk</string>
     <string name="version_summary">Version #%d built on %s</string>
+    <string name="give_feedback_github">GitHub</string>
 </resources>

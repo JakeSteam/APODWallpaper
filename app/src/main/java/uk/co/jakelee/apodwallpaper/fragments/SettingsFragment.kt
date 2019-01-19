@@ -141,7 +141,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                         .setData(Uri.parse("market://details?id=${BuildConfig.APPLICATION_ID}"))
                 )
             }
-            .setNegativeButton(getString(R.string.give_feedback_email)) { _, _ ->
+            .setNegativeButton(getString(R.string.give_feedback_github)) { _, _ ->
+                startActivity(
+                    Intent(Intent.ACTION_VIEW)
+                        .setData(Uri.parse(getString(R.string.repo_url) + "/issues"))
+                )
+            }
+            .setNeutralButton(getString(R.string.give_feedback_email)) { _, _ ->
                 val emailIntent = Intent(Intent.ACTION_SENDTO)
                 emailIntent.data = Uri.parse(getString(R.string.give_feedback_email_address))
                 startActivity(Intent.createChooser(emailIntent, getString(R.string.give_feedback_email_title)))
