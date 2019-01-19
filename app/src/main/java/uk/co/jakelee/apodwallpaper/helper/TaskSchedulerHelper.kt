@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit
 
 // adb shell dumpsys activity service GcmService --endpoints uk.co.jakelee.apodwallpaper
 class TaskSchedulerHelper : JobService() {
-    private val initialTaskTag = "${BuildConfig.APPLICATION_ID}.initialsync"
 
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
@@ -35,6 +34,8 @@ class TaskSchedulerHelper : JobService() {
     override fun onStopJob(job: JobParameters?) = true
 
     companion object {
+        private const val initialTaskTag = "${BuildConfig.APPLICATION_ID}.initialsync"
+
         fun getNextRecheckTime(context: Context) =
             PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) + TimeUnit.MINUTES.toMillis(10)
 
@@ -146,7 +147,7 @@ class TaskSchedulerHelper : JobService() {
             val variationMinutes = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
             dispatcher.mustSchedule(dispatcher.newJobBuilder()
                 .setService(TaskSchedulerHelper::class.java)
-                .setTag("initial")
+                .setTag(initialTaskTag)
                 .setRecurring(false)
                 .setLifetime(Lifetime.FOREVER)
                 .setReplaceCurrent(true)

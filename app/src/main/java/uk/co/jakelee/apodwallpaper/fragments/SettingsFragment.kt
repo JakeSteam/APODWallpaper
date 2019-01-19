@@ -47,16 +47,16 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             BuildConfig.VERSION_CODE,
             SimpleDateFormat("dd MMM yyy", Locale.US).format(BuildConfig.BUILD_TIME))
         setupSeekbar(
-            R.string.pref_automatic_check_frequency,
-            R.integer.automatic_check_frequency_step,
-            R.integer.automatic_check_frequency_min,
-            R.integer.automatic_check_frequency_max
+            R.string.pref_automatic_check_time,
+            R.integer.automatic_check_time_step,
+            R.integer.automatic_check_time_min,
+            R.integer.automatic_check_time_max
         )
         setupSeekbar(
-            R.string.pref_automatic_check_variance,
-            R.integer.automatic_check_variance_step,
-            R.integer.automatic_check_variance_min,
-            R.integer.automatic_check_variance_max
+            R.string.pref_automatic_check_variation,
+            R.integer.automatic_check_variation_step,
+            R.integer.automatic_check_variation_min,
+            R.integer.automatic_check_variation_max
         )
         setupSeekbar(
             R.string.pref_filtering_width,
@@ -104,15 +104,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         when {
             key == getString(R.string.pref_automatic_enabled) && pref is SwitchPreference -> {
                 if (pref.isChecked) {
-                    TaskSchedulerHelper.scheduleRepeatingJob(activity!!)
+                    TaskSchedulerHelper.scheduleJob(activity!!)
                 } else {
                     TaskSchedulerHelper.cancelJob(activity!!)
                 }
             }
             key == getString(R.string.pref_automatic_check_wifi)
-                    || key == getString(R.string.pref_automatic_check_frequency)
-                    || key == getString(R.string.pref_automatic_check_variance) -> {
-                TaskSchedulerHelper.scheduleRepeatingJob(activity!!)
+                    || key == getString(R.string.pref_automatic_check_time)
+                    || key == getString(R.string.pref_automatic_check_variation) -> {
+                TaskSchedulerHelper.scheduleJob(activity!!)
             }
             key == getString(R.string.pref_custom_key) && pref is EditTextPreference -> {
                 if (pref.text.length < 40) {
