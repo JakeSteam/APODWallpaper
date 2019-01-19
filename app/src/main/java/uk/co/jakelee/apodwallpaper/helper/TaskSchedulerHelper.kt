@@ -47,7 +47,7 @@ class TaskSchedulerHelper : JobService() {
         ): Single<Apod> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref =
-                if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
+                if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
             prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
             var checkedPreviousDay = false
@@ -163,6 +163,11 @@ class TaskSchedulerHelper : JobService() {
             //.setTrigger(Trigger.executionWindow(5, 15))
             dispatcher.mustSchedule(exampleJob.build())
             Timber.d("Scheduled job")
+        }
+
+        fun scheduleRepeatingJob(context: Context) {
+            // this gets called instead, scheduled for the TARGET time
+            // when it runs, it does the sync AND schedules the above job for 24hr (+/- variance)
         }
 
         fun cancelJob(context: Context) = FirebaseJobDispatcher(GooglePlayDriver(context)).cancelAll()
