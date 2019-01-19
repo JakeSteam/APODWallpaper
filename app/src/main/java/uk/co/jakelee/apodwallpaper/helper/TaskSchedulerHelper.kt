@@ -145,6 +145,9 @@ class TaskSchedulerHelper : JobService() {
             val timeRemaining = getSecondsUntilTarget(prefsHelper)
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
             val variationMinutes = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
+            val variationSeconds = TimeUnit.MINUTES.toSeconds(variationMinutes.toLong())
+            val minTime = if (timeRemaining > variationSeconds) timeRemaining - variationSeconds else 0
+            val maxTime = timeRemaining + variationSeconds
             dispatcher.mustSchedule(dispatcher.newJobBuilder()
                 .setService(TaskSchedulerHelper::class.java)
                 .setTag(initialTaskTag)
@@ -153,12 +156,7 @@ class TaskSchedulerHelper : JobService() {
                 .setReplaceCurrent(true)
                 .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
                 .setConstraints(0)
-                .setTrigger(
-                    Trigger.executionWindow(
-                        TimeUnit.MINUTES.toSeconds(timeRemaining - variationMinutes).toInt(),
-                        TimeUnit.HOURS.toSeconds(timeRemaining + variationMinutes).toInt()
-                    )
-                )
+                .setTrigger(Trigger.executionWindow(minTime.toInt(), maxTime.toInt()))
                 //.setTrigger(Trigger.executionWindow(5, 15))
                 .build()
             )
@@ -168,8 +166,11 @@ class TaskSchedulerHelper : JobService() {
         private fun getSecondsUntilTarget(prefsHelper: PreferenceHelper): Long {
             val targetHour = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_time)
             val currentTime = Calendar.getInstance()
-            val targetTime = currentTime.clone() as Calendar
-            targetTime.set(Calendar.HOUR_OF_DAY, targetHour)
+            val targetTime = (currentTime.clone() as Calendar).apply {
+                set(Calendar.HOUR_OF_DAY, targetHour)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+            }
             if (targetTime < currentTime) {
                 targetTime.add(Calendar.DAY_OF_YEAR, 1)
             }
