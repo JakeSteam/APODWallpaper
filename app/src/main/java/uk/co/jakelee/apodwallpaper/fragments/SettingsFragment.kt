@@ -104,7 +104,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         when {
             key == getString(R.string.pref_automatic_enabled) && pref is SwitchPreference -> {
                 if (pref.isChecked) {
-                    TaskSchedulerHelper.scheduleJob(activity!!)
+                    TaskSchedulerHelper.scheduleRepeatingJob(activity!!)
                 } else {
                     TaskSchedulerHelper.cancelJob(activity!!)
                 }
@@ -112,7 +112,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             key == getString(R.string.pref_automatic_check_wifi)
                     || key == getString(R.string.pref_automatic_check_frequency)
                     || key == getString(R.string.pref_automatic_check_variance) -> {
-                TaskSchedulerHelper.scheduleJob(activity!!)
+                TaskSchedulerHelper.scheduleRepeatingJob(activity!!)
             }
             key == getString(R.string.pref_custom_key) && pref is EditTextPreference -> {
                 if (pref.text.length < 40) {

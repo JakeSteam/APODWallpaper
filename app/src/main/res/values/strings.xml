@@ -72,10 +72,10 @@
     <string name="automatic_enabled_desc">When enabled, new wallpapers will be regularly checked for.</string>
     <string name="automatic_check_wifi_title">WiFi only</string>
     <string name="automatic_check_wifi_desc">When enabled, checks will only occur when on WiFi.</string>
-    <string name="automatic_check_frequency_title">Frequency (hours)</string>
-    <string name="automatic_check_frequency_desc">Determines how often checks will be performed.</string>
-    <string name="automatic_check_variance_title">Variance (hours)</string>
-    <string name="automatic_check_variance_desc">Determines how many hours the OS can modify the check time by. Higher = better battery.</string>
+    <string name="automatic_check_time_title">Check time</string>
+    <string name="automatic_check_time_desc">Determines which hour of the day the APOD check should occur.</string>
+    <string name="automatic_check_variation_title">Variation (minutes)</string>
+    <string name="automatic_check_variation_desc">Determines how many minutes earlier or later the OS can modify the check time by. Higher = better battery, as the OS can optimise scheduling.</string>
     <string name="category_image_filtering">Image filtering</string>
     <string name="filtering_enabled_title">Enable</string>
     <string name="filtering_enabled_desc">When enabled, images will be quality checked before being applied. Make sure to enable \"Use HD images\" if you set high minimum sizes!</string>

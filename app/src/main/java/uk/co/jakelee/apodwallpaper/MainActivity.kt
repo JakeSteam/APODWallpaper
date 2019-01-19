@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
         val prefHelper = PreferenceHelper(this)
         if (shouldPerformSetup(prefHelper)) {
-            TaskSchedulerHelper.scheduleJob(this)
+            TaskSchedulerHelper.scheduleRepeatingJob(this)
             prefHelper.setBooleanPref(PreferenceHelper.BooleanPref.first_time_setup, true)
         }
         val ft = supportFragmentManager.beginTransaction()
