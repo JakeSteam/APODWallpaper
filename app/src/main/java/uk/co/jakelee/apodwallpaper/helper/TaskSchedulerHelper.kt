@@ -60,7 +60,8 @@ class TaskSchedulerHelper : JobService() {
             return Single
                 .fromCallable {
                     var apiKey = BuildConfig.APOD_API_KEY
-                    if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)) {
+                    if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)
+                        && prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key).isNotEmpty()) {
                         apiKey = prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key)
                     }
                     try {
