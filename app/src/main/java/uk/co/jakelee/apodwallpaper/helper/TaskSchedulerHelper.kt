@@ -175,7 +175,7 @@ class TaskSchedulerHelper : JobService() {
                 targetTime.add(Calendar.DAY_OF_YEAR, 1)
             }
             val timeRemaining = targetTime.timeInMillis - currentTime.timeInMillis
-            return timeRemaining
+            return TimeUnit.MILLISECONDS.toSeconds(timeRemaining)
         }
 
         private fun scheduleRepeatingJob(context: Context) {
