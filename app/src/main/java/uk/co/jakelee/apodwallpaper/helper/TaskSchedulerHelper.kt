@@ -195,7 +195,7 @@ class TaskSchedulerHelper : JobService() {
                 .setTrigger(
                     Trigger.executionWindow(
                         TimeUnit.MINUTES.toSeconds(repeatMinutes - variationMinutes).toInt(),
-                        TimeUnit.HOURS.toSeconds(repeatMinutes + variationMinutes).toInt()
+                        TimeUnit.MINUTES.toSeconds(repeatMinutes + variationMinutes).toInt()
                     )
                 )
                 //.setTrigger(Trigger.executionWindow(5, 15))
