@@ -69,9 +69,9 @@
     <bool name="filtering_ratio_enabled_default">false</bool>
 
     <string name="pref_filtering_ratio">filtering_ratio</string>
-    <integer name="filtering_ratio_default">300</integer>
-    <integer name="filtering_ratio_min">50</integer>
-    <integer name="filtering_ratio_max">700</integer>
+    <integer name="filtering_ratio_default">50</integer>
+    <integer name="filtering_ratio_min">30</integer>
+    <integer name="filtering_ratio_max">400</integer>
     <integer name="filtering_ratio_step">10</integer>
 
     <!-- Targets section -->
@@ -101,6 +101,7 @@
 
     <!-- Additional section -->
     <string name="pref_delete_images">delete_images</string>
+    <string name="pref_test_jobs">test_jobs</string>
     <string name="pref_view_status">view_status</string>
     <string name="pref_view_quota">view_quota</string>
     <string name="pref_version">version</string>

@@ -156,6 +156,11 @@
                 android:icon="@drawable/ic_settings_delete"
                 android:summary="@string/delete_images_desc"/>
         <Preference
+                android:key="@string/pref_test_jobs"
+                android:title="@string/test_jobs_title"
+                android:icon="@drawable/ic_settings_test_jobs"
+                android:summary="@string/test_jobs_desc"/>
+        <Preference
                 android:key="@string/pref_view_status"
                 android:title="@string/view_status_title"
                 android:icon="@drawable/ic_settings_history"

@@ -85,8 +85,8 @@
     <string name="filtering_height_desc">How many pixels high must an image be to be applied.</string>
     <string name="filtering_ratio_enabled_title">Enable ratio filtering</string>
     <string name="filtering_ratio_enabled_desc">Enable filtering images by maximum width/height ratio.</string>
-    <string name="filtering_ratio_title">Maximum width/height ratio</string>
-    <string name="filtering_ratio_desc">50: Width = 0.5x height. 100: Width = 1x height. 200: Width = 2x height.</string>
+    <string name="filtering_ratio_title">Maximum width/height ratio (%)</string>
+    <string name="filtering_ratio_desc">50%: Width must be at least half height.\n100%: Width must be at least equal to height.\n200%: Width must be at least 2x height.</string>
     <string name="category_targets">Targets</string>
     <string name="wallpaper_enabled_title">Wallpaper</string>
     <string name="wallpaper_enabled_desc">When enabled, your wallpaper image will be set when a new image is found.
@@ -112,6 +112,8 @@
     <string name="category_additional_actions">Additional actions</string>
     <string name="delete_images_title">Delete all saved images</string>
     <string name="delete_images_desc">Delete all saved images (except current) to free up space.</string>
+    <string name="test_jobs_title">Test job scheduling</string>
+    <string name="test_jobs_desc">Schedule an example notification in 50 to 70 seconds, to check job scheduling works.</string>
     <string name="view_status_title">View status</string>
     <string name="view_status_desc">View current status of the app.</string>
     <string name="view_quota_title">View quota</string>
@@ -129,4 +131,6 @@
     <string name="give_feedback_email_address">mailto:apod@jakelee.co.uk</string>
     <string name="version_summary">Version #%d built on %s</string>
     <string name="give_feedback_github">GitHub</string>
+    <string name="test_jobs_scheduled">Scheduled job for 50-70 seconds from now.</string>
+    <string name="test_jobs_success">APOD Wallpaper job scheduling works!</string>
 </resources>

@@ -41,6 +41,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener =
                 previewNotificationListener
         findPreference(getString(R.string.pref_delete_images)).onPreferenceClickListener = deleteImagesListener
+        findPreference(getString(R.string.pref_test_jobs)).onPreferenceClickListener = testJobsListener
         findPreference(getString(R.string.pref_feedback)).onPreferenceClickListener = giveFeedbackListener
         findPreference(getString(R.string.pref_version)).title = "V${BuildConfig.VERSION_NAME}"
         findPreference(getString(R.string.pref_version)).summary = String.format(getString(R.string.version_summary),
@@ -129,6 +130,12 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     private val deleteImagesListener = Preference.OnPreferenceClickListener {
         FileSystemHelper(context!!).deleteAllPastImages()
         Toast.makeText(context!!, getString(R.string.deleted_all_images), Toast.LENGTH_SHORT).show()
+        true
+    }
+
+    private val testJobsListener = Preference.OnPreferenceClickListener {
+        TaskSchedulerHelper.scheduleTestJob(activity!!)
+        Toast.makeText(activity!!, getString(R.string.test_jobs_scheduled), Toast.LENGTH_SHORT).show()
         true
     }
 

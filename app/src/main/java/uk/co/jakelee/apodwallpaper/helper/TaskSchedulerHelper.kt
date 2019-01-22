@@ -1,6 +1,7 @@
 package uk.co.jakelee.apodwallpaper.helper
 
 import android.content.Context
+import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.firebase.jobdispatcher.*
 import io.reactivex.Single
@@ -20,6 +21,9 @@ class TaskSchedulerHelper : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
+        if (job.tag == testTag) {
+            Toast.makeText(applicationContext, getString(R.string.test_jobs_success), Toast.LENGTH_LONG).show()
+        }
         // If this is the initial task, schedule the regular repeating job
         if (job.tag == initialTaskTag) {
             scheduleRepeatingJob(applicationContext)
@@ -35,6 +39,7 @@ class TaskSchedulerHelper : JobService() {
 
     companion object {
         private const val initialTaskTag = "${BuildConfig.APPLICATION_ID}.initialsync"
+        private const val testTag = "${BuildConfig.APPLICATION_ID}.test"
 
         fun getNextRecheckTime(context: Context) =
             PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) + TimeUnit.MINUTES.toMillis(10)
@@ -204,6 +209,17 @@ class TaskSchedulerHelper : JobService() {
                 .build()
             )
             Timber.d("Scheduled repeating job")
+        }
+
+        fun scheduleTestJob(context: Context) {
+            val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
+            dispatcher.mustSchedule(dispatcher.newJobBuilder()
+                .setService(TaskSchedulerHelper::class.java)
+                .setTag(testTag)
+                .setRecurring(false)
+                .setTrigger(Trigger.executionWindow(50, 70))
+                .build()
+            )
         }
 
         fun cancelJob(context: Context) = FirebaseJobDispatcher(GooglePlayDriver(context)).cancelAll()
