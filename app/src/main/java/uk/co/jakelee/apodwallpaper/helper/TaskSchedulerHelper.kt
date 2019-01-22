@@ -143,6 +143,7 @@ class TaskSchedulerHelper : JobService() {
 
         fun scheduleJob(context: Context) {
             val prefsHelper = PreferenceHelper(context)
+            if (!prefsHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_enabled)) return
             val timeRemaining = getSecondsUntilTarget(prefsHelper)
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
             val variationMinutes = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
