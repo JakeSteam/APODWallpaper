@@ -9,10 +9,11 @@ android {
         applicationId "uk.co.jakelee.apodwallpaper"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 3
-        versionName "0.0.1"
+        versionCode 4
+        versionName "0.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "APOD_API_KEY", apod_api_key
+        buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
     }
     buildTypes {
         release {

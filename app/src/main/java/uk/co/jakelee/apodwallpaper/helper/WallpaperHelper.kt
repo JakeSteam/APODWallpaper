@@ -48,7 +48,7 @@ class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
             } else if (image.width < prefHelper.getIntPref(PreferenceHelper.IntPref.minimum_width)) {
                 return FilterResponse.MinWidth
             } else if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.filtering_ratio_enabled)
-                && (((image.width / image.height.toDouble()) * 100) > prefHelper.getIntPref(PreferenceHelper.IntPref.filtering_ratio))
+                && (((image.width / image.height.toDouble()) * 100) < prefHelper.getIntPref(PreferenceHelper.IntPref.filtering_ratio))
             ) {
                 return FilterResponse.Ratio
             }

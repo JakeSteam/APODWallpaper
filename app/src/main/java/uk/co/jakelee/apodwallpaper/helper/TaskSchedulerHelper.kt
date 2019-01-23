@@ -1,6 +1,7 @@
 package uk.co.jakelee.apodwallpaper.helper
 
 import android.content.Context
+import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import com.firebase.jobdispatcher.*
 import io.reactivex.Single
@@ -20,6 +21,13 @@ class TaskSchedulerHelper : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
         Timber.d("Job started")
+        if (job.tag == testTag) {
+            Toast.makeText(applicationContext, getString(R.string.test_jobs_success), Toast.LENGTH_LONG).show()
+        }
+        // If this is the initial task, schedule the regular repeating job
+        if (job.tag == initialTaskTag) {
+            scheduleRepeatingJob(applicationContext)
+        }
         downloadApod(applicationContext, getLatestDate(), true, false) { jobFinished(job, false) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -30,6 +38,9 @@ class TaskSchedulerHelper : JobService() {
     override fun onStopJob(job: JobParameters?) = true
 
     companion object {
+        private const val initialTaskTag = "${BuildConfig.APPLICATION_ID}.initialsync"
+        private const val testTag = "${BuildConfig.APPLICATION_ID}.test"
+
         fun getNextRecheckTime(context: Context) =
             PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) + TimeUnit.MINUTES.toMillis(10)
 
@@ -47,14 +58,15 @@ class TaskSchedulerHelper : JobService() {
         ): Single<Apod> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref =
-                if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_set_automatic
+                if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
             prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
             var checkedPreviousDay = false
             return Single
                 .fromCallable {
                     var apiKey = BuildConfig.APOD_API_KEY
-                    if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)) {
+                    if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)
+                        && prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key).isNotEmpty()) {
                         apiKey = prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key)
                     }
                     try {
@@ -135,18 +147,51 @@ class TaskSchedulerHelper : JobService() {
         fun getLatestDate() = CalendarHelper.calendarToString(Calendar.getInstance(), false)
 
         fun scheduleJob(context: Context) {
+            val prefsHelper = PreferenceHelper(context)
+            if (!prefsHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_enabled)) return
+            val timeRemaining = getSecondsUntilTarget(prefsHelper)
+            val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
+            val variationMinutes = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
+            val variationSeconds = TimeUnit.MINUTES.toSeconds(variationMinutes.toLong())
+            val minTime = if (timeRemaining > variationSeconds) timeRemaining - variationSeconds else 0
+            val maxTime = timeRemaining + variationSeconds
+            dispatcher.mustSchedule(dispatcher.newJobBuilder()
+                .setService(TaskSchedulerHelper::class.java)
+                .setTag(initialTaskTag)
+                .setRecurring(false)
+                .setLifetime(Lifetime.FOREVER)
+                .setReplaceCurrent(true)
+                .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
+                .setConstraints(0)
+                .setTrigger(Trigger.executionWindow(minTime.toInt(), maxTime.toInt()))
+                //.setTrigger(Trigger.executionWindow(5, 15))
+                .build()
+            )
+            Timber.d("Scheduled repeating job")
+        }
+
+        private fun getSecondsUntilTarget(prefsHelper: PreferenceHelper): Long {
+            val targetHour = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_time)
+            val currentTime = Calendar.getInstance()
+            val targetTime = (currentTime.clone() as Calendar).apply {
+                set(Calendar.HOUR_OF_DAY, targetHour)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+            }
+            if (targetTime < currentTime) {
+                targetTime.add(Calendar.DAY_OF_YEAR, 1)
+            }
+            val timeRemaining = targetTime.timeInMillis - currentTime.timeInMillis
+            return TimeUnit.MILLISECONDS.toSeconds(timeRemaining)
+        }
+
+        private fun scheduleRepeatingJob(context: Context) {
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
             val prefsHelper = PreferenceHelper(context)
-            val targetHours = prefsHelper.prefs.getInt(
-                context.getString(R.string.pref_automatic_check_frequency),
-                context.resources.getInteger(R.integer.automatic_check_frequency_default)
-            )
-            val varianceHours = prefsHelper.prefs.getInt(
-                context.getString(R.string.pref_automatic_check_variance),
-                context.resources.getInteger(R.integer.automatic_check_variance_default)
-            )
-            val wifiOnly = prefsHelper.prefs.getBoolean(context.getString(R.string.pref_automatic_check_wifi), false)
-            val exampleJob = dispatcher.newJobBuilder()
+            val repeatMinutes = TimeUnit.DAYS.toMinutes(1)
+            val variationMinutes = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
+            val wifiOnly = prefsHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_wifi)
+            dispatcher.mustSchedule(dispatcher.newJobBuilder()
                 .setService(TaskSchedulerHelper::class.java)
                 .setTag(BuildConfig.APPLICATION_ID)
                 .setRecurring(true)
@@ -156,13 +201,25 @@ class TaskSchedulerHelper : JobService() {
                 .setConstraints(if (wifiOnly) Constraint.ON_UNMETERED_NETWORK else 0)
                 .setTrigger(
                     Trigger.executionWindow(
-                        TimeUnit.HOURS.toSeconds((targetHours - varianceHours).toLong()).toInt(),
-                        TimeUnit.HOURS.toSeconds((targetHours + varianceHours).toLong()).toInt()
+                        TimeUnit.MINUTES.toSeconds(repeatMinutes - variationMinutes).toInt(),
+                        TimeUnit.MINUTES.toSeconds(repeatMinutes + variationMinutes).toInt()
                     )
                 )
-            //.setTrigger(Trigger.executionWindow(5, 15))
-            dispatcher.mustSchedule(exampleJob.build())
-            Timber.d("Scheduled job")
+                //.setTrigger(Trigger.executionWindow(5, 15))
+                .build()
+            )
+            Timber.d("Scheduled repeating job")
+        }
+
+        fun scheduleTestJob(context: Context) {
+            val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
+            dispatcher.mustSchedule(dispatcher.newJobBuilder()
+                .setService(TaskSchedulerHelper::class.java)
+                .setTag(testTag)
+                .setRecurring(false)
+                .setTrigger(Trigger.executionWindow(50, 70))
+                .build()
+            )
         }
 
         fun cancelJob(context: Context) = FirebaseJobDispatcher(GooglePlayDriver(context)).cancelAll()

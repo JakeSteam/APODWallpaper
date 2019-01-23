@@ -37,17 +37,17 @@
     <string name="pref_automatic_check_wifi">automatic_check_wifi</string>
     <bool name="automatic_check_wifi_default">false</bool>
 
-    <string name="pref_automatic_check_frequency">automatic_check_frequency</string>
-    <integer name="automatic_check_frequency_default">24</integer>
-    <integer name="automatic_check_frequency_min">4</integer>
-    <integer name="automatic_check_frequency_max">36</integer>
-    <integer name="automatic_check_frequency_step">1</integer>
+    <string name="pref_automatic_check_time">automatic_check_time</string>
+    <integer name="automatic_check_time_default">8</integer>
+    <integer name="automatic_check_time_min">0</integer>
+    <integer name="automatic_check_time_max">23</integer>
+    <integer name="automatic_check_time_step">1</integer>
 
-    <string name="pref_automatic_check_variance">automatic_check_variance</string>
-    <integer name="automatic_check_variance_default">5</integer>
-    <integer name="automatic_check_variance_min">1</integer>
-    <integer name="automatic_check_variance_max">12</integer>
-    <integer name="automatic_check_variance_step">1</integer>
+    <string name="pref_automatic_check_variation">automatic_check_variation</string>
+    <integer name="automatic_check_variation_default">60</integer>
+    <integer name="automatic_check_variation_min">5</integer>
+    <integer name="automatic_check_variation_max">180</integer>
+    <integer name="automatic_check_variation_step">10</integer>
 
     <!-- Filtering section -->
     <string name="pref_filtering_enabled">filtering_enabled</string>
@@ -69,9 +69,9 @@
     <bool name="filtering_ratio_enabled_default">false</bool>
 
     <string name="pref_filtering_ratio">filtering_ratio</string>
-    <integer name="filtering_ratio_default">300</integer>
-    <integer name="filtering_ratio_min">50</integer>
-    <integer name="filtering_ratio_max">700</integer>
+    <integer name="filtering_ratio_default">50</integer>
+    <integer name="filtering_ratio_min">30</integer>
+    <integer name="filtering_ratio_max">400</integer>
     <integer name="filtering_ratio_step">10</integer>
 
     <!-- Targets section -->
@@ -101,6 +101,9 @@
 
     <!-- Additional section -->
     <string name="pref_delete_images">delete_images</string>
+    <string name="pref_test_jobs">test_jobs</string>
     <string name="pref_view_status">view_status</string>
     <string name="pref_view_quota">view_quota</string>
+    <string name="pref_version">version</string>
+    <string name="pref_feedback">feedback</string>
 </resources>

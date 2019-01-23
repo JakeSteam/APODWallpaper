@@ -83,7 +83,9 @@ class PreferenceHelper(val context: Context) {
         api_quota(R.string.pref_api_quota, R.integer.empty_int),
         minimum_width(R.string.pref_filtering_width, R.integer.filtering_width_default),
         minimum_height(R.string.pref_filtering_height, R.integer.filtering_height_default),
-        filtering_ratio(R.string.pref_filtering_ratio, R.integer.filtering_ratio_default)
+        filtering_ratio(R.string.pref_filtering_ratio, R.integer.filtering_ratio_default),
+        check_time(R.string.pref_automatic_check_time, R.integer.automatic_check_time_default),
+        check_variation(R.string.pref_automatic_check_variation, R.integer.automatic_check_variation_default)
     }
 
     fun getIntPref(pref: IntPref) =

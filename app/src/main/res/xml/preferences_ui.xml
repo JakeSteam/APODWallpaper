@@ -41,19 +41,19 @@
                 android:dependency="@string/pref_automatic_enabled"
                 android:summary="@string/automatic_check_wifi_desc"/>
         <SeekBarPreference
-                android:key="@string/pref_automatic_check_frequency"
-                android:defaultValue="@integer/automatic_check_frequency_default"
-                android:title="@string/automatic_check_frequency_title"
-                android:icon="@drawable/ic_settings_frequency"
+                android:key="@string/pref_automatic_check_time"
+                android:defaultValue="@integer/automatic_check_time_default"
+                android:title="@string/automatic_check_time_title"
+                android:icon="@drawable/ic_settings_check_time"
                 android:dependency="@string/pref_automatic_enabled"
-                android:summary="@string/automatic_check_frequency_desc"/>
+                android:summary="@string/automatic_check_time_desc"/>
         <SeekBarPreference
-                android:key="@string/pref_automatic_check_variance"
-                android:defaultValue="@integer/automatic_check_variance_default"
-                android:title="@string/automatic_check_variance_title"
-                android:icon="@drawable/ic_settings_variance"
+                android:key="@string/pref_automatic_check_variation"
+                android:defaultValue="@integer/automatic_check_variation_default"
+                android:title="@string/automatic_check_variation_title"
+                android:icon="@drawable/ic_settings_variation"
                 android:dependency="@string/pref_automatic_enabled"
-                android:summary="@string/automatic_check_variance_desc"/>
+                android:summary="@string/automatic_check_variation_desc"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_image_filtering">
         <SwitchPreference
@@ -156,6 +156,11 @@
                 android:icon="@drawable/ic_settings_delete"
                 android:summary="@string/delete_images_desc"/>
         <Preference
+                android:key="@string/pref_test_jobs"
+                android:title="@string/test_jobs_title"
+                android:icon="@drawable/ic_settings_test_jobs"
+                android:summary="@string/test_jobs_desc"/>
+        <Preference
                 android:key="@string/pref_view_status"
                 android:title="@string/view_status_title"
                 android:icon="@drawable/ic_settings_history"
@@ -172,5 +177,13 @@
             <intent android:action="android.intent.action.VIEW"
                     android:data="@string/repo_url"/>
         </PreferenceScreen>
+        <Preference
+                android:key="@string/pref_feedback"
+                android:title="@string/feedback_title"
+                android:icon="@drawable/ic_settings_feedback"
+                android:summary="@string/feedback_desc"/>
+        <Preference
+                android:key="@string/pref_version"
+                android:icon="@drawable/ic_settings_version"/>
     </PreferenceCategory>
 </PreferenceScreen>

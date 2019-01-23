@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">APOD Daily Wallpaper</string>
+    <string name="app_name">Daily APOD Wallpaper</string>
     <string name="metadata_bar_checked">APOD for %s (checked: %s)\n© %s</string>
     <string name="metadata_bar">APOD for %s © %s</string>
     <string name="loading_message">Loading APOD...</string>
@@ -72,21 +72,21 @@
     <string name="automatic_enabled_desc">When enabled, new wallpapers will be regularly checked for.</string>
     <string name="automatic_check_wifi_title">WiFi only</string>
     <string name="automatic_check_wifi_desc">When enabled, checks will only occur when on WiFi.</string>
-    <string name="automatic_check_frequency_title">Frequency (hours)</string>
-    <string name="automatic_check_frequency_desc">Determines how often checks will be performed.</string>
-    <string name="automatic_check_variance_title">Variance (hours)</string>
-    <string name="automatic_check_variance_desc">Determines how many hours the OS can modify the check time by. Higher = better battery.</string>
+    <string name="automatic_check_time_title">Check time</string>
+    <string name="automatic_check_time_desc">Determines which hour of the day the APOD check should occur.</string>
+    <string name="automatic_check_variation_title">Variation (minutes)</string>
+    <string name="automatic_check_variation_desc">Determines how many minutes earlier or later the OS can modify the check time by. Higher = better battery, as the OS can optimise scheduling.</string>
     <string name="category_image_filtering">Image filtering</string>
     <string name="filtering_enabled_title">Enable</string>
-    <string name="filtering_enabled_desc">When enabled, images will be quality checked before being applied.</string>
+    <string name="filtering_enabled_desc">When enabled, images will be quality checked before being applied. Make sure to enable \"Use HD images\" if you set high minimum sizes!</string>
     <string name="filtering_width_title">Minimum width (px)</string>
     <string name="filtering_width_desc">How many pixels wide must an image be to be applied.</string>
     <string name="filtering_height_title">Minimum height (px)</string>
     <string name="filtering_height_desc">How many pixels high must an image be to be applied.</string>
     <string name="filtering_ratio_enabled_title">Enable ratio filtering</string>
     <string name="filtering_ratio_enabled_desc">Enable filtering images by maximum width/height ratio.</string>
-    <string name="filtering_ratio_title">Maximum width/height ratio</string>
-    <string name="filtering_ratio_desc">50: Width = 0.5x height. 100: Width = 1x height. 200: Width = 2x height.</string>
+    <string name="filtering_ratio_title">Maximum width/height ratio (%)</string>
+    <string name="filtering_ratio_desc">50%: Width can be at most half height.\n100%: Width can be at most equal to height.\n200%: Width can be at most 2x height.</string>
     <string name="category_targets">Targets</string>
     <string name="wallpaper_enabled_title">Wallpaper</string>
     <string name="wallpaper_enabled_desc">When enabled, your wallpaper image will be set when a new image is found.
@@ -112,11 +112,25 @@
     <string name="category_additional_actions">Additional actions</string>
     <string name="delete_images_title">Delete all saved images</string>
     <string name="delete_images_desc">Delete all saved images (except current) to free up space.</string>
+    <string name="test_jobs_title">Test job scheduling</string>
+    <string name="test_jobs_desc">Schedule an example notification in 50 to 70 seconds, to check job scheduling works.</string>
     <string name="view_status_title">View status</string>
     <string name="view_status_desc">View current status of the app.</string>
     <string name="view_quota_title">View quota</string>
     <string name="view_quota_desc">View current API quota.</string>
     <string name="view_source_title">View source</string>
     <string name="view_source_desc">View complete app source code.</string>
+    <string name="feedback_title">Give app feedback</string>
+    <string name="feedback_desc">Bugs / suggestions / anything else?</string>
     <string name="repo_url">https://www.github.com/JakeSteam/APODWallpaper</string>
+    <string name="give_feedback_title">How would you like to give feedback?</string>
+    <string name="give_feedback_playstore">Play Store</string>
+    <string name="give_feedback_email">Email</string>
+    <string name="ok">OK</string>
+    <string name="give_feedback_email_title">Send feedback using:</string>
+    <string name="give_feedback_email_address">mailto:apod@jakelee.co.uk</string>
+    <string name="version_summary">Version #%d built on %s</string>
+    <string name="give_feedback_github">GitHub</string>
+    <string name="test_jobs_scheduled">Scheduled job for 50-70 seconds from now.</string>
+    <string name="test_jobs_success">APOD Wallpaper job scheduling works!</string>
 </resources>
