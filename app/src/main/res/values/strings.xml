@@ -86,7 +86,7 @@
     <string name="filtering_ratio_enabled_title">Enable ratio filtering</string>
     <string name="filtering_ratio_enabled_desc">Enable filtering images by maximum width/height ratio.</string>
     <string name="filtering_ratio_title">Maximum width/height ratio (%)</string>
-    <string name="filtering_ratio_desc">50%: Width must be at least half height.\n100%: Width must be at least equal to height.\n200%: Width must be at least 2x height.</string>
+    <string name="filtering_ratio_desc">50%: Width can be at most half height.\n100%: Width can be at most equal to height.\n200%: Width can be at most 2x height.</string>
     <string name="category_targets">Targets</string>
     <string name="wallpaper_enabled_title">Wallpaper</string>
     <string name="wallpaper_enabled_desc">When enabled, your wallpaper image will be set when a new image is found.
