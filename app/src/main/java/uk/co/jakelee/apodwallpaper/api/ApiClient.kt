@@ -1,6 +1,6 @@
 package uk.co.jakelee.apodwallpaper.api
 
-import android.accounts.NetworkErrorException
+import android.content.res.Resources
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -25,15 +25,18 @@ class ApiClient(val url: String) {
         } else {
             when (response.code()) {
                 400 -> throw DateRequestedException()
+                404 -> throw Resources.NotFoundException()
                 429 -> throw TooManyRequestsException()
+                500 -> throw ServerError()
                 503 -> throw TimeoutException()
-                else -> throw NetworkErrorException()
+                else -> throw UnknownError()
             }
         }
     }
 
     class DateRequestedException : Exception()
     class TooManyRequestsException : Exception()
+    class ServerError : Exception()
 
     private val httpClient = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
