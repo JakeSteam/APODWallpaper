@@ -100,6 +100,7 @@ class TaskSchedulerHelper : JobService() {
                     return@map apod
                 }
                 .doOnError {
+                    Crashlytics.setBool("forced log", true)
                     Crashlytics.logException(it)
                 }
         }
