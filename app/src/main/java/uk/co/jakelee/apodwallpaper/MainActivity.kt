@@ -12,7 +12,7 @@ import io.fabric.sdk.android.Fabric
 import uk.co.jakelee.apodwallpaper.fragments.HomeFragment
 import uk.co.jakelee.apodwallpaper.fragments.SettingsFragment
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-import uk.co.jakelee.apodwallpaper.helper.TaskSchedulerHelper
+import uk.co.jakelee.apodwallpaper.scheduling.TaskSchedulerHelper
 import java.util.*
 
 class MainActivity : AppCompatActivity() {

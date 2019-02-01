@@ -1,4 +1,4 @@
-package uk.co.jakelee.apodwallpaper.helper
+package uk.co.jakelee.apodwallpaper.scheduling
 
 import android.content.Context
 import android.widget.Toast
@@ -12,6 +12,7 @@ import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.Apod
+import uk.co.jakelee.apodwallpaper.helper.*
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -20,18 +21,27 @@ import java.util.concurrent.TimeUnit
 class TaskSchedulerHelper : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
+        // If we're testing scheduling, don't actually perform a job
         if (job.tag == testTag) {
             Toast.makeText(applicationContext, getString(R.string.test_jobs_success), Toast.LENGTH_LONG).show()
+            return false
         }
         // If this is the initial task, schedule the regular repeating job
         if (job.tag == initialTaskTag) {
             scheduleRepeatingJob(applicationContext)
         }
-        downloadApod(applicationContext, getLatestDate(), true, false) { jobFinished(job, false) }
+        downloadApod(
+            applicationContext,
+            getLatestDate(),
+            true,
+            false
+        ) { jobFinished(job, false) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
-        rescheduleJobIfPoorlyTimed(applicationContext)
+        rescheduleJobIfPoorlyTimed(
+            applicationContext
+        )
         return true
     }
 
@@ -43,7 +53,10 @@ class TaskSchedulerHelper : JobService() {
 
         private fun rescheduleJobIfPoorlyTimed(context: Context) {
             val prefHelper = PreferenceHelper(context)
-            if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_fix) && isJobDelayed(prefHelper)) {
+            if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_fix) && isJobDelayed(
+                    prefHelper
+                )
+            ) {
                 cancelJob(context)
                 scheduleJob(context)
             }
@@ -67,7 +80,9 @@ class TaskSchedulerHelper : JobService() {
         fun getNextRecheckTime(context: Context) =
             PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) + TimeUnit.MINUTES.toMillis(10)
 
-        fun canRecheck(context: Context) = getNextRecheckTime(context) <= System.currentTimeMillis()
+        fun canRecheck(context: Context) = getNextRecheckTime(
+            context
+        ) <= System.currentTimeMillis()
 
         fun getUrl(apiKey: String, date: String) =
             "https://api.nasa.gov/planetary/apod?api_key=$apiKey&date=$date&hd=true"
@@ -93,14 +108,28 @@ class TaskSchedulerHelper : JobService() {
                         apiKey = prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key)
                     }
                     try {
-                        return@fromCallable ApiClient(getUrl(apiKey, dateString)).getApodResponse()
+                        return@fromCallable ApiClient(
+                            getUrl(
+                                apiKey,
+                                dateString
+                            )
+                        ).getApodResponse()
                     } catch (e: ApiClient.DateRequestedException) {
                         // Retry previous day, due to time differences / delay in releases!
                         if (pullingLatest && !checkedPreviousDay) {
                             checkedPreviousDay = true
-                            val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
+                            val newDateString =
+                                CalendarHelper.modifyStringDate(
+                                    dateString,
+                                    -1
+                                )
                             Timber.i("Trying $newDateString as $dateString was not available")
-                            return@fromCallable ApiClient(getUrl(apiKey, newDateString)).getApodResponse()
+                            return@fromCallable ApiClient(
+                                getUrl(
+                                    apiKey,
+                                    newDateString
+                                )
+                            ).getApodResponse()
                         } else {
                             throw ApiClient.DateRequestedException()
                         }
@@ -114,10 +143,21 @@ class TaskSchedulerHelper : JobService() {
                     val apod = Apod(it)
                     prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.quota!!)
 
-                    saveDataIfNecessary(apod, fsh, prefHelper, manualCheck)
+                    saveDataIfNecessary(
+                        apod,
+                        fsh,
+                        prefHelper,
+                        manualCheck
+                    )
                     // If we're pulling the latest image, and it's different to the current latest
                     if (pullingLatest && apod.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
-                        handleNewLatestApod(apod, fsh, manualCheck, context, prefHelper)
+                        handleNewLatestApod(
+                            apod,
+                            fsh,
+                            manualCheck,
+                            context,
+                            prefHelper
+                        )
                     }
                     postJobTask.invoke()
                     return@map apod
@@ -163,17 +203,20 @@ class TaskSchedulerHelper : JobService() {
                 if (!manualCheck) {
                     NotificationHelper(context).display(prefHelper, apod, image)
                 }
-                WallpaperHelper(context, prefHelper).applyRequired(apod.date, image, false)
+                WallpaperHelper(context, prefHelper)
+                    .applyRequired(apod.date, image, false)
             }
             prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, apod.date)
         }
 
-        fun getLatestDate() = CalendarHelper.calendarToString(Calendar.getInstance(), false)
+        fun getLatestDate() =
+            CalendarHelper.calendarToString(Calendar.getInstance(), false)
 
         fun scheduleJob(context: Context) {
             val prefsHelper = PreferenceHelper(context)
             if (!prefsHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_enabled)) return
-            val timeRemaining = getSecondsUntilTarget(prefsHelper)
+            val timeRemaining =
+                getSecondsUntilTarget(prefsHelper)
             val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
             val variationMinutes = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
             val variationSeconds = TimeUnit.MINUTES.toSeconds(variationMinutes.toLong())

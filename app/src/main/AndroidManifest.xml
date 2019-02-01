@@ -24,7 +24,7 @@
         </activity>
 
         <service
-                android:name=".helper.TaskSchedulerHelper"
+                android:name=".scheduling.TaskSchedulerHelper"
                 android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>

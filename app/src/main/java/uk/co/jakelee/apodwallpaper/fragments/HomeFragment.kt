@@ -20,6 +20,7 @@ import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.helper.*
+import uk.co.jakelee.apodwallpaper.scheduling.TaskSchedulerHelper
 import java.util.*
 import java.util.concurrent.TimeoutException
 
