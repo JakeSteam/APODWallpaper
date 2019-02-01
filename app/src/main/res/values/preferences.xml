@@ -37,6 +37,9 @@
     <string name="pref_automatic_check_wifi">automatic_check_wifi</string>
     <bool name="automatic_check_wifi_default">false</bool>
 
+    <string name="pref_automatic_check_fix">automatic_check_fix</string>
+    <bool name="automatic_check_fix_default">true</bool>
+
     <string name="pref_automatic_check_time">automatic_check_time</string>
     <integer name="automatic_check_time_default">8</integer>
     <integer name="automatic_check_time_min">0</integer>

@@ -76,6 +76,8 @@
     <string name="automatic_check_time_desc">Determines which hour of the day the APOD check should occur.</string>
     <string name="automatic_check_variation_title">Variation (minutes)</string>
     <string name="automatic_check_variation_desc">Determines how many minutes earlier or later the OS can modify the check time by. Higher = better battery, as the OS can optimise scheduling.</string>
+    <string name="automatic_check_fix_title">Automatically fix check time</string>
+    <string name="automatic_check_fix_desc">If a daily task is delayed, the check time can become later than usual. Enabling this will fix that.</string>
     <string name="category_image_filtering">Image filtering</string>
     <string name="filtering_enabled_title">Enable</string>
     <string name="filtering_enabled_desc">When enabled, images will be quality checked before being applied. Make sure to enable \"Use HD images\" if you set high minimum sizes!</string>
