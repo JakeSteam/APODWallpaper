@@ -15,50 +15,21 @@ class ApiWrapper {
         fun getUrl(apiKey: String, date: String) =
             "https://api.nasa.gov/planetary/apod?api_key=$apiKey&date=$date&hd=true"
 
-        fun downloadApod(
-            context: Context,
-            dateString: String,
-            pullingLatest: Boolean,
-            manualCheck: Boolean,
-            postJobTask: () -> Unit
-        ): Single<Apod> {
+        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean,
+                         postJobTask: () -> Unit): Single<Apod> {
             val prefHelper = PreferenceHelper(context)
-            val lastRunPref =
-                if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
+            val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
             prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
             var checkedPreviousDay = false
-            return Single
-                .fromCallable {
-                    var apiKey = BuildConfig.APOD_API_KEY
-                    if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)
-                        && prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key).isNotEmpty()
-                    ) {
-                        apiKey = prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key)
-                    }
+            return Single.fromCallable {
+                    val apiKey = getApiKey(prefHelper)
                     try {
-                        return@fromCallable ApiClient(
-                            ApiWrapper.getUrl(
-                                apiKey,
-                                dateString
-                            )
-                        ).getApodResponse()
+                        return@fromCallable ApiClient(ApiWrapper.getUrl(apiKey, dateString)).getApodResponse()
                     } catch (e: ApiClient.DateRequestedException) {
-                        // Retry previous day, due to time differences / delay in releases!
                         if (pullingLatest && !checkedPreviousDay) {
                             checkedPreviousDay = true
-                            val newDateString =
-                                CalendarHelper.modifyStringDate(
-                                    dateString,
-                                    -1
-                                )
-                            Timber.i("Trying $newDateString as $dateString was not available")
-                            return@fromCallable ApiClient(
-                                ApiWrapper.getUrl(
-                                    apiKey,
-                                    newDateString
-                                )
-                            ).getApodResponse()
+                            return@fromCallable retryPreviousDay(dateString, apiKey)
                         } else {
                             throw ApiClient.DateRequestedException()
                         }
@@ -71,22 +42,10 @@ class ApiWrapper {
                     val fsh = FileSystemHelper(context)
                     val apod = Apod(it)
                     prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.quota!!)
-
-                    saveDataIfNecessary(
-                        apod,
-                        fsh,
-                        prefHelper,
-                        manualCheck
-                    )
+                    saveDataIfNecessary(apod, fsh, prefHelper, manualCheck)
                     // If we're pulling the latest image, and it's different to the current latest
                     if (pullingLatest && apod.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
-                        handleNewLatestApod(
-                            apod,
-                            fsh,
-                            manualCheck,
-                            context,
-                            prefHelper
-                        )
+                        handleNewLatestApod(apod, fsh, manualCheck, context, prefHelper)
                     }
                     postJobTask.invoke()
                     return@map apod
@@ -95,6 +54,21 @@ class ApiWrapper {
                     Crashlytics.setBool("forced log", true)
                     Crashlytics.logException(it)
                 }
+        }
+
+        private fun getApiKey(prefHelper: PreferenceHelper): String {
+            var apiKey = BuildConfig.APOD_API_KEY
+            if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)
+                && prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key).isNotEmpty()
+            ) {
+                apiKey = prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key)
+            }
+            return apiKey
+        }
+
+        private fun retryPreviousDay(dateString: String, apiKey: String): ApiResponse {
+            val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
+            return ApiClient(getUrl(apiKey, newDateString)).getApodResponse()
         }
 
         // If data hasn't been saved before, save it
@@ -132,8 +106,7 @@ class ApiWrapper {
                 if (!manualCheck) {
                     NotificationHelper(context).display(prefHelper, apod, image)
                 }
-                WallpaperHelper(context, prefHelper)
-                    .applyRequired(apod.date, image, false)
+                WallpaperHelper(context, prefHelper).applyRequired(apod.date, image, false)
             }
             prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, apod.date)
         }
