@@ -82,10 +82,8 @@ class HomeFragment : Fragment() {
     fun getApod(dateString: String, pullingLatest: Boolean, manual: Boolean, menuItem: MenuItem? = null) {
         toggleRecheckIfNecessary(menuItem, false)
         // If it's not an image, or the image exists, display the content
-        if (!PreferenceHelper(activity!!).getApodData(dateString).isImage || FileSystemHelper(activity!!).getImagePath(
-                dateString
-            ).exists()
-        ) {
+        if (!PreferenceHelper(activity!!).getApodData(dateString).isImage || FileSystemHelper(activity!!)
+                .getImagePath(dateString).exists()) {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
         } else {
@@ -98,19 +96,29 @@ class HomeFragment : Fragment() {
                         updateSelectedDate(it.date)
                         displayApod(it.date)
                     },
-                    {
-                        Timber.e(it)
-                        when (it) {
-                            is ApiClient.TooManyRequestsException -> Toast.makeText(activity, getString(R.string.error_quota_hit), Toast.LENGTH_SHORT).show()
-                            is TimeoutException -> Toast.makeText(activity, getString(R.string.error_no_response), Toast.LENGTH_SHORT).show()
-                            else -> Toast.makeText(
-                                activity,
-                                String.format(getString(R.string.error_generic_retrieval_failure), it.localizedMessage),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+                    { handleApodError(it) }
                 )
+        }
+    }
+
+    private fun handleApodError(it: Throwable) {
+        Timber.e(it)
+        when (it) {
+            is ApiClient.TooManyRequestsException -> Toast.makeText(
+                activity,
+                getString(R.string.error_quota_hit),
+                Toast.LENGTH_SHORT
+            ).show()
+            is TimeoutException -> Toast.makeText(
+                activity,
+                getString(R.string.error_no_response),
+                Toast.LENGTH_SHORT
+            ).show()
+            else -> Toast.makeText(
+                activity,
+                String.format(getString(R.string.error_generic_retrieval_failure), it.localizedMessage),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
