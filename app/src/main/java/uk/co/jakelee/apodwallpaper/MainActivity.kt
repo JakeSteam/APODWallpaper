@@ -12,7 +12,9 @@ import io.fabric.sdk.android.Fabric
 import uk.co.jakelee.apodwallpaper.fragments.HomeFragment
 import uk.co.jakelee.apodwallpaper.fragments.SettingsFragment
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-import uk.co.jakelee.apodwallpaper.scheduling.TaskSchedulerHelper
+import uk.co.jakelee.apodwallpaper.scheduling.TaskExecutor
+import uk.co.jakelee.apodwallpaper.scheduling.TaskScheduler
+import uk.co.jakelee.apodwallpaper.scheduling.TaskTimingHelper
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         }
         val prefHelper = PreferenceHelper(this)
         if (shouldPerformSetup(prefHelper)) {
-            TaskSchedulerHelper.scheduleJob(this)
+            TaskScheduler(this).scheduleJob()
             prefHelper.setBooleanPref(PreferenceHelper.BooleanPref.first_time_setup, true)
         }
         val ft = supportFragmentManager.beginTransaction()
@@ -71,10 +73,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleRecheckTap(item: MenuItem, fragment: HomeFragment) {
-        if (TaskSchedulerHelper.canRecheck(this)) {
-            fragment.getApod(TaskSchedulerHelper.getLatestDate(), true, true, item)
+        if (TaskTimingHelper.canRecheck(this)) {
+            fragment.getApod(TaskTimingHelper.getLatestDate(), true, true, item)
         } else {
-            val recheck = TaskSchedulerHelper.getNextRecheckTime(this)
+            val recheck = TaskTimingHelper.getNextRecheckTime(this)
             val recheckTime =
                 DateUtils.getRelativeTimeSpanString(recheck, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
             val recheckText =

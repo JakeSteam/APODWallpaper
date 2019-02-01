@@ -19,8 +19,10 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
+import uk.co.jakelee.apodwallpaper.api.ApiWrapper
 import uk.co.jakelee.apodwallpaper.helper.*
-import uk.co.jakelee.apodwallpaper.scheduling.TaskSchedulerHelper
+import uk.co.jakelee.apodwallpaper.scheduling.TaskExecutor
+import uk.co.jakelee.apodwallpaper.scheduling.TaskTimingHelper
 import java.util.*
 import java.util.concurrent.TimeoutException
 
@@ -67,8 +69,8 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
-        if (TaskSchedulerHelper.canRecheck(activity!!)) {
-            getApod(TaskSchedulerHelper.getLatestDate(), true, true)
+        if (TaskTimingHelper.canRecheck(activity!!)) {
+            getApod(TaskTimingHelper.getLatestDate(), true, true)
         }
     }
 
@@ -87,7 +89,7 @@ class HomeFragment : Fragment() {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
         } else {
-            disposable = TaskSchedulerHelper.downloadApod(activity!!, dateString, pullingLatest, manual) {}
+            disposable = ApiWrapper.downloadApod(activity!!, dateString, pullingLatest, manual) {}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { toggleRecheckIfNecessary(menuItem, true) }

@@ -15,7 +15,8 @@ import androidx.preference.*
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.helper.*
-import uk.co.jakelee.apodwallpaper.scheduling.TaskSchedulerHelper
+import uk.co.jakelee.apodwallpaper.scheduling.TaskExecutor
+import uk.co.jakelee.apodwallpaper.scheduling.TaskScheduler
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -106,15 +107,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         when {
             key == getString(R.string.pref_automatic_enabled) && pref is SwitchPreference -> {
                 if (pref.isChecked) {
-                    TaskSchedulerHelper.scheduleJob(activity!!)
+                    TaskScheduler(activity!!).scheduleJob()
                 } else {
-                    TaskSchedulerHelper.cancelJob(activity!!)
+                    TaskScheduler(activity!!).cancelJob()
                 }
             }
             key == getString(R.string.pref_automatic_check_wifi)
                     || key == getString(R.string.pref_automatic_check_time)
                     || key == getString(R.string.pref_automatic_check_variation) -> {
-                TaskSchedulerHelper.scheduleJob(activity!!)
+                TaskScheduler(activity!!).scheduleJob()
             }
             key == getString(R.string.pref_custom_key) && pref is EditTextPreference -> {
                 if (pref.text.length < 40) {
@@ -135,7 +136,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     private val testJobsListener = Preference.OnPreferenceClickListener {
-        TaskSchedulerHelper.scheduleTestJob(activity!!)
+        TaskScheduler(activity!!).scheduleTestJob()
         Toast.makeText(activity!!, getString(R.string.test_jobs_scheduled), Toast.LENGTH_SHORT).show()
         true
     }

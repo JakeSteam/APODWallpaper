@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class ApiClient(val url: String) {
+
     fun getApodResponse(): ApiResponse {
         val request = Request.Builder()
             .url(url)
