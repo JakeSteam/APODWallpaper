@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit
 class TaskSchedulerHelper : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
-        Timber.d("Job started")
         if (job.tag == testTag) {
             Toast.makeText(applicationContext, getString(R.string.test_jobs_success), Toast.LENGTH_LONG).show()
         }
@@ -32,27 +31,8 @@ class TaskSchedulerHelper : JobService() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
-        val prefHelper = PreferenceHelper(applicationContext)
-        if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_fix) && isJobDelayed(prefHelper)) {
-            cancelJob(applicationContext)
-            scheduleJob(applicationContext)
-        }
+        rescheduleJobIfPoorlyTimed(applicationContext)
         return true
-    }
-
-    private fun isJobDelayed(prefHelper: PreferenceHelper): Boolean {
-        val targetHour = prefHelper.getIntPref(PreferenceHelper.IntPref.check_time)
-        val variance = prefHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
-        val currentTime = Calendar.getInstance()
-        val min = (currentTime.clone() as Calendar).apply {
-            set(Calendar.HOUR_OF_DAY, targetHour)
-            add(Calendar.MINUTE, -variance)
-        }
-        val max = (currentTime.clone() as Calendar).apply {
-            set(Calendar.HOUR_OF_DAY, targetHour)
-            add(Calendar.MINUTE, variance)
-        }
-        return currentTime < min || currentTime > max
     }
 
     override fun onStopJob(job: JobParameters?) = true
@@ -60,6 +40,29 @@ class TaskSchedulerHelper : JobService() {
     companion object {
         private const val initialTaskTag = "${BuildConfig.APPLICATION_ID}.initialsync"
         private const val testTag = "${BuildConfig.APPLICATION_ID}.test"
+
+        private fun rescheduleJobIfPoorlyTimed(context: Context) {
+            val prefHelper = PreferenceHelper(context)
+            if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_fix) && isJobDelayed(prefHelper)) {
+                cancelJob(context)
+                scheduleJob(context)
+            }
+        }
+
+        private fun isJobDelayed(prefHelper: PreferenceHelper): Boolean {
+            val targetHour = prefHelper.getIntPref(PreferenceHelper.IntPref.check_time)
+            val variance = prefHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
+            val currentTime = Calendar.getInstance()
+            val min = (currentTime.clone() as Calendar).apply {
+                set(Calendar.HOUR_OF_DAY, targetHour)
+                add(Calendar.MINUTE, -variance)
+            }
+            val max = (currentTime.clone() as Calendar).apply {
+                set(Calendar.HOUR_OF_DAY, targetHour)
+                add(Calendar.MINUTE, variance)
+            }
+            return currentTime < min || currentTime > max
+        }
 
         fun getNextRecheckTime(context: Context) =
             PreferenceHelper(context).getLongPref(PreferenceHelper.LongPref.last_checked) + TimeUnit.MINUTES.toMillis(10)
@@ -183,7 +186,6 @@ class TaskSchedulerHelper : JobService() {
                 .setLifetime(Lifetime.FOREVER)
                 .setReplaceCurrent(true)
                 .setRetryStrategy(RetryStrategy.DEFAULT_LINEAR)
-                .setConstraints(0)
                 .setTrigger(Trigger.executionWindow(minTime.toInt(), maxTime.toInt()))
                 //.setTrigger(Trigger.executionWindow(5, 15))
                 .build()
