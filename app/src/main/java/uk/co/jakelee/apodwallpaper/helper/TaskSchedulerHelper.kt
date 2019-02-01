@@ -32,7 +32,27 @@ class TaskSchedulerHelper : JobService() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
+        val prefHelper = PreferenceHelper(applicationContext)
+        if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_fix) && isJobDelayed(prefHelper)) {
+            cancelJob(applicationContext)
+            scheduleJob(applicationContext)
+        }
         return true
+    }
+
+    private fun isJobDelayed(prefHelper: PreferenceHelper): Boolean {
+        val targetHour = prefHelper.getIntPref(PreferenceHelper.IntPref.check_time)
+        val variance = prefHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
+        val currentTime = Calendar.getInstance()
+        val min = (currentTime.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, targetHour)
+            add(Calendar.MINUTE, -variance)
+        }
+        val max = (currentTime.clone() as Calendar).apply {
+            set(Calendar.HOUR_OF_DAY, targetHour)
+            add(Calendar.MINUTE, variance)
+        }
+        return currentTime < min || currentTime > max
     }
 
     override fun onStopJob(job: JobParameters?) = true
