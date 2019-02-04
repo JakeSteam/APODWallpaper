@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import uk.co.jakelee.apodwallpaper.config.Config
 import java.net.URL
 
-data class LocalDefinition(
+data class LocalObject(
     val date: String,
     val title: String,
     val desc: String,
@@ -14,15 +14,6 @@ data class LocalDefinition(
     val copyright: String,
     val isImage: Boolean
 ) {
-    constructor(response: RemoteDefinition) : this(
-        response.date,
-        response.title,
-        response.explanation,
-        response.url,
-        response.hdurl ?: response.url,
-        response.copyright ?: Config().defaultCopyright,
-        response.media_type == Config().imageTypeIdentifier
-    )
 
     fun pullRemoteImage(useHd: Boolean): Bitmap {
         val url = if (useHd && this.imageUrlHd.isNotEmpty()) this.imageUrlHd else this.imageUrl

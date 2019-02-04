@@ -1,8 +1,11 @@
 package uk.co.jakelee.apodwallpaper.config
 
+import android.content.Context
 import com.google.gson.Gson
-import uk.co.jakelee.apodwallpaper.api.RemoteDefinition
+import uk.co.jakelee.apodwallpaper.R
+import uk.co.jakelee.apodwallpaper.api.LocalObject
 import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
+import java.io.IOException
 import java.util.*
 
 class Config: IConfig {
@@ -18,5 +21,20 @@ class Config: IConfig {
     override fun getUrl(auth: String, date: String) =
         "https://api.nasa.gov/planetary/apod?api_key=$auth&date=$date&hd=true"
 
-    override fun parseResponse(response: String) = Gson().fromJson(response, RemoteDefinition::class.java)!!
+    override fun parseResponse(context: Context, response: String): LocalObject {
+        val remoteObject = Gson().fromJson(response, RemoteObject::class.java)!!
+        if (!remoteObject.isValid()) {
+            throw IOException(context.getString(R.string.error_returned_apod_format))
+        } else {
+            return LocalObject(
+                remoteObject.date,
+                remoteObject.title,
+                remoteObject.explanation,
+                remoteObject.url,
+                remoteObject.hdurl ?: remoteObject.url,
+                remoteObject.copyright ?: Config().defaultCopyright,
+                remoteObject.media_type == Config().imageTypeIdentifier
+            )
+        }
+    }
 }

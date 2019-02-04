@@ -1,6 +1,7 @@
 package uk.co.jakelee.apodwallpaper.config
 
-import uk.co.jakelee.apodwallpaper.api.RemoteDefinition
+import android.content.Context
+import uk.co.jakelee.apodwallpaper.api.LocalObject
 
 interface IConfig {
     val defaultCopyright: String
@@ -8,7 +9,7 @@ interface IConfig {
 
     fun getUrl(auth: String, date: String): String
 
-    fun parseResponse(response: String): RemoteDefinition
+    fun parseResponse(context: Context, response: String): LocalObject
 
     fun getPreviousEntryDate(dateString: String): String
 }

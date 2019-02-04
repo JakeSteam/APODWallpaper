@@ -1,5 +1,6 @@
 package uk.co.jakelee.apodwallpaper.api
 
+import android.content.Context
 import android.content.res.Resources
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -10,17 +11,17 @@ import java.util.concurrent.TimeoutException
 
 class ApiClient(val url: String) {
 
-    fun getApodResponse(): RemoteDefinition {
+    fun getApodResponse(context: Context): Pair<LocalObject, Int> {
         val request = Request.Builder()
             .url(url)
             .get()
             .build()
         val response = httpClient.newCall(request).execute()
         if (response.isSuccessful) {
-            val quota = response.headers("X-RateLimit-Remaining")?.firstOrNull()
+            val quota = response.headers("X-RateLimit-Remaining")?.firstOrNull()?.toIntOrNull() ?: 999
             response.body()?.string()?.let {
-                val apiResponse = Config().parseResponse(it)
-                return apiResponse.apply { this.quota = quota?.toIntOrNull() }
+                val apiResponse = Config().parseResponse(context, it)
+                return Pair(apiResponse, quota)
             }
             throw IOException()
         } else {
