@@ -37,10 +37,16 @@ class EndpointCheckTimingHelper {
             val currentTime = Calendar.getInstance()
             val min = (currentTime.clone() as Calendar).apply {
                 set(Calendar.HOUR_OF_DAY, targetHour)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
                 add(Calendar.MINUTE, -variance)
             }
             val max = (currentTime.clone() as Calendar).apply {
                 set(Calendar.HOUR_OF_DAY, targetHour)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
                 add(Calendar.MINUTE, variance)
             }
             return currentTime < min || currentTime > max

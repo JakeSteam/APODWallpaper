@@ -13,17 +13,16 @@ class EndpointCheckJob : JobService() {
 
     override fun onStartJob(job: JobParameters): Boolean {
         // If we're testing scheduling, don't actually perform a job
-        if (job.tag == testTag) {
+        if (job.tag == TEST_JOB_TAG) {
             Toast.makeText(applicationContext, getString(R.string.test_jobs_success), Toast.LENGTH_LONG).show()
             return false
         }
-        // If this is the initial task, schedule the regular repeating job
-        if (job.tag == initialTaskTag) {
+        // If this is the initial task, also schedule the regular repeating job
+        if (job.tag == INITIAL_JOB_TAG) {
             EndpointCheckScheduler(applicationContext).scheduleRepeatingJob()
         }
-        downloadApod(applicationContext, EndpointCheckTimingHelper.getLatestDate(), true, false) {
-            jobFinished(job, false)
-        }
+        val date = EndpointCheckTimingHelper.getLatestDate()
+        downloadApod(applicationContext, date, true, false) { jobFinished(job, false) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
@@ -38,8 +37,9 @@ class EndpointCheckJob : JobService() {
     override fun onStopJob(job: JobParameters?) = true
 
     companion object {
-        const val initialTaskTag = "${BuildConfig.APPLICATION_ID}.initialsync"
-        const val testTag = "${BuildConfig.APPLICATION_ID}.test"
+        const val INITIAL_JOB_TAG = "${BuildConfig.APPLICATION_ID}.initialsync"
+        const val JOB_TAG = BuildConfig.APPLICATION_ID
+        const val TEST_JOB_TAG = "${BuildConfig.APPLICATION_ID}.test"
     }
 
 }

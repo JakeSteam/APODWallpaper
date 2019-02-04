@@ -2,8 +2,6 @@ package uk.co.jakelee.apodwallpaper.scheduling
 
 import android.content.Context
 import com.firebase.jobdispatcher.*
-import timber.log.Timber
-import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
 import java.util.concurrent.TimeUnit
 
@@ -19,7 +17,7 @@ class EndpointCheckScheduler(val context: Context) {
         val maxTime = timeRemaining + variationSeconds
         dispatcher.mustSchedule(dispatcher.newJobBuilder()
             .setService(EndpointCheckJob::class.java)
-            .setTag(EndpointCheckJob.initialTaskTag)
+            .setTag(EndpointCheckJob.INITIAL_JOB_TAG)
             .setRecurring(false)
             .setLifetime(Lifetime.FOREVER)
             .setReplaceCurrent(true)
@@ -28,7 +26,6 @@ class EndpointCheckScheduler(val context: Context) {
             //.setTrigger(Trigger.executionWindow(5, 15))
             .build()
         )
-        Timber.d("Scheduled repeating job")
     }
 
     fun scheduleRepeatingJob() {
@@ -39,7 +36,7 @@ class EndpointCheckScheduler(val context: Context) {
         val wifiOnly = prefsHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_wifi)
         dispatcher.mustSchedule(dispatcher.newJobBuilder()
             .setService(EndpointCheckJob::class.java)
-            .setTag(BuildConfig.APPLICATION_ID)
+            .setTag(EndpointCheckJob.JOB_TAG)
             .setRecurring(true)
             .setLifetime(Lifetime.FOREVER)
             .setReplaceCurrent(true)
@@ -54,14 +51,13 @@ class EndpointCheckScheduler(val context: Context) {
             //.setTrigger(Trigger.executionWindow(5, 15))
             .build()
         )
-        Timber.d("Scheduled repeating job")
     }
 
     fun scheduleTestJob() {
         val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
         dispatcher.mustSchedule(dispatcher.newJobBuilder()
             .setService(EndpointCheckJob::class.java)
-            .setTag(EndpointCheckJob.testTag)
+            .setTag(EndpointCheckJob.TEST_JOB_TAG)
             .setRecurring(false)
             .setTrigger(Trigger.executionWindow(50, 70))
             .build()
