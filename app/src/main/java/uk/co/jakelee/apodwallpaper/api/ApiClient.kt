@@ -4,6 +4,7 @@ import android.content.res.Resources
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import uk.co.jakelee.apodwallpaper.config.Config
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -19,7 +20,7 @@ class ApiClient(val url: String) {
         if (response.isSuccessful) {
             val quota = response.headers("X-RateLimit-Remaining")?.first()
             response.body()?.string()?.let {
-                val apiResponse = Gson().fromJson(it, ApiResponse::class.java)
+                val apiResponse = Config().parseResponse(it)
                 return apiResponse.apply { this.quota = quota?.toIntOrNull() }
             }
             throw IOException()

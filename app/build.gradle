@@ -12,8 +12,21 @@ android {
         versionCode 4
         versionName "0.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "APOD_API_KEY", apod_api_key
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+        resConfigs "en"
+    }
+
+    flavorDimensions "endpoint"
+    productFlavors {
+        apod {
+            dimension "endpoint"
+            applicationId "uk.co.jakelee.apodwallpaper"
+            buildConfigField "String", "APOD_API_KEY", apod_api_key
+        }
+        moonmonday {
+            dimension "endpoint"
+            applicationId "uk.co.jakelee.moonmonday"
+        }
     }
     buildTypes {
         release {

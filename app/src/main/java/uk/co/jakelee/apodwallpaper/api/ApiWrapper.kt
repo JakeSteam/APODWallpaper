@@ -5,6 +5,7 @@ import com.crashlytics.android.Crashlytics
 import io.reactivex.Single
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
+import uk.co.jakelee.apodwallpaper.config.Config
 import uk.co.jakelee.apodwallpaper.helper.*
 import java.io.IOException
 
@@ -23,7 +24,7 @@ class ApiWrapper {
             return Single.fromCallable {
                     val apiKey = getApiKey(prefHelper)
                     try {
-                        return@fromCallable ApiClient(ApiWrapper.getUrl(apiKey, dateString)).getApodResponse()
+                        return@fromCallable ApiClient(Config().getUrl(apiKey, dateString)).getApodResponse()
                     } catch (e: ApiClient.DateRequestedException) {
                         if (pullingLatest && !checkedPreviousDay) {
                             checkedPreviousDay = true
@@ -66,7 +67,7 @@ class ApiWrapper {
 
         private fun retryPreviousDay(dateString: String, apiKey: String): ApiResponse {
             val newDateString = CalendarHelper.modifyStringDate(dateString, -1)
-            return ApiClient(getUrl(apiKey, newDateString)).getApodResponse()
+            return ApiClient(Config().getUrl(apiKey, newDateString)).getApodResponse()
         }
 
         // If data hasn't been saved before, save it
