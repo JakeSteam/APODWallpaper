@@ -7,6 +7,7 @@ import io.reactivex.schedulers.Schedulers
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiWrapper.Companion.downloadApod
+import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
 
 // adb shell dumpsys activity service GcmService --endpoints uk.co.jakelee.apodwallpaper
 class EndpointCheckJob : JobService() {
@@ -27,11 +28,17 @@ class EndpointCheckJob : JobService() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
         if (EndpointCheckTimingHelper.isJobBadlyTimed(applicationContext)) {
-            val tsw = EndpointCheckScheduler(applicationContext)
-            tsw.cancelJob()
-            tsw.scheduleJob()
+            fixBadlyTimedJob()
         }
         return true
+    }
+
+    private fun fixBadlyTimedJob() {
+        val tsw = EndpointCheckScheduler(applicationContext)
+        PreferenceHelper(applicationContext).setLongPref(PreferenceHelper.LongPref.last_sync_fix_date,
+            System.currentTimeMillis())
+        tsw.cancelJob()
+        tsw.scheduleJob()
     }
 
     override fun onStopJob(job: JobParameters?) = true

@@ -72,7 +72,8 @@ class PreferenceHelper(val context: Context) {
         last_run_manual(R.string.pref_last_manual_run, R.integer.empty_int),
         last_set_manual(R.string.pref_last_manual_set, R.integer.empty_int),
         last_run_automatic(R.string.pref_last_automatic_run, R.integer.empty_int),
-        last_set_automatic(R.string.pref_last_automatic_set, R.integer.empty_int)
+        last_set_automatic(R.string.pref_last_automatic_set, R.integer.empty_int),
+        last_sync_fix_date(R.string.pref_last_sync_fix_date, R.integer.empty_int)
     }
 
     fun getLongPref(pref: LongPref) =
