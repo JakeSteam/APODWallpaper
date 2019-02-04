@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import uk.co.jakelee.apodwallpaper.config.Config
 import java.net.URL
 
-data class LocalObject(
+data class ContentItem(
     val date: String,
     val title: String,
     val desc: String,

@@ -11,7 +11,7 @@ import java.util.concurrent.TimeoutException
 
 class ApiClient(val url: String) {
 
-    fun getApodResponse(context: Context): Pair<LocalObject, Int> {
+    fun getApodResponse(context: Context): Pair<ContentItem, Int> {
         val request = Request.Builder()
             .url(url)
             .get()

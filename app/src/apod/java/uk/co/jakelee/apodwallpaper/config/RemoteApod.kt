@@ -1,6 +1,6 @@
 package uk.co.jakelee.apodwallpaper.config
 
-data class RemoteObject(
+data class RemoteApod(
     val copyright: String?,
     val date: String,
     val explanation: String,

@@ -4,17 +4,14 @@ import android.content.Context
 import com.crashlytics.android.Crashlytics
 import io.reactivex.Single
 import uk.co.jakelee.apodwallpaper.BuildConfig
-import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.config.Config
-import uk.co.jakelee.apodwallpaper.config.RemoteObject
 import uk.co.jakelee.apodwallpaper.helper.*
-import java.io.IOException
 
 class ApiWrapper {
     companion object {
 
         fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean,
-                         postJobTask: () -> Unit): Single<LocalObject> {
+                         postJobTask: () -> Unit): Single<ContentItem> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
@@ -60,7 +57,7 @@ class ApiWrapper {
             return auth
         }
 
-        private fun retryPreviousEntry(context: Context, dateString: String, apiKey: String): Pair<LocalObject, Int> {
+        private fun retryPreviousEntry(context: Context, dateString: String, apiKey: String): Pair<ContentItem, Int> {
             val newDateString = Config().getPreviousEntryDate(dateString)
             return ApiClient(Config().getUrl(apiKey, newDateString)).getApodResponse(context)
         }
@@ -68,41 +65,41 @@ class ApiWrapper {
         // If data hasn't been saved before, save it
         // For images, check if image exists. For others, check if title pref set.
         private fun saveDataIfNecessary(
-            localObject: LocalObject,
+            contentItem: ContentItem,
             fsh: FileSystemHelper,
             prefHelper: PreferenceHelper,
             manualCheck: Boolean
         ) {
-            if (localObject.isImage && !fsh.getImagePath(localObject.date).exists()
-                || (!localObject.isImage && prefHelper.getApodData(localObject.date).title.isEmpty())
+            if (contentItem.isImage && !fsh.getImagePath(contentItem.date).exists()
+                || (!contentItem.isImage && prefHelper.getApodData(contentItem.date).title.isEmpty())
             ) {
-                prefHelper.saveApodData(localObject)
+                prefHelper.saveApodData(contentItem)
                 val lastSetPref =
                     if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
                 prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
                 val useHd = prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.use_hd_images)
-                if (localObject.isImage) {
-                    val image = localObject.pullRemoteImage(useHd)
-                    fsh.saveImage(image, localObject.date)
+                if (contentItem.isImage) {
+                    val image = contentItem.pullRemoteImage(useHd)
+                    fsh.saveImage(image, contentItem.date)
                 }
             }
         }
 
         private fun handleNewLatestApod(
-            localObject: LocalObject,
+            contentItem: ContentItem,
             fsh: FileSystemHelper,
             manualCheck: Boolean,
             context: Context,
             prefHelper: PreferenceHelper
         ) {
-            if (localObject.isImage) {
-                val image = fsh.getImage(localObject.date)
+            if (contentItem.isImage) {
+                val image = fsh.getImage(contentItem.date)
                 if (!manualCheck) {
-                    NotificationHelper(context).display(prefHelper, localObject, image)
+                    NotificationHelper(context).display(prefHelper, contentItem, image)
                 }
-                WallpaperHelper(context, prefHelper).applyRequired(localObject.date, image, false)
+                WallpaperHelper(context, prefHelper).applyRequired(contentItem.date, image, false)
             }
-            prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, localObject.date)
+            prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, contentItem.date)
         }
     }
 }
