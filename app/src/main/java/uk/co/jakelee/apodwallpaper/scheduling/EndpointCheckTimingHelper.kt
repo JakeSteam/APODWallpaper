@@ -6,7 +6,7 @@ import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class TaskTimingHelper {
+class EndpointCheckTimingHelper {
     companion object {
         fun getSecondsUntilTarget(prefsHelper: PreferenceHelper): Long {
             val targetHour = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_time)

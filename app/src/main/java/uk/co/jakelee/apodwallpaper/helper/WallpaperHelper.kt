@@ -29,7 +29,7 @@ class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.wallpaper_enabled)) {
             updateWallpaper(image)
         }
-        if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.lockscreen_enabled)) {
+        if (canSetLockScreen() && prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.lockscreen_enabled)) {
             updateLockScreen(FileSystemHelper(context).getImagePath(dateString))
         }
         if (displayOverrideMessage) {
@@ -41,7 +41,7 @@ class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
         }
     }
 
-    fun applyFilters(image: Bitmap): FilterResponse {
+    private fun applyFilters(image: Bitmap): FilterResponse {
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.filtering_enabled)) {
             if (image.height < prefHelper.getIntPref(PreferenceHelper.IntPref.minimum_height)) {
                 return FilterResponse.MinHeight
@@ -63,10 +63,14 @@ class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
     }
 
     fun updateLockScreen(file: File) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (canSetLockScreen()) {
             manager.setStream(file.inputStream(), null, true, WallpaperManager.FLAG_LOCK)
         } else {
-            Timber.i("Can't set lock screen!")
+            Timber.i("Can't set lock screen before Android N!")
         }
+    }
+
+    companion object {
+        fun canSetLockScreen() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
     }
 }

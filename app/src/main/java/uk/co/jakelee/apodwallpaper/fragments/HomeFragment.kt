@@ -16,13 +16,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_main.*
-import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.ApiWrapper
 import uk.co.jakelee.apodwallpaper.helper.*
-import uk.co.jakelee.apodwallpaper.scheduling.TaskExecutor
-import uk.co.jakelee.apodwallpaper.scheduling.TaskTimingHelper
+import uk.co.jakelee.apodwallpaper.scheduling.EndpointCheckTimingHelper
 import java.util.*
 import java.util.concurrent.TimeoutException
 
@@ -69,8 +67,8 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
-        if (TaskTimingHelper.canRecheck(activity!!)) {
-            getApod(TaskTimingHelper.getLatestDate(), true, true)
+        if (EndpointCheckTimingHelper.canRecheck(activity!!)) {
+            getApod(EndpointCheckTimingHelper.getLatestDate(), true, true)
         }
     }
 
@@ -177,21 +175,23 @@ class HomeFragment : Fragment() {
     private fun manuallySetButtonListener(dateString: String, image: Bitmap, title: String) = View.OnClickListener {
         val wallpaperHelper = WallpaperHelper(activity!!, PreferenceHelper(activity!!))
         val imagePath = FileSystemHelper(activity!!).getImagePath(dateString)
-        AlertDialog.Builder(activity!!)
+        val builder = AlertDialog.Builder(activity!!)
             .setTitle(getString(R.string.manual_set_title))
             .setMessage(String.format(getString(R.string.manual_set_message), title))
-            .setPositiveButton(getString(R.string.manual_set_lockscreen)) { _, _ ->
-                wallpaperHelper.updateLockScreen(imagePath)
-                Toast.makeText(activity!!, String.format(getString(R.string.lockscreen_set), title), Toast.LENGTH_SHORT)
-                    .show()
-            }
             .setNegativeButton(getString(R.string.manual_set_wallpaper)) { _, _ ->
                 wallpaperHelper.updateWallpaper(image)
                 Toast.makeText(activity!!, String.format(getString(R.string.wallpaper_set), title), Toast.LENGTH_SHORT)
                     .show()
             }
             .setNeutralButton(getString(R.string.manual_set_cancel)) { _, _ -> }
-            .show()
+        if (WallpaperHelper.canSetLockScreen()) {
+            builder.setPositiveButton(getString(R.string.manual_set_lockscreen)) { _, _ ->
+                wallpaperHelper.updateLockScreen(imagePath)
+                Toast.makeText(activity!!, String.format(getString(R.string.lockscreen_set), title), Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+        builder.show()
     }
 
     private fun fullscreenButtonListener(title: String, dateString: String) = View.OnClickListener {

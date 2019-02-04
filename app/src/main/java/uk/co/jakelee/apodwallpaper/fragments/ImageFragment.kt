@@ -6,6 +6,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_image.*
+import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import java.io.File
 
@@ -31,7 +32,7 @@ class ImageFragment : Fragment() {
     }
 
     companion object {
-        val TITLE_ARG = "uk.co.jakelee.apodwallpaper.fullscreen.title"
-        val IMAGE_ARG = "uk.co.jakelee.apodwallpaper.fullscreen.image"
+        val TITLE_ARG = "${BuildConfig.APPLICATION_ID}.fullscreen.title"
+        val IMAGE_ARG = "${BuildConfig.APPLICATION_ID}.fullscreen.image"
     }
 }

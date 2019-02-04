@@ -7,19 +7,19 @@ import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
 import java.util.concurrent.TimeUnit
 
-class TaskScheduler(val context: Context) {
+class EndpointCheckScheduler(val context: Context) {
     fun scheduleJob() {
         val prefsHelper = PreferenceHelper(context)
         if (!prefsHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_enabled)) return
-        val timeRemaining = TaskTimingHelper.getSecondsUntilTarget(prefsHelper)
+        val timeRemaining = EndpointCheckTimingHelper.getSecondsUntilTarget(prefsHelper)
         val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
         val variationMinutes = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
         val variationSeconds = TimeUnit.MINUTES.toSeconds(variationMinutes.toLong())
         val minTime = if (timeRemaining > variationSeconds) timeRemaining - variationSeconds else 0
         val maxTime = timeRemaining + variationSeconds
         dispatcher.mustSchedule(dispatcher.newJobBuilder()
-            .setService(TaskExecutor::class.java)
-            .setTag(TaskExecutor.initialTaskTag)
+            .setService(EndpointCheckJob::class.java)
+            .setTag(EndpointCheckJob.initialTaskTag)
             .setRecurring(false)
             .setLifetime(Lifetime.FOREVER)
             .setReplaceCurrent(true)
@@ -38,7 +38,7 @@ class TaskScheduler(val context: Context) {
         val variationMinutes = prefsHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
         val wifiOnly = prefsHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_wifi)
         dispatcher.mustSchedule(dispatcher.newJobBuilder()
-            .setService(TaskExecutor::class.java)
+            .setService(EndpointCheckJob::class.java)
             .setTag(BuildConfig.APPLICATION_ID)
             .setRecurring(true)
             .setLifetime(Lifetime.FOREVER)
@@ -60,8 +60,8 @@ class TaskScheduler(val context: Context) {
     fun scheduleTestJob() {
         val dispatcher = FirebaseJobDispatcher(GooglePlayDriver(context))
         dispatcher.mustSchedule(dispatcher.newJobBuilder()
-            .setService(TaskExecutor::class.java)
-            .setTag(TaskExecutor.testTag)
+            .setService(EndpointCheckJob::class.java)
+            .setTag(EndpointCheckJob.testTag)
             .setRecurring(false)
             .setTrigger(Trigger.executionWindow(50, 70))
             .build()

@@ -3,11 +3,9 @@ package uk.co.jakelee.apodwallpaper.api
 import android.content.Context
 import com.crashlytics.android.Crashlytics
 import io.reactivex.Single
-import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.helper.*
-import uk.co.jakelee.apodwallpaper.scheduling.TaskExecutor
 import java.io.IOException
 
 class ApiWrapper {
