@@ -3,14 +3,14 @@ package uk.co.jakelee.apodwallpaper.helper
 import android.content.Context
 import android.preference.PreferenceManager
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.api.ContentItem
+import uk.co.jakelee.apodwallpaper.api.LocalDefinition
 
 class PreferenceHelper(val context: Context) {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
     enum class OldStringPref { Title, Desc, Image, ImageHd, Copyright, IsImage }
 
-    fun saveApodData(response: ContentItem) = prefs.edit()
+    fun saveApodData(response: LocalDefinition) = prefs.edit()
         .putString("${response.date}_${OldStringPref.Title.name}", response.title)
         .putString("${response.date}_${OldStringPref.Desc.name}", response.desc)
         .putString("${response.date}_${OldStringPref.Image.name}", response.imageUrl)
@@ -19,7 +19,7 @@ class PreferenceHelper(val context: Context) {
         .putBoolean("${response.date}_${OldStringPref.IsImage.name}", response.isImage)
         .apply()
 
-    fun getApodData(date: String) = ContentItem(
+    fun getApodData(date: String) = LocalDefinition(
         date,
         prefs.getString("${date}_${OldStringPref.Title.name}", "")!!,
         prefs.getString("${date}_${OldStringPref.Desc.name}", "")!!,

@@ -1,6 +1,6 @@
-package uk.co.jakelee.apodwallpaper.config
+package uk.co.jakelee.apodwallpaper.api
 
-data class ApodResponse(
+data class RemoteDefinition(
     val copyright: String?,
     val date: String,
     val explanation: String,

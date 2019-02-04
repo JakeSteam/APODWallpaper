@@ -5,7 +5,6 @@ import com.crashlytics.android.Crashlytics
 import io.reactivex.Single
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.config.ApodResponse
 import uk.co.jakelee.apodwallpaper.config.Config
 import uk.co.jakelee.apodwallpaper.helper.*
 import java.io.IOException
@@ -14,7 +13,7 @@ class ApiWrapper {
     companion object {
 
         fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean,
-                         postJobTask: () -> Unit): Single<ContentItem> {
+                         postJobTask: () -> Unit): Single<LocalDefinition> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
@@ -38,7 +37,7 @@ class ApiWrapper {
                         throw IOException(context.getString(R.string.error_returned_apod_format))
                     }
                     val fsh = FileSystemHelper(context)
-                    val apod = ContentItem(it)
+                    val apod = LocalDefinition(it)
                     prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.quota!!)
                     saveDataIfNecessary(apod, fsh, prefHelper, manualCheck)
                     // If we're pulling the latest image, and it's different to the current latest
@@ -64,7 +63,7 @@ class ApiWrapper {
             return auth
         }
 
-        private fun retryPreviousEntry(dateString: String, apiKey: String): ApodResponse {
+        private fun retryPreviousEntry(dateString: String, apiKey: String): RemoteDefinition {
             val newDateString = Config().getPreviousEntryDate(dateString)
             return ApiClient(Config().getUrl(apiKey, newDateString)).getApodResponse()
         }
@@ -72,41 +71,41 @@ class ApiWrapper {
         // If data hasn't been saved before, save it
         // For images, check if image exists. For others, check if title pref set.
         private fun saveDataIfNecessary(
-            contentItem: ContentItem,
+            localDefinition: LocalDefinition,
             fsh: FileSystemHelper,
             prefHelper: PreferenceHelper,
             manualCheck: Boolean
         ) {
-            if (contentItem.isImage && !fsh.getImagePath(contentItem.date).exists()
-                || (!contentItem.isImage && prefHelper.getApodData(contentItem.date).title.isEmpty())
+            if (localDefinition.isImage && !fsh.getImagePath(localDefinition.date).exists()
+                || (!localDefinition.isImage && prefHelper.getApodData(localDefinition.date).title.isEmpty())
             ) {
-                prefHelper.saveApodData(contentItem)
+                prefHelper.saveApodData(localDefinition)
                 val lastSetPref =
                     if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
                 prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
                 val useHd = prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.use_hd_images)
-                if (contentItem.isImage) {
-                    val image = contentItem.pullRemoteImage(useHd)
-                    fsh.saveImage(image, contentItem.date)
+                if (localDefinition.isImage) {
+                    val image = localDefinition.pullRemoteImage(useHd)
+                    fsh.saveImage(image, localDefinition.date)
                 }
             }
         }
 
         private fun handleNewLatestApod(
-            contentItem: ContentItem,
+            localDefinition: LocalDefinition,
             fsh: FileSystemHelper,
             manualCheck: Boolean,
             context: Context,
             prefHelper: PreferenceHelper
         ) {
-            if (contentItem.isImage) {
-                val image = fsh.getImage(contentItem.date)
+            if (localDefinition.isImage) {
+                val image = fsh.getImage(localDefinition.date)
                 if (!manualCheck) {
-                    NotificationHelper(context).display(prefHelper, contentItem, image)
+                    NotificationHelper(context).display(prefHelper, localDefinition, image)
                 }
-                WallpaperHelper(context, prefHelper).applyRequired(contentItem.date, image, false)
+                WallpaperHelper(context, prefHelper).applyRequired(localDefinition.date, image, false)
             }
-            prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, contentItem.date)
+            prefHelper.setStringPref(PreferenceHelper.StringPref.last_pulled, localDefinition.date)
         }
     }
 }

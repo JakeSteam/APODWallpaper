@@ -2,11 +2,10 @@ package uk.co.jakelee.apodwallpaper.api
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import uk.co.jakelee.apodwallpaper.config.ApodResponse
 import uk.co.jakelee.apodwallpaper.config.Config
 import java.net.URL
 
-data class ContentItem(
+data class LocalDefinition(
     val date: String,
     val title: String,
     val desc: String,
@@ -15,7 +14,7 @@ data class ContentItem(
     val copyright: String,
     val isImage: Boolean
 ) {
-    constructor(response: ApodResponse) : this(
+    constructor(response: RemoteDefinition) : this(
         response.date,
         response.title,
         response.explanation,

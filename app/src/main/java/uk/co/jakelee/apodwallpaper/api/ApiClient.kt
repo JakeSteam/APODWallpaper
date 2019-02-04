@@ -3,7 +3,6 @@ package uk.co.jakelee.apodwallpaper.api
 import android.content.res.Resources
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import uk.co.jakelee.apodwallpaper.config.ApodResponse
 import uk.co.jakelee.apodwallpaper.config.Config
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -11,7 +10,7 @@ import java.util.concurrent.TimeoutException
 
 class ApiClient(val url: String) {
 
-    fun getApodResponse(): ApodResponse {
+    fun getApodResponse(): RemoteDefinition {
         val request = Request.Builder()
             .url(url)
             .get()

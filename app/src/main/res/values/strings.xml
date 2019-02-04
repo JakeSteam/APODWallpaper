@@ -131,7 +131,7 @@
     <string name="give_feedback_email">Email</string>
     <string name="ok">OK</string>
     <string name="give_feedback_email_title">Send feedback using:</string>
-    <string name="give_feedback_email_address">mailto:contentItem@jakelee.co.uk</string>
+    <string name="give_feedback_email_address">mailto:localDefinition@jakelee.co.uk</string>
     <string name="version_summary">Version #%d built on %s</string>
     <string name="give_feedback_github">GitHub</string>
     <string name="test_jobs_scheduled">Scheduled job for 50-70 seconds from now.</string>
