@@ -21,11 +21,12 @@ android {
         apod {
             dimension "endpoint"
             applicationId "uk.co.jakelee.apodwallpaper"
-            buildConfigField "String", "APOD_API_KEY", apod_api_key
+            buildConfigField "String", "AUTH_CODE", apod_api_key
         }
         moonmonday {
             dimension "endpoint"
             applicationId "uk.co.jakelee.moonmonday"
+            buildConfigField "String", "AUTH_CODE", ""
         }
     }
     buildTypes {

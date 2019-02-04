@@ -2,9 +2,11 @@ package uk.co.jakelee.apodwallpaper.api
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import uk.co.jakelee.apodwallpaper.config.ApodResponse
+import uk.co.jakelee.apodwallpaper.config.Config
 import java.net.URL
 
-data class Apod(
+data class ContentItem(
     val date: String,
     val title: String,
     val desc: String,
@@ -13,18 +15,18 @@ data class Apod(
     val copyright: String,
     val isImage: Boolean
 ) {
-    constructor(response: ApiResponse) : this(
+    constructor(response: ApodResponse) : this(
         response.date,
         response.title,
         response.explanation,
         response.url,
         response.hdurl ?: response.url,
-        response.copyright ?: "NASA",
-        response.media_type == "image"
+        response.copyright ?: Config().defaultCopyright,
+        response.media_type == Config().imageTypeIdentifier
     )
 
     fun pullRemoteImage(useHd: Boolean): Bitmap {
-        val url = if (useHd) this.imageUrlHd else this.imageUrl
+        val url = if (useHd && this.imageUrlHd.isNotEmpty()) this.imageUrlHd else this.imageUrl
         return BitmapFactory.decodeStream(URL(url).openStream())
     }
 }

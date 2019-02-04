@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.MainActivity
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.api.Apod
+import uk.co.jakelee.apodwallpaper.api.ContentItem
 
 
 class NotificationHelper(val context: Context) {
@@ -31,27 +31,27 @@ class NotificationHelper(val context: Context) {
         }
     }
 
-    fun display(prefHelper: PreferenceHelper, apod: Apod, image: Bitmap) {
+    fun display(prefHelper: PreferenceHelper, contentItem: ContentItem, image: Bitmap) {
         if (!prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_enabled)) {
             return
         }
         val notifManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = applyNotificationPreferences(prefHelper, getBasicNotification(apod), image)
+        val notification = applyNotificationPreferences(prefHelper, getBasicNotification(contentItem), image)
         createNotifChannelIfNeeded(notifManager)
         notifManager.notify(notificationId, notification)
     }
 
-    private fun getBasicNotification(apod: Apod): NotificationCompat.Builder {
+    private fun getBasicNotification(contentItem: ContentItem): NotificationCompat.Builder {
         val date = CalendarHelper.convertFormats(
-            apod.date,
+            contentItem.date,
             CalendarHelper.Companion.FORMAT.date,
             CalendarHelper.Companion.FORMAT.friendlyDate
         )
         return NotificationCompat.Builder(context, channelId)
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("$date: ${apod.title}")
-            .setContentText(apod.desc.take(100))
+            .setContentTitle("$date: ${contentItem.title}")
+            .setContentText(contentItem.desc.take(100))
             .setContentIntent(
                 PendingIntent.getActivity(
                     context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT
