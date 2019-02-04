@@ -31,12 +31,9 @@ class TaskExecutor : JobService() {
         if (job.tag == initialTaskTag) {
             TaskScheduler(applicationContext).scheduleRepeatingJob()
         }
-        downloadApod(
-            applicationContext,
-            TaskTimingHelper.getLatestDate(),
-            true,
-            false
-        ) { jobFinished(job, false) }
+        downloadApod(applicationContext, TaskTimingHelper.getLatestDate(), true, false) {
+            jobFinished(job, false)
+        }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()

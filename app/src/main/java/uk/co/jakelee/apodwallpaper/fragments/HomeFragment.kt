@@ -102,24 +102,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun handleApodError(it: Throwable) {
-        Timber.e(it)
-        when (it) {
-            is ApiClient.TooManyRequestsException -> Toast.makeText(
-                activity,
-                getString(R.string.error_quota_hit),
-                Toast.LENGTH_SHORT
-            ).show()
-            is TimeoutException -> Toast.makeText(
-                activity,
-                getString(R.string.error_no_response),
-                Toast.LENGTH_SHORT
-            ).show()
-            else -> Toast.makeText(
-                activity,
-                String.format(getString(R.string.error_generic_retrieval_failure), it.localizedMessage),
-                Toast.LENGTH_SHORT
-            ).show()
+        val errorString = when (it) {
+            is ApiClient.TooManyRequestsException -> getString(R.string.error_quota_hit)
+            is TimeoutException -> getString(R.string.error_no_response)
+            else -> String.format(getString(R.string.error_generic_retrieval_failure), it.localizedMessage)
         }
+        Toast.makeText(activity, errorString, Toast.LENGTH_SHORT).show()
     }
 
     private fun updateSelectedDate(dateString: String) {

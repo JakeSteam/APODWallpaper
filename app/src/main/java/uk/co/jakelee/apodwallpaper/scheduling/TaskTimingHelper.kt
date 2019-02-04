@@ -31,7 +31,7 @@ class TaskTimingHelper {
             return prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.automatic_check_fix) && isJobDelayed(prefHelper)
         }
 
-        fun isJobDelayed(prefHelper: PreferenceHelper): Boolean {
+        private fun isJobDelayed(prefHelper: PreferenceHelper): Boolean {
             val targetHour = prefHelper.getIntPref(PreferenceHelper.IntPref.check_time)
             val variance = prefHelper.getIntPref(PreferenceHelper.IntPref.check_variation)
             val currentTime = Calendar.getInstance()
