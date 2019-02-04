@@ -15,7 +15,7 @@ data class ContentItem(
     val isImage: Boolean
 ) {
 
-    fun pullRemoteImage(useHd: Boolean): Bitmap {
+    fun pullImageFromServer(useHd: Boolean): Bitmap {
         val url = if (useHd && this.imageUrlHd.isNotEmpty()) this.imageUrlHd else this.imageUrl
         return BitmapFactory.decodeStream(URL(url).openStream())
     }

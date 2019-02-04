@@ -79,7 +79,7 @@ class ApiWrapper {
                 prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())
                 val useHd = prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.use_hd_images)
                 if (contentItem.isImage) {
-                    val image = contentItem.pullRemoteImage(useHd)
+                    val image = contentItem.pullImageFromServer(useHd)
                     fsh.saveImage(image, contentItem.date)
                 }
             }
