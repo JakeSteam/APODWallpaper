@@ -25,10 +25,8 @@ class ImageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val title = arguments!!.getString(TITLE_ARG)
-        (activity as AppCompatActivity).supportActionBar!!.title = title
-        val imagePath = arguments!!.getString(IMAGE_ARG)
-        myZoomageView.setImageURI(Uri.fromFile(File(imagePath)))
+        (activity as AppCompatActivity).supportActionBar!!.title = arguments!!.getString(TITLE_ARG)
+        zoomageView.setImageURI(Uri.fromFile(File(arguments!!.getString(IMAGE_ARG))))
     }
 
     companion object {

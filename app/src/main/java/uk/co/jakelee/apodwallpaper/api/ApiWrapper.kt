@@ -5,10 +5,7 @@ import com.crashlytics.android.Crashlytics
 import io.reactivex.Single
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.config.Config
-import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
-import uk.co.jakelee.apodwallpaper.helper.NotificationHelper
-import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
-import uk.co.jakelee.apodwallpaper.helper.WallpaperHelper
+import uk.co.jakelee.apodwallpaper.helper.*
 
 class ApiWrapper {
     companion object {
@@ -36,7 +33,7 @@ class ApiWrapper {
                 .map {
                     val fsh = FileSystemHelper(context)
                     prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.second)
-                    saveDataIfNecessary(it.first, fsh, prefHelper, manualCheck)
+                    saveDataIfNecessary(it.first, fsh, prefHelper, ContentHelper(context), manualCheck)
                     // If we're pulling the latest image, and it's different to the current latest
                     if (pullingLatest && it.first.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
                         handleNewLatestContent(it.first, fsh, manualCheck, context, prefHelper)
@@ -71,12 +68,13 @@ class ApiWrapper {
             contentItem: ContentItem,
             fsh: FileSystemHelper,
             prefHelper: PreferenceHelper,
+            contentHelper: ContentHelper,
             manualCheck: Boolean
         ) {
             if (contentItem.isImage && !fsh.getImagePath(contentItem.date).exists()
-                || (!contentItem.isImage && prefHelper.getApodData(contentItem.date).title.isEmpty())
+                || (!contentItem.isImage && contentHelper.getContentData(contentItem.date).title.isEmpty())
             ) {
-                prefHelper.saveApodData(contentItem)
+                contentHelper.saveContentData(contentItem)
                 val lastSetPref =
                     if (manualCheck) PreferenceHelper.LongPref.last_set_manual else PreferenceHelper.LongPref.last_set_automatic
                 prefHelper.setLongPref(lastSetPref, System.currentTimeMillis())

@@ -25,9 +25,9 @@ class NotificationHelper(val context: Context) {
         val prefHelper = PreferenceHelper(context)
         val dateString = prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
         if (!dateString.isEmpty()) {
-            val apod = prefHelper.getApodData(dateString)
-            val image = FileSystemHelper(context).getImage(apod.date)
-            display(prefHelper, apod, image)
+            val content = ContentHelper(context).getContentData(dateString)
+            val image = FileSystemHelper(context).getImage(content.date)
+            display(prefHelper, content, image)
         }
     }
 
