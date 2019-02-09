@@ -5,13 +5,16 @@ import com.crashlytics.android.Crashlytics
 import io.reactivex.Single
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.config.Config
-import uk.co.jakelee.apodwallpaper.helper.*
+import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
+import uk.co.jakelee.apodwallpaper.helper.NotificationHelper
+import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import uk.co.jakelee.apodwallpaper.helper.WallpaperHelper
 
 class ApiWrapper {
     companion object {
 
-        fun downloadApod(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean,
-                         postJobTask: () -> Unit): Single<ContentItem> {
+        fun downloadContent(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean,
+                            postJobTask: () -> Unit): Single<ContentItem> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
@@ -20,7 +23,7 @@ class ApiWrapper {
             return Single.fromCallable {
                     val auth = getAuth(prefHelper)
                     try {
-                        return@fromCallable ApiClient(Config().getUrl(auth, dateString)).getApodResponse(context)
+                        return@fromCallable ApiClient(Config().getUrl(auth, dateString)).getApiResponse(context)
                     } catch (e: ApiClient.DateRequestedException) {
                         if (pullingLatest && !checkedPreviousDay) {
                             checkedPreviousDay = true
@@ -36,7 +39,7 @@ class ApiWrapper {
                     saveDataIfNecessary(it.first, fsh, prefHelper, manualCheck)
                     // If we're pulling the latest image, and it's different to the current latest
                     if (pullingLatest && it.first.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
-                        handleNewLatestApod(it.first, fsh, manualCheck, context, prefHelper)
+                        handleNewLatestContent(it.first, fsh, manualCheck, context, prefHelper)
                     }
                     postJobTask.invoke()
                     return@map it.first
@@ -59,7 +62,7 @@ class ApiWrapper {
 
         private fun retryPreviousEntry(context: Context, dateString: String, apiKey: String): Pair<ContentItem, Int> {
             val newDateString = Config().getPreviousEntryDate(dateString)
-            return ApiClient(Config().getUrl(apiKey, newDateString)).getApodResponse(context)
+            return ApiClient(Config().getUrl(apiKey, newDateString)).getApiResponse(context)
         }
 
         // If data hasn't been saved before, save it
@@ -85,7 +88,7 @@ class ApiWrapper {
             }
         }
 
-        private fun handleNewLatestApod(
+        private fun handleNewLatestContent(
             contentItem: ContentItem,
             fsh: FileSystemHelper,
             manualCheck: Boolean,

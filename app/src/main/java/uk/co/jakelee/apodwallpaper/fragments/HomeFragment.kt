@@ -19,7 +19,10 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.ApiWrapper
-import uk.co.jakelee.apodwallpaper.helper.*
+import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
+import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
+import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import uk.co.jakelee.apodwallpaper.helper.WallpaperHelper
 import uk.co.jakelee.apodwallpaper.scheduling.EndpointCheckTimingHelper
 import java.util.*
 import java.util.concurrent.TimeoutException
@@ -85,7 +88,7 @@ class HomeFragment : Fragment() {
             displayApod(dateString)
             toggleRecheckIfNecessary(menuItem, true)
         } else {
-            disposable = ApiWrapper.downloadApod(activity!!, dateString, pullingLatest, manual) {}
+            disposable = ApiWrapper.downloadContent(activity!!, dateString, pullingLatest, manual) {}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { toggleRecheckIfNecessary(menuItem, true) }
