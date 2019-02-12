@@ -11,6 +11,7 @@ import java.util.*
 class Config: IConfig {
     override val defaultCopyright = "NASA"
     override val imageTypeIdentifier = "image"
+    override val supportsPaging = true
 
     override fun getPreviousEntryDate(dateString: String): String {
         val date = CalendarHelper.stringToCalendar(dateString)

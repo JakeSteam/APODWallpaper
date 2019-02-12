@@ -26,7 +26,7 @@ android {
         moonmonday {
             dimension "endpoint"
             applicationId "uk.co.jakelee.moonmonday"
-            buildConfigField "String", "AUTH_CODE", ""
+            buildConfigField "String", "AUTH_CODE", '""'
         }
     }
     buildTypes {
