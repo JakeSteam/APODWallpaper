@@ -1,13 +1,23 @@
 
-# Daily APOD Wallpaper
+# Daily Space Wallpaper
 
 ## Building
 
 1. Check out the repo.
-2. [Get an APOD api key](https://api.nasa.gov/index.html#apply-for-an-api-key).
-3. Add it as `apod_api_key="xxxx"` in your `gradle.properties`.
-4. [Create a Firebase project](https://console.firebase.google.com/u/0/) (for crash reporting).
-5. Put your `google-services.json` file in the repository root. 
+2. [Create a Firebase project](https://console.firebase.google.com/u/0/) (for crash reporting).
+3. Put your `google-services.json` file in `/app/src/FLAVOURNAME/`. 
+
+### APOD
+
+1. [Get an APOD api key](https://api.nasa.gov/index.html#apply-for-an-api-key).
+2. Add it as `apod_api_key="xxxx"` in your `gradle.properties`.
+
+## Adding a new flavour
+
+1. Add the new flavour to app-level `build.gradle`, along with any auth code needed.
+2. Create a new Firebase project, download the `google-services.json` file, and place it in `/app/src/FLAVOURNAME/`.
+3. Copy an existing `Config.kt`, and place it in `/app/src/FLAVOURNAME/java/PACKAGENAME/Config/`.
+4. Modify `Config.kt` as necessary.
 
 ## Libraries
 External libraries used in this app are listed below. Core Android / AndroidX libraries are excluded from this list.

@@ -54,6 +54,13 @@
                 android:icon="@drawable/ic_settings_variation"
                 android:dependency="@string/pref_automatic_enabled"
                 android:summary="@string/automatic_check_variation_desc"/>
+        <SwitchPreference
+                android:key="@string/pref_automatic_check_fix"
+                android:defaultValue="@bool/automatic_check_fix_default"
+                android:title="@string/automatic_check_fix_title"
+                android:icon="@drawable/ic_settings_automatic_fix"
+                android:dependency="@string/pref_automatic_enabled"
+                android:summary="@string/automatic_check_fix_desc"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_image_filtering">
         <SwitchPreference

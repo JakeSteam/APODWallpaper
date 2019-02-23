@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.MainActivity
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.api.Apod
+import uk.co.jakelee.apodwallpaper.api.ContentItem
 
 
 class NotificationHelper(val context: Context) {
@@ -25,33 +25,33 @@ class NotificationHelper(val context: Context) {
         val prefHelper = PreferenceHelper(context)
         val dateString = prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
         if (!dateString.isEmpty()) {
-            val apod = prefHelper.getApodData(dateString)
-            val image = FileSystemHelper(context).getImage(apod.date)
-            display(prefHelper, apod, image)
+            val content = ContentHelper(context).getContentData(dateString)
+            val image = FileSystemHelper(context).getImage(content.date)
+            display(prefHelper, content, image)
         }
     }
 
-    fun display(prefHelper: PreferenceHelper, apod: Apod, image: Bitmap) {
+    fun display(prefHelper: PreferenceHelper, contentItem: ContentItem, image: Bitmap) {
         if (!prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_enabled)) {
             return
         }
         val notifManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = applyNotificationPreferences(prefHelper, getBasicNotification(apod), image)
+        val notification = applyNotificationPreferences(prefHelper, getBasicNotification(contentItem), image)
         createNotifChannelIfNeeded(notifManager)
         notifManager.notify(notificationId, notification)
     }
 
-    private fun getBasicNotification(apod: Apod): NotificationCompat.Builder {
+    private fun getBasicNotification(contentItem: ContentItem): NotificationCompat.Builder {
         val date = CalendarHelper.convertFormats(
-            apod.date,
+            contentItem.date,
             CalendarHelper.Companion.FORMAT.date,
             CalendarHelper.Companion.FORMAT.friendlyDate
         )
         return NotificationCompat.Builder(context, channelId)
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("$date: ${apod.title}")
-            .setContentText(apod.desc.take(100))
+            .setContentTitle("$date: ${contentItem.title}")
+            .setContentText(contentItem.desc.take(100))
             .setContentIntent(
                 PendingIntent.getActivity(
                     context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT

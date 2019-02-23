@@ -29,12 +29,6 @@ class CalendarHelper {
             return cal
         }
 
-        fun modifyStringDate(dateString: String, days: Int): String {
-            val date = CalendarHelper.stringToCalendar(dateString)
-            date.add(Calendar.DAY_OF_YEAR, days)
-            return CalendarHelper.calendarToString(date, false)
-        }
-
         fun convertFormats(dateString: String, existingFormat: FORMAT, newFormat: FORMAT): String {
             val existingDateFormat = SimpleDateFormat(existingFormat.value, Locale.US)
             val parsedDate = existingDateFormat.parse(dateString)

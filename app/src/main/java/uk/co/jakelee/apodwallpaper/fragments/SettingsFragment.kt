@@ -15,6 +15,7 @@ import androidx.preference.*
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.helper.*
+import uk.co.jakelee.apodwallpaper.scheduling.EndpointCheckScheduler
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,17 +37,21 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.settings_title)
         setHasOptionsMenu(true)
         addPreferencesFromResource(R.xml.preferences_ui)
-        findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
-        findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
-        findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener =
-                previewNotificationListener
-        findPreference(getString(R.string.pref_delete_images)).onPreferenceClickListener = deleteImagesListener
-        findPreference(getString(R.string.pref_test_jobs)).onPreferenceClickListener = testJobsListener
-        findPreference(getString(R.string.pref_feedback)).onPreferenceClickListener = giveFeedbackListener
-        findPreference(getString(R.string.pref_version)).title = "V${BuildConfig.VERSION_NAME}"
-        findPreference(getString(R.string.pref_version)).summary = String.format(getString(R.string.version_summary),
-            BuildConfig.VERSION_CODE,
-            SimpleDateFormat("dd MMM yyy", Locale.US).format(BuildConfig.BUILD_TIME))
+        if (!WallpaperHelper.canSetLockScreen()) {
+            val target = findPreference(getString(R.string.pref_lockscreen_enabled))
+            val category = findPreference(getString(R.string.category_targets)) as PreferenceCategory
+            category.removePreference(target)
+        }
+        setupListeners()
+        setupVersionInfo()
+        setupSeekbars()
+        val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
+        if (customKeyPref.text.isNotEmpty()) {
+            customKeyPref.title = customKeyPref.text
+        }
+    }
+
+    private fun setupSeekbars() {
         setupSeekbar(
             R.string.pref_automatic_check_time,
             R.integer.automatic_check_time_step,
@@ -77,10 +82,25 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
             R.integer.filtering_ratio_min,
             R.integer.filtering_ratio_max
         )
-        val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
-        if (customKeyPref.text.isNotEmpty()) {
-            customKeyPref.title = customKeyPref.text
-        }
+    }
+
+    private fun setupVersionInfo() {
+        findPreference(getString(R.string.pref_version)).title = "V${BuildConfig.VERSION_NAME}"
+        findPreference(getString(R.string.pref_version)).summary = String.format(
+            getString(R.string.version_summary),
+            BuildConfig.VERSION_CODE,
+            SimpleDateFormat("dd MMM yyy", Locale.US).format(BuildConfig.BUILD_TIME)
+        )
+    }
+
+    private fun setupListeners() {
+        findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
+        findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
+        findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener =
+                previewNotificationListener
+        findPreference(getString(R.string.pref_delete_images)).onPreferenceClickListener = deleteImagesListener
+        findPreference(getString(R.string.pref_test_jobs)).onPreferenceClickListener = testJobsListener
+        findPreference(getString(R.string.pref_feedback)).onPreferenceClickListener = giveFeedbackListener
     }
 
     fun setupSeekbar(id: Int, step: Int, min: Int, max: Int) {
@@ -105,15 +125,15 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         when {
             key == getString(R.string.pref_automatic_enabled) && pref is SwitchPreference -> {
                 if (pref.isChecked) {
-                    TaskSchedulerHelper.scheduleJob(activity!!)
+                    EndpointCheckScheduler(activity!!).scheduleJob()
                 } else {
-                    TaskSchedulerHelper.cancelJob(activity!!)
+                    EndpointCheckScheduler(activity!!).cancelJob()
                 }
             }
             key == getString(R.string.pref_automatic_check_wifi)
                     || key == getString(R.string.pref_automatic_check_time)
                     || key == getString(R.string.pref_automatic_check_variation) -> {
-                TaskSchedulerHelper.scheduleJob(activity!!)
+                EndpointCheckScheduler(activity!!).scheduleJob()
             }
             key == getString(R.string.pref_custom_key) && pref is EditTextPreference -> {
                 if (pref.text.length < 40) {
@@ -134,7 +154,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     private val testJobsListener = Preference.OnPreferenceClickListener {
-        TaskSchedulerHelper.scheduleTestJob(activity!!)
+        EndpointCheckScheduler(activity!!).scheduleTestJob()
         Toast.makeText(activity!!, getString(R.string.test_jobs_scheduled), Toast.LENGTH_SHORT).show()
         true
     }
@@ -190,6 +210,10 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 prefHelper.getStringPref(PreferenceHelper.StringPref.last_filtered_date)
         dialog.findViewById<TextView>(R.id.last_filtered_reason)!!.text =
                 prefHelper.getStringPref(PreferenceHelper.StringPref.last_filtered_reason)
+        dialog.findViewById<TextView>(R.id.last_sync_fix_date)!!.text = CalendarHelper.millisToString(
+            prefHelper.getLongPref(PreferenceHelper.LongPref.last_sync_fix_date),
+            true
+        )
         var count = 0
         var size = 0L
         FileSystemHelper(activity!!).getImagesDirectory().listFiles().forEach {

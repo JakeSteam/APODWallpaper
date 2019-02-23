@@ -1,6 +1,6 @@
-package uk.co.jakelee.apodwallpaper.api
+package uk.co.jakelee.apodwallpaper.config
 
-data class ApiResponse(
+data class RemoteApod(
     val copyright: String?,
     val date: String,
     val explanation: String,
@@ -11,5 +11,5 @@ data class ApiResponse(
     val url: String,
     var quota: Int?
 ) {
-    fun isValid() = this.title.isNotEmpty() && this.url.isNotEmpty() && this.quota != null
+    fun isValid() = this.title.isNotEmpty() && this.url.isNotEmpty()
 }

@@ -16,6 +16,7 @@
     <string name="pref_api_quota">api_quota</string>
     <string name="pref_last_filtered_date">last_filtered_date</string>
     <string name="pref_last_filtered_reason">last_filtered_reason</string>
+    <string name="pref_last_sync_fix_date">last_sync_fix_date</string>
 
     <!-- App options section -->
     <string name="pref_custom_key_enabled">custom_key_enabled</string>
@@ -36,6 +37,9 @@
 
     <string name="pref_automatic_check_wifi">automatic_check_wifi</string>
     <bool name="automatic_check_wifi_default">false</bool>
+
+    <string name="pref_automatic_check_fix">automatic_check_fix</string>
+    <bool name="automatic_check_fix_default">true</bool>
 
     <string name="pref_automatic_check_time">automatic_check_time</string>
     <integer name="automatic_check_time_default">8</integer>

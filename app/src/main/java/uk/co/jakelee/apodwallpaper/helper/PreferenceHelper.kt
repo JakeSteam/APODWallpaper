@@ -3,35 +3,14 @@ package uk.co.jakelee.apodwallpaper.helper
 import android.content.Context
 import android.preference.PreferenceManager
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.api.Apod
 
 class PreferenceHelper(val context: Context) {
     val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-    enum class OldStringPref { Title, Desc, Image, ImageHd, Copyright, IsImage }
-
-    fun saveApodData(response: Apod) = prefs.edit()
-        .putString("${response.date}_${OldStringPref.Title.name}", response.title)
-        .putString("${response.date}_${OldStringPref.Desc.name}", response.desc)
-        .putString("${response.date}_${OldStringPref.Image.name}", response.imageUrl)
-        .putString("${response.date}_${OldStringPref.ImageHd.name}", response.imageUrlHd)
-        .putString("${response.date}_${OldStringPref.Copyright.name}", response.copyright)
-        .putBoolean("${response.date}_${OldStringPref.IsImage.name}", response.isImage)
-        .apply()
-
-    fun getApodData(date: String) = Apod(
-        date,
-        prefs.getString("${date}_${OldStringPref.Title.name}", "")!!,
-        prefs.getString("${date}_${OldStringPref.Desc.name}", "")!!,
-        prefs.getString("${date}_${OldStringPref.Image.name}", "")!!,
-        prefs.getString("${date}_${OldStringPref.ImageHd.name}", "")!!,
-        prefs.getString("${date}_${OldStringPref.Copyright.name}", "")!!,
-        prefs.getBoolean("${date}_${OldStringPref.IsImage.name}", true)
-    )
-
     enum class BooleanPref(val prefId: Int, val defaultId: Int) {
         automatic_enabled(R.string.pref_automatic_enabled, R.bool.automatic_enabled_default),
         automatic_check_wifi(R.string.pref_automatic_check_wifi, R.bool.automatic_check_wifi_default),
+        automatic_check_fix(R.string.pref_automatic_check_fix, R.bool.automatic_check_fix_default),
         show_description(R.string.pref_show_description, R.bool.show_description_default),
         custom_key_enabled(R.string.pref_custom_key_enabled, R.bool.custom_key_enabled_default),
         wallpaper_enabled(R.string.pref_wallpaper_enabled, R.bool.wallpaper_enabled_default),
@@ -71,7 +50,8 @@ class PreferenceHelper(val context: Context) {
         last_run_manual(R.string.pref_last_manual_run, R.integer.empty_int),
         last_set_manual(R.string.pref_last_manual_set, R.integer.empty_int),
         last_run_automatic(R.string.pref_last_automatic_run, R.integer.empty_int),
-        last_set_automatic(R.string.pref_last_automatic_set, R.integer.empty_int)
+        last_set_automatic(R.string.pref_last_automatic_set, R.integer.empty_int),
+        last_sync_fix_date(R.string.pref_last_sync_fix_date, R.integer.empty_int)
     }
 
     fun getLongPref(pref: LongPref) =

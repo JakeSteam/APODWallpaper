@@ -6,6 +6,7 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_image.*
+import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import java.io.File
 
@@ -24,14 +25,12 @@ class ImageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val title = arguments!!.getString(TITLE_ARG)
-        (activity as AppCompatActivity).supportActionBar!!.title = title
-        val imagePath = arguments!!.getString(IMAGE_ARG)
-        myZoomageView.setImageURI(Uri.fromFile(File(imagePath)))
+        (activity as AppCompatActivity).supportActionBar!!.title = arguments!!.getString(TITLE_ARG)
+        zoomageView.setImageURI(Uri.fromFile(File(arguments!!.getString(IMAGE_ARG))))
     }
 
     companion object {
-        val TITLE_ARG = "uk.co.jakelee.apodwallpaper.fullscreen.title"
-        val IMAGE_ARG = "uk.co.jakelee.apodwallpaper.fullscreen.image"
+        val TITLE_ARG = "${BuildConfig.APPLICATION_ID}.fullscreen.title"
+        val IMAGE_ARG = "${BuildConfig.APPLICATION_ID}.fullscreen.image"
     }
 }

@@ -9,11 +9,25 @@ android {
         applicationId "uk.co.jakelee.apodwallpaper"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 4
-        versionName "0.1.0"
+        versionCode 5
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "APOD_API_KEY", apod_api_key
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+        resConfigs "en"
+    }
+
+    flavorDimensions "endpoint"
+    productFlavors {
+        apod {
+            dimension "endpoint"
+            applicationId "uk.co.jakelee.apodwallpaper"
+            buildConfigField "String", "AUTH_CODE", apod_api_key
+        }
+        moonmonday {
+            dimension "endpoint"
+            applicationId "uk.co.jakelee.moonmonday"
+            buildConfigField "String", "AUTH_CODE", '""'
+        }
     }
     buildTypes {
         release {
