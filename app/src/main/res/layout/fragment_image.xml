@@ -5,7 +5,7 @@
         android:background="@color/colorPrimary">
 
     <com.jsibbold.zoomage.ZoomageView
-            android:id="@+id/myZoomageView"
+            android:id="@+id/zoomageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
     />

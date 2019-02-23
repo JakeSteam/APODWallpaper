@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleRecheckTap(item: MenuItem, fragment: HomeFragment) {
         if (EndpointCheckTimingHelper.canRecheck(this)) {
-            fragment.getApod(EndpointCheckTimingHelper.getLatestDate(), true, true, item)
+            fragment.getContent(EndpointCheckTimingHelper.getLatestDate(), true, true, item)
         } else {
             val recheck = EndpointCheckTimingHelper.getNextRecheckTime(this)
             val recheckTime =

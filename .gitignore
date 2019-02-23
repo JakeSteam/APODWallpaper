@@ -15,3 +15,7 @@ gradle\.properties
 \.idea/assetWizardSettings\.xml
 
 app/google-services\.json
+
+app/src/apod/google-services\.json
+
+app/src/moonmonday/google-services\.json

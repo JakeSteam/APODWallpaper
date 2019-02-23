@@ -6,7 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
-import uk.co.jakelee.apodwallpaper.api.ApiWrapper.Companion.downloadApod
+import uk.co.jakelee.apodwallpaper.api.ApiWrapper.Companion.downloadContent
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
 
 // adb shell dumpsys activity service GcmService --endpoints uk.co.jakelee.apodwallpaper
@@ -23,7 +23,7 @@ class EndpointCheckJob : JobService() {
             EndpointCheckScheduler(applicationContext).scheduleRepeatingJob()
         }
         val date = EndpointCheckTimingHelper.getLatestDate()
-        downloadApod(applicationContext, date, true, false) { jobFinished(job, false) }
+        downloadContent(applicationContext, date, true, false) { jobFinished(job, false) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe()
