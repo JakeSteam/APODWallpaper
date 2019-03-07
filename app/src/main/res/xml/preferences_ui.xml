@@ -98,7 +98,9 @@
                 android:dependency="@string/pref_filtering_ratio_enabled"
                 android:summary="@string/filtering_ratio_desc"/>
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/category_targets">
+    <PreferenceCategory
+            android:key="@string/category_targets"
+            android:title="@string/category_targets">
         <SwitchPreference
                 android:key="@string/pref_wallpaper_enabled"
                 android:defaultValue="@bool/wallpaper_enabled_default"
