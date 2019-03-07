@@ -1,9 +1,13 @@
 package uk.co.jakelee.apodwallpaper.scheduling
 
+import android.annotation.SuppressLint
 import android.widget.Toast
-import com.firebase.jobdispatcher.*
+import com.firebase.jobdispatcher.JobParameters
+import com.firebase.jobdispatcher.JobService
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiWrapper.Companion.downloadContent
@@ -11,7 +15,11 @@ import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
 
 // adb shell dumpsys activity service GcmService --endpoints uk.co.jakelee.apodwallpaper
 class EndpointCheckJob : JobService() {
+    init {
+        RxJavaPlugins.setErrorHandler { Timber.e(it.cause, "Uncaught RxJava error") }
+    }
 
+    @SuppressLint("CheckResult")
     override fun onStartJob(job: JobParameters): Boolean {
         // If we're testing scheduling, don't actually perform a job
         if (job.tag == TEST_JOB_TAG) {
@@ -26,7 +34,9 @@ class EndpointCheckJob : JobService() {
         downloadContent(applicationContext, date, true, false) { jobFinished(job, false) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe()
+            .subscribe({}, {
+                Timber.e("Exception during job, try again")
+            })
         if (EndpointCheckTimingHelper.isJobBadlyTimed(applicationContext)) {
             fixBadlyTimedJob()
         }
