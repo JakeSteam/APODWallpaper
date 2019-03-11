@@ -45,10 +45,16 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         setupListeners()
         setupVersionInfo()
         setupSeekbars()
+        setupNotificationColourTitle()
         val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
         if (customKeyPref.text.isNotEmpty()) {
             customKeyPref.title = customKeyPref.text
         }
+    }
+
+    private fun setupNotificationColourTitle() {
+        val notificationColourPref = (findPreference(getString(R.string.pref_notifications_colour)) as ListPreference)
+        notificationColourPref.title = String.format(getString(R.string.notifications_colour_title), notificationColourPref.value)
     }
 
     private fun setupSeekbars() {
@@ -143,6 +149,9 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 } else {
                     pref.title = pref.text
                 }
+            }
+            key == getString(R.string.pref_notifications_colour) -> {
+                setupNotificationColourTitle()
             }
         }
     }

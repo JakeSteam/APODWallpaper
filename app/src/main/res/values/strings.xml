@@ -106,12 +106,14 @@
     <string name="notifications_instant_desc">Display a notification now to check your settings.</string>
     <string name="notifications_led_title">LED</string>
     <string name="notifications_led_desc">When enabled, the notification will light up your LED (if available).</string>
+    <string name="notifications_colour_title">LED Colour: %s</string>
+    <string name="notifications_colour_desc">Choose the colour your LED will light up when a notification is received.</string>
     <string name="notifications_sound_title">Sound</string>
     <string name="notifications_sound_desc">When enabled, the notification will make a little beep noise.</string>
     <string name="notifications_vibrate_title">Vibrate</string>
     <string name="notifications_vibrate_desc">When enabled, the notification will vibrate once.</string>
     <string name="notifications_preview_title">Rich previews</string>
-    <string name="notifications_preview_desc">When enabled, the notification can be expanded to view the image.</string>
+    <string name="notifications_preview_desc">When enabled, the notification can be expanded to view the image, instead of the description.</string>
     <string name="category_additional_actions">Additional actions</string>
     <string name="delete_images_title">Delete all saved images</string>
     <string name="delete_images_desc">Delete all saved images (except current) to free up space.</string>
@@ -136,4 +138,38 @@
     <string name="give_feedback_github">GitHub</string>
     <string name="test_jobs_scheduled">Scheduled job for 50-70 seconds from now.</string>
     <string name="test_jobs_success">APOD Wallpaper job scheduling works!</string>
+    <string-array name="notification_colour_names">
+        <item>White</item>
+        <item>Silver</item>
+        <item>Grey</item>
+        <item>Aqua</item>
+        <item>Teal</item>
+        <item>Red</item>
+        <item>Maroon</item>
+        <item>Fuchsia</item>
+        <item>Purple</item>
+        <item>Lime</item>
+        <item>Green</item>
+        <item>Yellow</item>
+        <item>Olive</item>
+        <item>Blue</item>
+        <item>Navy</item>
+    </string-array>
+    <string-array name="notification_colour_values">
+        <item>#FFFFFF</item>
+        <item>#C0C0C0</item>
+        <item>#808080</item>
+        <item>#00FFFF</item>
+        <item>#008080</item>
+        <item>#FF0000</item>
+        <item>#800000</item>
+        <item>#FF00FF</item>
+        <item>#800080</item>
+        <item>#00FF00</item>
+        <item>#008000</item>
+        <item>#FFFF00</item>
+        <item>#808000</item>
+        <item>#0000FF</item>
+        <item>#000080</item>
+    </string-array>
 </resources>

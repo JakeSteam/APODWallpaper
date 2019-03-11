@@ -36,7 +36,7 @@ class NotificationHelper(val context: Context) {
             return
         }
         val notifManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val notification = applyNotificationPreferences(prefHelper, getBasicNotification(contentItem), image)
+        val notification = applyNotificationPreferences(prefHelper, getBasicNotification(contentItem), image, contentItem.desc)
         createNotifChannelIfNeeded(notifManager)
         notifManager.notify(notificationId, notification)
     }
@@ -51,7 +51,7 @@ class NotificationHelper(val context: Context) {
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle("$date: ${contentItem.title}")
-            .setContentText(contentItem.desc.take(100))
+            .setContentText(contentItem.desc)
             .setContentIntent(
                 PendingIntent.getActivity(
                     context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT
@@ -62,10 +62,12 @@ class NotificationHelper(val context: Context) {
     private fun applyNotificationPreferences(
         prefHelper: PreferenceHelper,
         notif: NotificationCompat.Builder,
-        image: Bitmap
+        image: Bitmap,
+        description: String
     ): Notification {
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_led)) {
-            notif.setLights(Color.WHITE, 1000, 3000)
+            notif.setLights(Color.parseColor(prefHelper.getStringPref(PreferenceHelper.StringPref.notification_colour)),
+                1000, 3000)
         }
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_sound)) {
             notif.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -80,8 +82,12 @@ class NotificationHelper(val context: Context) {
                     .bigLargeIcon(null)
             )
         } else {
-            notif.setLargeIcon(image)
+            notif.setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(description)
+            )
         }
+        notif.setLargeIcon(image)
         return notif.build()
     }
 
