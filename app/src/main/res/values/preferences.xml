@@ -104,7 +104,7 @@
     <bool name="notifications_vibrate_default">true</bool>
 
     <string name="pref_notifications_preview">notifications_preview</string>
-    <bool name="notifications_preview_default">true</bool>
+    <bool name="notifications_preview_default">false</bool>
 
     <string name="pref_notifications_colour">notifications_colour</string>
     <string name="notifications_colour_default_title">White</string>

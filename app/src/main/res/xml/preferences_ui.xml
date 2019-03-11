@@ -144,7 +144,6 @@
         <ListPreference
                 android:key="@string/pref_notifications_colour"
                 android:defaultValue="@string/notifications_colour_default_title"
-                android:title="@string/notifications_colour_title"
                 android:icon="@drawable/ic_settings_colour"
                 android:dependency="@string/pref_notifications_led"
                 android:summary="@string/notifications_colour_desc"
