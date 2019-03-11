@@ -36,7 +36,8 @@ class PreferenceHelper(val context: Context) {
         last_pulled(R.string.pref_last_pulled, R.string.empty_string),
         custom_key(R.string.pref_custom_key, R.string.custom_key_default),
         last_filtered_date(R.string.pref_last_filtered_date, R.string.custom_key_default),
-        last_filtered_reason(R.string.pref_last_filtered_reason, R.string.custom_key_default)
+        last_filtered_reason(R.string.pref_last_filtered_reason, R.string.custom_key_default),
+        notification_colour(R.string.pref_notifications_colour, R.string.notifications_colour_default)
     }
 
     fun getStringPref(pref: StringPref) =

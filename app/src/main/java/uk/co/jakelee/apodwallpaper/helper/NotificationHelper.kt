@@ -66,7 +66,8 @@ class NotificationHelper(val context: Context) {
         description: String
     ): Notification {
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_led)) {
-            notif.setLights(Color.WHITE, 1000, 3000)
+            notif.setLights(Color.parseColor(prefHelper.getStringPref(PreferenceHelper.StringPref.notification_colour)),
+                1000, 3000)
         }
         if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_sound)) {
             notif.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
