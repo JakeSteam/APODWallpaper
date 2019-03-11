@@ -31,6 +31,9 @@
     <string name="pref_use_hd_images">use_hd_images</string>
     <bool name="use_hd_images_default">false</bool>
 
+    <string name="pref_use_greyscale_images">use_greyscale_images</string>
+    <bool name="use_greyscale_images_default">false</bool>
+
     <!-- Automatic section -->
     <string name="pref_automatic_enabled">automatic_enabled</string>
     <bool name="automatic_enabled_default">true</bool>

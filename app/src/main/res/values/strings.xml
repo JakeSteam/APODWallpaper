@@ -67,6 +67,8 @@
     <string name="use_hd_images_desc">When enabled, HD images will be used. Some of these are too large to be displayed
         in the app, but still work as wallpapers!
     </string>
+    <string name="use_greyscale_images_title">Use greyscale images</string>
+    <string name="use_greyscale_images_desc">When enabled, all images will be converted to black and white before being used. Only applies to new images.</string>
     <string name="category_app_options">App options</string>
     <string name="category_automatic_checking">Automatic checking</string>
     <string name="automatic_enabled_title">Enable</string>

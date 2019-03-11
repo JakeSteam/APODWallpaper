@@ -25,6 +25,12 @@
                 android:title="@string/use_hd_images_title"
                 android:icon="@drawable/ic_settings_hd"
                 android:summary="@string/use_hd_images_desc"/>
+        <SwitchPreference
+                android:key="@string/pref_use_greyscale_images"
+                android:defaultValue="@bool/use_greyscale_images_default"
+                android:title="@string/use_greyscale_images_title"
+                android:icon="@drawable/ic_settings_greyscale"
+                android:summary="@string/use_greyscale_images_desc"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_automatic_checking">
         <SwitchPreference
