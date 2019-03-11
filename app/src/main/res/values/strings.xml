@@ -111,7 +111,7 @@
     <string name="notifications_vibrate_title">Vibrate</string>
     <string name="notifications_vibrate_desc">When enabled, the notification will vibrate once.</string>
     <string name="notifications_preview_title">Rich previews</string>
-    <string name="notifications_preview_desc">When enabled, the notification can be expanded to view the image.</string>
+    <string name="notifications_preview_desc">When enabled, the notification can be expanded to view the image, instead of the description.</string>
     <string name="category_additional_actions">Additional actions</string>
     <string name="delete_images_title">Delete all saved images</string>
     <string name="delete_images_desc">Delete all saved images (except current) to free up space.</string>
