@@ -25,6 +25,12 @@
                 android:title="@string/use_hd_images_title"
                 android:icon="@drawable/ic_settings_hd"
                 android:summary="@string/use_hd_images_desc"/>
+        <SwitchPreference
+                android:key="@string/pref_use_greyscale_images"
+                android:defaultValue="@bool/use_greyscale_images_default"
+                android:title="@string/use_greyscale_images_title"
+                android:icon="@drawable/ic_settings_greyscale"
+                android:summary="@string/use_greyscale_images_desc"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/category_automatic_checking">
         <SwitchPreference
@@ -135,6 +141,14 @@
                 android:icon="@drawable/ic_settings_led"
                 android:dependency="@string/pref_notifications_enabled"
                 android:summary="@string/notifications_led_desc"/>
+        <ListPreference
+                android:key="@string/pref_notifications_colour"
+                android:defaultValue="@string/notifications_colour_default_title"
+                android:icon="@drawable/ic_settings_colour"
+                android:dependency="@string/pref_notifications_led"
+                android:summary="@string/notifications_colour_desc"
+                android:entries="@array/notification_colour_names"
+                android:entryValues="@array/notification_colour_values"/>
         <SwitchPreference
                 android:key="@string/pref_notifications_sound"
                 android:defaultValue="@bool/notifications_sound_default"

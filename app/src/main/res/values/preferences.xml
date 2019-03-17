@@ -31,6 +31,9 @@
     <string name="pref_use_hd_images">use_hd_images</string>
     <bool name="use_hd_images_default">false</bool>
 
+    <string name="pref_use_greyscale_images">use_greyscale_images</string>
+    <bool name="use_greyscale_images_default">false</bool>
+
     <!-- Automatic section -->
     <string name="pref_automatic_enabled">automatic_enabled</string>
     <bool name="automatic_enabled_default">true</bool>
@@ -101,7 +104,11 @@
     <bool name="notifications_vibrate_default">true</bool>
 
     <string name="pref_notifications_preview">notifications_preview</string>
-    <bool name="notifications_preview_default">true</bool>
+    <bool name="notifications_preview_default">false</bool>
+
+    <string name="pref_notifications_colour">notifications_colour</string>
+    <string name="notifications_colour_default_title">White</string>
+    <string name="notifications_colour_default">#FFFFFF</string>
 
     <!-- Additional section -->
     <string name="pref_delete_images">delete_images</string>

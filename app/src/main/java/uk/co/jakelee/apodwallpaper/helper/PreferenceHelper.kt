@@ -23,7 +23,8 @@ class PreferenceHelper(val context: Context) {
         filtering_enabled(R.string.pref_filtering_enabled, R.bool.filtering_enabled_default),
         filtering_ratio_enabled(R.string.pref_filtering_ratio_enabled, R.bool.filtering_ratio_enabled_default),
         first_time_setup(R.string.pref_first_time_setup, R.bool.first_time_setup_default),
-        use_hd_images(R.string.pref_use_hd_images, R.bool.use_hd_images_default)
+        use_hd_images(R.string.pref_use_hd_images, R.bool.use_hd_images_default),
+        use_greyscale_images(R.string.pref_use_greyscale_images, R.bool.use_greyscale_images_default)
     }
 
     fun getBooleanPref(pref: BooleanPref) =
@@ -36,7 +37,8 @@ class PreferenceHelper(val context: Context) {
         last_pulled(R.string.pref_last_pulled, R.string.empty_string),
         custom_key(R.string.pref_custom_key, R.string.custom_key_default),
         last_filtered_date(R.string.pref_last_filtered_date, R.string.custom_key_default),
-        last_filtered_reason(R.string.pref_last_filtered_reason, R.string.custom_key_default)
+        last_filtered_reason(R.string.pref_last_filtered_reason, R.string.custom_key_default),
+        notification_colour(R.string.pref_notifications_colour, R.string.notifications_colour_default)
     }
 
     fun getStringPref(pref: StringPref) =
