@@ -123,7 +123,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun displayContent(dateString: String) {
-        if (dateString.isNotEmpty()) {
+        if (dateString.isNotEmpty() && activity != null) {
             val contentData = ContentHelper(activity!!).getContentData(dateString)
             titleBar.text = contentData.title
             descriptionBar.text = contentData.desc
