@@ -123,7 +123,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun displayContent(dateString: String) {
-        if (dateString.isNotEmpty()) {
+        if (dateString.isNotEmpty() && activity != null) {
             val contentData = ContentHelper(activity!!).getContentData(dateString)
             titleBar.text = contentData.title
             descriptionBar.text = contentData.desc
@@ -140,9 +140,9 @@ class HomeFragment : Fragment() {
                 metadataBar.text = String.format(getString(R.string.metadata_bar), dateString, contentData.copyright)
             }
             metadataGroup.visibility = View.VISIBLE
-            if (contentData.isImage) {
+            val image = FileSystemHelper(activity!!).getImage(contentData.date)
+            if (contentData.isImage && image != null) {
                 bottomButtonsGroup.visibility = View.VISIBLE
-                val image = FileSystemHelper(activity!!).getImage(contentData.date)
                 if (image.byteCount > 100 * 1024 * 1024) {
                     Toast.makeText(activity!!, getString(R.string.error_image_too_large), Toast.LENGTH_SHORT).show()
                 } else {
@@ -157,7 +157,16 @@ class HomeFragment : Fragment() {
                         contentData.imageUrlHd
                     )
                 )
-                manuallySetButton.setOnClickListener(manuallySetButtonListener(contentData.date, image, contentData.title))
+                manuallySetButton.setOnClickListener(
+                    manuallySetButtonListener(
+                        contentData.date,
+                        image,
+                        contentData.title
+                    )
+                )
+            } else if (contentData.isImage && image == null) {
+                descriptionBar.text = getString(R.string.error_image_not_found)
+                getContent(dateString, pullingLatest = false, manual = true)
             } else {
                 descriptionBar.text = String.format(
                     getString(R.string.apod_not_image),
