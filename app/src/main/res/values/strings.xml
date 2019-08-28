@@ -141,6 +141,7 @@
     <string name="give_feedback_github">GitHub</string>
     <string name="test_jobs_scheduled">Scheduled job for 50-70 seconds from now.</string>
     <string name="test_jobs_success">APOD Wallpaper job scheduling works!</string>
+    <string name="power_saving_warning">Power saving mode is enabled, APOD will likely not work correctly!\n\nPlease turn off power saving mode / whitelist this app by tapping here.</string>
     <string-array name="notification_colour_names">
         <item>White</item>
         <item>Silver</item>
