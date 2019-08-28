@@ -46,13 +46,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
     // Android UI libraries
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     implementation 'com.android.support:preference-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
 
@@ -61,12 +61,12 @@ dependencies {
     implementation 'com.wdullaer:materialdatetimepicker:4.1.0'
 
     // Networking
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.3'
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     // Threading
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
