@@ -4,4 +4,5 @@
     <color name="colorAccent">#141414</color>
 
     <color name="textBackground">#aa141414</color>
+    <color name="powerSavingBackground">#aaF28200</color>
 </resources>
