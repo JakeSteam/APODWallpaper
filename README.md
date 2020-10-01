@@ -1,6 +1,8 @@
 
 # Daily Space Wallpaper
 
+# NOTE: This repo is no longer maintained, as a full project rewrite is underway!
+
 ## Building
 
 1. Check out the repo.
