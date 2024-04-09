@@ -1,7 +1,6 @@
 package uk.co.jakelee.apodwallpaper.api
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
 import io.reactivex.Single
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.config.Config
@@ -40,10 +39,6 @@ class ApiWrapper {
                     }
                     postJobTask.invoke()
                     return@map it.first
-                }
-                .doOnError {
-                    Crashlytics.setBool("forced log", true)
-                    Crashlytics.logException(it)
                 }
         }
 

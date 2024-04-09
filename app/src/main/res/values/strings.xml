@@ -40,6 +40,7 @@
     <string name="error_image_too_large">Image is too large to be displayed (> 100MB)! Try turning off HD images &amp;
         clearing cache!
     </string>
+    <string name="error_image_not_found">Image not found! Try restarting the app, or something unknown might have gone wrong.</string>
     <string name="deleted_all_images">Deleted all past images!</string>
 
     <string name="lockscreen_set">Set \"%s\" as your lock screen!</string>

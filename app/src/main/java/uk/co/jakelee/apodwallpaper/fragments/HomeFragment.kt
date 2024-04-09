@@ -73,7 +73,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun toggleRecheckIfNecessary(menuItem: MenuItem?, enabled: Boolean) = menuItem?.let {
-        it.icon.alpha = if (enabled) 255 else 100
+        it.icon!!.alpha = if (enabled) 255 else 100
         it.isEnabled = enabled
     }
 
@@ -123,7 +123,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun displayContent(dateString: String) {
-        if (dateString.isNotEmpty()) {
+        if (dateString.isNotEmpty() && activity != null) {
             val contentData = ContentHelper(activity!!).getContentData(dateString)
             titleBar.text = contentData.title
             descriptionBar.text = contentData.desc
@@ -143,7 +143,9 @@ class HomeFragment : Fragment() {
             if (contentData.isImage) {
                 bottomButtonsGroup.visibility = View.VISIBLE
                 val image = FileSystemHelper(activity!!).getImage(contentData.date)
-                if (image.byteCount > 100 * 1024 * 1024) {
+                if (image == null) {
+                    Toast.makeText(activity!!, getString(R.string.error_image_not_found), Toast.LENGTH_SHORT).show()
+                } else if (image.byteCount > 100 * 1024 * 1024) {
                     Toast.makeText(activity!!, getString(R.string.error_image_too_large), Toast.LENGTH_SHORT).show()
                 } else {
                     backgroundImage.setImageBitmap(image)
