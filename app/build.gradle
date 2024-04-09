@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 33
     defaultConfig {
         applicationId "uk.co.jakelee.apodwallpaper"
         minSdkVersion 17

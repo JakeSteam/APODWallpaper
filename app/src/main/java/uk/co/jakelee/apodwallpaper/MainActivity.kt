@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric
 import uk.co.jakelee.apodwallpaper.fragments.HomeFragment
 import uk.co.jakelee.apodwallpaper.fragments.SettingsFragment
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
@@ -22,9 +21,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(this, Crashlytics())
-        }
         val prefHelper = PreferenceHelper(this)
         if (shouldPerformSetup(prefHelper)) {
             EndpointCheckScheduler(this).scheduleJob()
