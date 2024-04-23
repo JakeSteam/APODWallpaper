@@ -1,7 +1,8 @@
 
-# Daily Space Wallpaper
+# Daily APOD Space Wallpaper
 
-# NOTE: This repo is no longer maintained, as a full project rewrite is underway!
+> [!WARNING]
+> This repo is no longer actively developed, but PRs will be merged!
 
 ## Building
 
@@ -24,8 +25,6 @@
 ## Libraries
 External libraries used in this app are listed below. Core Android / AndroidX libraries are excluded from this list.
 
-* [Firebase Crashlytics](https://firebase.google.com/docs/crashlytics/get-started#android) (for crash reporting)
-* [Firebase JobDispatcher](https://github.com/firebase/firebase-jobdispatcher-android) (for task scheduling)
 * [OkHttp](https://github.com/square/okhttp) & [Gson](https://github.com/google/gson) (for networking)
 * [Zoomage](https://github.com/jsibbold/zoomage) (for image zooming)
 * [Material DateTime Picker](https://github.com/wdullaer/MaterialDateTimePicker) (for day picking)
