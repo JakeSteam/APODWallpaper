@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
     defaultConfig {
         applicationId "uk.co.jakelee.apodwallpaper"
         minSdkVersion 17
@@ -13,6 +13,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         resConfigs "en"
+        multiDexEnabled true
     }
 
     flavorDimensions "endpoint"
@@ -44,9 +45,10 @@ dependencies {
     // Core
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // Firebase
+    // Scheduling
     implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+    implementation "androidx.work:work-rxjava2:2.7.1"
 
     // Android UI libraries
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
@@ -68,6 +70,9 @@ dependencies {
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Build
+    implementation 'com.android.support:multidex:1.0.3'
 
 }
 

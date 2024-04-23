@@ -9,8 +9,7 @@ import uk.co.jakelee.apodwallpaper.helper.*
 class ApiWrapper {
     companion object {
 
-        fun downloadContent(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean,
-                            postJobTask: () -> Unit): Single<ContentItem> {
+        fun downloadContent(context: Context, dateString: String, pullingLatest: Boolean, manualCheck: Boolean): Single<ContentItem> {
             val prefHelper = PreferenceHelper(context)
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
@@ -37,7 +36,6 @@ class ApiWrapper {
                     if (pullingLatest && it.first.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
                         handleNewLatestContent(it.first, fsh, manualCheck, context, prefHelper)
                     }
-                    postJobTask.invoke()
                     return@map it.first
                 }
         }

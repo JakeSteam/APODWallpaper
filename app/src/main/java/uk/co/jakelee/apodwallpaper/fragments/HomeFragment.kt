@@ -15,13 +15,25 @@ import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.fragment_main.backgroundImage
+import kotlinx.android.synthetic.main.fragment_main.bottomButtonsGroup
+import kotlinx.android.synthetic.main.fragment_main.descriptionBar
+import kotlinx.android.synthetic.main.fragment_main.fullscreenButton
+import kotlinx.android.synthetic.main.fragment_main.manuallySetButton
+import kotlinx.android.synthetic.main.fragment_main.metadataBar
+import kotlinx.android.synthetic.main.fragment_main.metadataGroup
+import kotlinx.android.synthetic.main.fragment_main.shareButton
+import kotlinx.android.synthetic.main.fragment_main.titleBar
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.ApiWrapper
-import uk.co.jakelee.apodwallpaper.helper.*
+import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
+import uk.co.jakelee.apodwallpaper.helper.ContentHelper
+import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
+import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
+import uk.co.jakelee.apodwallpaper.helper.WallpaperHelper
 import uk.co.jakelee.apodwallpaper.scheduling.EndpointCheckTimingHelper
-import java.util.*
+import java.util.Calendar
 import java.util.concurrent.TimeoutException
 
 
@@ -85,7 +97,7 @@ class HomeFragment : Fragment() {
             displayContent(dateString)
             toggleRecheckIfNecessary(menuItem, true)
         } else {
-            disposable = ApiWrapper.downloadContent(activity!!, dateString, pullingLatest, manual) {}
+            disposable = ApiWrapper.downloadContent(activity!!, dateString, pullingLatest, manual)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally { toggleRecheckIfNecessary(menuItem, true) }
