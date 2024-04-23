@@ -8,8 +8,8 @@ android {
         applicationId "uk.co.jakelee.apodwallpaper"
         minSdkVersion 17
         targetSdkVersion 33
-        versionCode 9
-        versionName "1.1.1"
+        versionCode 10
+        versionName "1.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         resConfigs "en"
