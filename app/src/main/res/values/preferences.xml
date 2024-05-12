@@ -5,7 +5,7 @@
     <integer name="empty_int">0</integer>
 
     <!-- Internal only -->
-    <string name="pref_first_time_setup">first_time_setup</string>
+    <string name="pref_first_time_setup">first_time_setup_v2</string>
     <bool name="first_time_setup_default">false</bool>
     <string name="pref_last_automatic_run">last_automatic_run</string>
     <string name="pref_last_automatic_set">last_automatic_set</string>
