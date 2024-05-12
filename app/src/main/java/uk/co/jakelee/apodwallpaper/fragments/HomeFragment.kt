@@ -157,8 +157,10 @@ class HomeFragment : Fragment() {
                 val image = FileSystemHelper(activity!!).getImage(contentData.date)
                 if (image == null) {
                     Toast.makeText(activity!!, getString(R.string.error_image_not_found), Toast.LENGTH_SHORT).show()
+                    return
                 } else if (image.byteCount > 100 * 1024 * 1024) {
                     Toast.makeText(activity!!, getString(R.string.error_image_too_large), Toast.LENGTH_SHORT).show()
+                    return
                 } else {
                     backgroundImage.setImageBitmap(image)
                 }

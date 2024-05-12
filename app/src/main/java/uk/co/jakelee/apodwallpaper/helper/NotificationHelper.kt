@@ -54,7 +54,7 @@ class NotificationHelper(val context: Context) {
             .setContentText(contentItem.desc)
             .setContentIntent(
                 PendingIntent.getActivity(
-                    context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT
+                    context, 0, Intent(context, MainActivity::class.java), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
     }
