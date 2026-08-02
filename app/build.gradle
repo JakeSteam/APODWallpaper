@@ -6,6 +6,13 @@ plugins {
 // a quoted Java literal either way.
 def apodApiKey = (project.findProperty('APOD_API_KEY') ?: 'DEMO_KEY').toString().replaceAll('^"|"$', '')
 
+// Upload key, from ~/.gradle/gradle.properties, outside the repo. Without it release simply comes
+// out unsigned, so a clone still builds. Play App Signing holds the real signing key, so this one
+// can be reset in Play Console if it is ever lost.
+def signingReady = ['APOD_STORE_FILE', 'APOD_STORE_PASSWORD', 'APOD_KEY_ALIAS', 'APOD_KEY_PASSWORD'].every {
+    project.hasProperty(it)
+} && file(project.findProperty('APOD_STORE_FILE').toString()).exists()
+
 android {
     compileSdk 37
     namespace "uk.co.jakelee.apodwallpaper"
@@ -28,10 +35,21 @@ android {
         // Off by default from AGP 8; AUTH_CODE and BUILD_TIME are custom BuildConfig fields.
         buildConfig true
     }
+    if (signingReady) {
+        signingConfigs {
+            upload {
+                storeFile = file(project.findProperty('APOD_STORE_FILE').toString())
+                storePassword = project.findProperty('APOD_STORE_PASSWORD').toString()
+                keyAlias = project.findProperty('APOD_KEY_ALIAS').toString()
+                keyPassword = project.findProperty('APOD_KEY_PASSWORD').toString()
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (signingReady) signingConfig = signingConfigs.upload
         }
     }
     compileOptions {
