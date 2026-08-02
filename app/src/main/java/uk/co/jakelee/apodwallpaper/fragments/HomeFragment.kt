@@ -80,9 +80,8 @@ class HomeFragment : Fragment() {
     }
 
     /**
-     * Targeting 35+ draws the window behind the system bars, which left the metadata bar's text
-     * under the navigation bar. The picture is meant to be full bleed, so only the bar is padded -
-     * its background keeps running to the bottom edge and reads as a scrim behind the bar.
+     * Edge to edge left the metadata text under the navigation bar. Only the bar is padded, not
+     * the whole screen, so the picture stays full bleed and the bar's background reaches the edge.
      */
     private fun applyBottomInset() {
         val basePadding = binding.metadataBar.paddingBottom

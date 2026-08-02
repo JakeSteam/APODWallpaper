@@ -46,19 +46,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Targeting 35+ draws edge to edge, which pushes the action bar down by the status bar height
-     * but leaves the content view where it was, so the action bar covers the top of every screen -
-     * on the home screen that is the whole title. Padding the content down by the same inset lines
-     * it back up underneath.
+     * Edge to edge pushes the action bar down by the status bar height but leaves the content view
+     * where it was, so the action bar ends up covering the title. This puts them back in line.
      */
     private fun keepContentBelowActionBar() {
-        // The strip behind the status bar is now the near-black window background, so its icons
-        // have to be light to stay visible.
+        // Light icons, since the strip behind them is now the near-black window background.
         WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 
         val content = findViewById<View>(R.id.mainFrame)
-        // Read the window's own insets rather than listening on this view: the decor has already
-        // consumed the top inset by the time it reaches here, so a listener would only ever see 0.
+        // The decor consumes the top inset before it reaches this view, so a listener here would
+        // only ever see 0. The window's own insets still carry it.
         content.post {
             val insets = ViewCompat.getRootWindowInsets(window.decorView) ?: return@post
             val bars = insets.getInsets(
@@ -69,9 +66,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * From API 33 a notification is silently dropped without this permission - notify() does not
-     * throw, it simply does nothing - so the daily update would appear to work while never
-     * notifying. Only worth asking when the user actually wants notifications.
+     * From API 33 notify() without this permission does not throw, it silently does nothing, so
+     * the daily update would look like it worked while never notifying.
      */
     private fun requestNotificationPermissionIfNeeded(prefHelper: PreferenceHelper) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {

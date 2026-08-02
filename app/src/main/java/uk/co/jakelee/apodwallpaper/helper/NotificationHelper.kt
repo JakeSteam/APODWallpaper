@@ -79,7 +79,6 @@ class NotificationHelper(val context: Context) {
             notif.setStyle(
                 NotificationCompat.BigPictureStyle()
                     .bigPicture(image)
-                    // Clears the large icon when expanded, so it doesn't duplicate the picture.
                     // Cast disambiguates the Bitmap and Icon overloads, both nullable.
                     .bigLargeIcon(null as Bitmap?)
             )

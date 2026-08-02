@@ -20,9 +20,8 @@ class EndpointCheckJob(context: Context, params: WorkerParameters) : RxWorker(co
 
     @SuppressLint("CheckResult")
     override fun createWork(): Single<Result> {
-        // These are tags, not the request id, which is a UUID, so neither branch could ever be
-        // taken: the test job really downloaded, and - far worse - the repeating job was never
-        // scheduled, leaving automatic checks to run once and never again.
+        // Tags, not the request id, which is a UUID. Comparing against id meant the repeating job
+        // was never scheduled, so automatic checks ran once and never again.
         if (tags.contains(TEST_JOB_TAG)) {
             return Single.just(Result.success())
         }
