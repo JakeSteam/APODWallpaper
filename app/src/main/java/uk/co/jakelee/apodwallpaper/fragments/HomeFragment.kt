@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -64,6 +66,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        applyBottomInset()
         hideContent()
         displayContent(PreferenceHelper(activity!!).getStringPref(PreferenceHelper.StringPref.last_pulled))
         binding.descriptionBar.setOnClickListener {
@@ -74,6 +77,25 @@ class HomeFragment : Fragment() {
             )
             binding.descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
         }
+    }
+
+    /**
+     * Targeting 35+ draws the window behind the system bars, which left the metadata bar's text
+     * under the navigation bar. The picture is meant to be full bleed, so only the bar is padded -
+     * its background keeps running to the bottom edge and reads as a scrim behind the bar.
+     */
+    private fun applyBottomInset() {
+        val basePadding = binding.metadataBar.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            _binding?.metadataBar?.apply {
+                setPadding(paddingLeft, paddingTop, paddingRight, basePadding + bars.bottom)
+            }
+            insets
+        }
+        binding.root.requestApplyInsets()
     }
 
     override fun onResume() {

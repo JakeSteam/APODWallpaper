@@ -1,12 +1,20 @@
 package uk.co.jakelee.apodwallpaper
 
+import android.Manifest
 import android.app.DatePickerDialog
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import uk.co.jakelee.apodwallpaper.fragments.HomeFragment
 import uk.co.jakelee.apodwallpaper.fragments.SettingsFragment
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
@@ -17,6 +25,10 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private val HomeFragmentTag = "HOME_FRAGMENT"
+
+    private val notificationPermissionRequest =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,9 +37,49 @@ class MainActivity : AppCompatActivity() {
             EndpointCheckScheduler(this).scheduleJob()
             prefHelper.setBooleanPref(PreferenceHelper.BooleanPref.first_time_setup, true)
         }
+        requestNotificationPermissionIfNeeded(prefHelper)
+        keepContentBelowActionBar()
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.mainFrame, HomeFragment(), HomeFragmentTag).commit()
         supportFragmentManager.addOnBackStackChangedListener(backStackChangedListener)
+    }
+
+    /**
+     * Targeting 35+ draws edge to edge, which pushes the action bar down by the status bar height
+     * but leaves the content view where it was, so the action bar covers the top of every screen -
+     * on the home screen that is the whole title. Padding the content down by the same inset lines
+     * it back up underneath.
+     */
+    private fun keepContentBelowActionBar() {
+        val content = findViewById<View>(R.id.mainFrame)
+        // Read the window's own insets rather than listening on this view: the decor has already
+        // consumed the top inset by the time it reaches here, so a listener would only ever see 0.
+        content.post {
+            val insets = ViewCompat.getRootWindowInsets(window.decorView) ?: return@post
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            content.setPadding(bars.left, bars.top, bars.right, content.paddingBottom)
+        }
+    }
+
+    /**
+     * From API 33 a notification is silently dropped without this permission - notify() does not
+     * throw, it simply does nothing - so the daily update would appear to work while never
+     * notifying. Only worth asking when the user actually wants notifications.
+     */
+    private fun requestNotificationPermissionIfNeeded(prefHelper: PreferenceHelper) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return
+        }
+        if (!prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.notifications_enabled)) {
+            return
+        }
+        val granted = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+        if (!granted) {
+            notificationPermissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     private fun shouldPerformSetup(prefHelper: PreferenceHelper) =

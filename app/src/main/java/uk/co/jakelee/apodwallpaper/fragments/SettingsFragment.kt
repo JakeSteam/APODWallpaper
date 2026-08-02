@@ -11,6 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.preference.*
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
@@ -26,6 +28,23 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         val view = super.onCreateView(inflater, container, savedInstanceState)
         view.setBackgroundColor(Color.WHITE)
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Edge to edge at targetSdk 35+ puts the last preference under the navigation bar.
+        listView.clipToPadding = false
+        val basePadding = listView.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            listView.setPadding(
+                listView.paddingLeft, listView.paddingTop, listView.paddingRight, basePadding + bars.bottom
+            )
+            insets
+        }
+        view.requestApplyInsets()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
