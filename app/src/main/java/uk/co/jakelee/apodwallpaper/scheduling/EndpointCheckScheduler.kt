@@ -50,7 +50,12 @@ class EndpointCheckScheduler(val context: Context) {
             .addTag(EndpointCheckJob.JOB_TAG)
             .build()
 
-        workManager.enqueueUniquePeriodicWork(EndpointCheckJob.JOB_TAG, ExistingPeriodicWorkPolicy.REPLACE, workRequest)
+        // REPLACE is deprecated; CANCEL_AND_REENQUEUE is what it did.
+        workManager.enqueueUniquePeriodicWork(
+            EndpointCheckJob.JOB_TAG,
+            ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE,
+            workRequest
+        )
     }
 
     fun scheduleTestJob() {

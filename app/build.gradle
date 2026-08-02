@@ -43,9 +43,9 @@ android {
 dependencies {
     // The Kotlin stdlib comes from AGP's built-in Kotlin support, so it is not declared here.
 
-    // Scheduling
-    implementation "androidx.work:work-runtime-ktx:2.7.1"
-    implementation "androidx.work:work-rxjava2:2.7.1"
+    // Scheduling. 2.10.5 is the last release supporting minSdk 21; 2.11 requires 23.
+    implementation "androidx.work:work-runtime-ktx:2.10.5"
+    implementation "androidx.work:work-rxjava2:2.10.5"
 
     // Android UI libraries
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -61,9 +61,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.google.code.gson:gson:2.8.2'
 
-    // Threading
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    // Threading. 2.2.21 and 2.1.1 are the final 2.x releases of each.
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'

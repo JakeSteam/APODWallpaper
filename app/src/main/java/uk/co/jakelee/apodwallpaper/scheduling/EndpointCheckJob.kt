@@ -20,12 +20,13 @@ class EndpointCheckJob(context: Context, params: WorkerParameters) : RxWorker(co
 
     @SuppressLint("CheckResult")
     override fun createWork(): Single<Result> {
-        // If we're testing scheduling, don't actually perform a job
-        if (id.toString() == TEST_JOB_TAG) {
+        // These are tags, not the request id, which is a UUID, so neither branch could ever be
+        // taken: the test job really downloaded, and - far worse - the repeating job was never
+        // scheduled, leaving automatic checks to run once and never again.
+        if (tags.contains(TEST_JOB_TAG)) {
             return Single.just(Result.success())
         }
-        // If this is the initial task, also schedule the regular repeating job
-        if (id.toString() == INITIAL_JOB_TAG) {
+        if (tags.contains(INITIAL_JOB_TAG)) {
             EndpointCheckScheduler(applicationContext).scheduleRepeatingJob()
         }
         val date = EndpointCheckTimingHelper.getLatestDate()
