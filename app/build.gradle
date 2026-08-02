@@ -21,7 +21,9 @@ android {
         apod {
             dimension "endpoint"
             applicationId "uk.co.jakelee.apodwallpaper"
-            buildConfigField "String", "AUTH_CODE", apod_api_key
+            // NASA's shared DEMO_KEY is heavily rate limited, but it keeps a clone building without
+            // apod_api_key in ~/.gradle/gradle.properties. Users can set their own key in settings.
+            buildConfigField "String", "AUTH_CODE", project.findProperty('apod_api_key') ?: '"DEMO_KEY"'
         }
         moonmonday {
             dimension "endpoint"
@@ -46,7 +48,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Scheduling
-    implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation "androidx.work:work-runtime-ktx:2.7.1"
     implementation "androidx.work:work-rxjava2:2.7.1"
 
@@ -57,8 +58,9 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
 
     // Additional UI libraries
-    implementation 'com.jsibbold:zoomage:1.2.0'
-    implementation 'com.wdullaer:materialdatetimepicker:4.1.0'
+    // 1.2.0 and 4.1.0 were only ever on jcenter; these are the first releases on Maven Central.
+    implementation 'com.jsibbold:zoomage:1.3.1'
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 
     // Networking
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -75,5 +77,3 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
 }
-
-apply plugin: 'com.google.gms.google-services'
