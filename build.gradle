@@ -1,20 +1,8 @@
-buildscript {
-    ext.kotlin_version = '1.5.30'
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+// API 37 needs AGP 9.3+, which in turn needs Gradle 9.5.0 and JDK 17+.
+// AGP 9 has built-in Kotlin support and registers the `kotlin` extension itself, so the separate
+// org.jetbrains.kotlin.android plugin is neither needed nor compatible.
+plugins {
+    id 'com.android.application' version '9.3.1' apply false
 }
 
 task clean(type: Delete) {

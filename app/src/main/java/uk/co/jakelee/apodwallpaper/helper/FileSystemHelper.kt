@@ -55,7 +55,7 @@ class FileSystemHelper(private val context: Context) {
     fun deleteAllPastImages() {
         val lastPulled = PreferenceHelper(context).getStringPref(PreferenceHelper.StringPref.last_pulled)
         val files = getImagesDirectory().listFiles { _, filename -> !filename.startsWith(lastPulled) }
-        files.forEach {
+        files?.forEach {
             it.delete()
         }
     }

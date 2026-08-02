@@ -1,12 +1,14 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+}
 
 // Read from ~/.gradle/gradle.properties, outside the repo. Tolerates the value being quoted or
 // not, since buildConfigField needs a quoted Java literal either way.
 def apodApiKey = (project.findProperty('APOD_API_KEY') ?: 'DEMO_KEY').toString().replaceAll('^"|"$', '')
 
 android {
-    compileSdk 33
+    compileSdk 37
+    namespace "uk.co.jakelee.apodwallpaper"
     defaultConfig {
         applicationId "uk.co.jakelee.apodwallpaper"
         minSdkVersion 17
@@ -24,11 +26,13 @@ android {
 
     buildFeatures {
         viewBinding true
+        // Off by default from AGP 8; AUTH_CODE and BUILD_TIME are custom BuildConfig fields.
+        buildConfig true
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -38,18 +42,16 @@ android {
 }
 
 dependencies {
-    // Core
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // The Kotlin stdlib comes from AGP's built-in Kotlin support, so it is not declared here.
 
     // Scheduling
     implementation "androidx.work:work-runtime-ktx:2.7.1"
     implementation "androidx.work:work-rxjava2:2.7.1"
 
     // Android UI libraries
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
-    implementation 'com.android.support:preference-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
 
     // Additional UI libraries
     // 1.2.0 and 4.1.0 were only ever on jcenter; these are the first releases on Maven Central.
@@ -67,7 +69,5 @@ dependencies {
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    // Build
-    implementation 'com.android.support:multidex:1.0.3'
 
 }

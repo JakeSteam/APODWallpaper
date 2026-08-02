@@ -74,7 +74,7 @@ class MainActivity : AppCompatActivity() {
             val recheckTime =
                 DateUtils.getRelativeTimeSpanString(recheck, System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS)
             val recheckText =
-                String.format(getString(R.string.checked_too_recently), recheckTime.toString().toLowerCase())
+                String.format(getString(R.string.checked_too_recently), recheckTime.toString().lowercase())
             Toast.makeText(this, recheckText, Toast.LENGTH_SHORT).show()
         }
     }
