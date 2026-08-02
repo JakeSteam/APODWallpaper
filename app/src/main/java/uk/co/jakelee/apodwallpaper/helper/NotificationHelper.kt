@@ -79,7 +79,8 @@ class NotificationHelper(val context: Context) {
             notif.setStyle(
                 NotificationCompat.BigPictureStyle()
                     .bigPicture(image)
-                    .bigLargeIcon(null)
+                    // Cast disambiguates the Bitmap and Icon overloads, both nullable.
+                    .bigLargeIcon(null as Bitmap?)
             )
         } else {
             notif.setStyle(

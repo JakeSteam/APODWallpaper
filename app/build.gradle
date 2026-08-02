@@ -1,38 +1,55 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+plugins {
+    id 'com.android.application'
+}
+
+// From ~/.gradle/gradle.properties, outside the repo. Quoted or not, since buildConfigField needs
+// a quoted Java literal either way.
+def apodApiKey = (project.findProperty('APOD_API_KEY') ?: 'DEMO_KEY').toString().replaceAll('^"|"$', '')
+
+// Upload key, from ~/.gradle/gradle.properties, outside the repo. Without it release simply comes
+// out unsigned, so a clone still builds. Play App Signing holds the real signing key, so this one
+// can be reset in Play Console if it is ever lost.
+def signingReady = ['APOD_STORE_FILE', 'APOD_STORE_PASSWORD', 'APOD_KEY_ALIAS', 'APOD_KEY_PASSWORD'].every {
+    project.hasProperty(it)
+} && file(project.findProperty('APOD_STORE_FILE').toString()).exists()
 
 android {
-    compileSdk 33
+    compileSdk 37
+    namespace "uk.co.jakelee.apodwallpaper"
     defaultConfig {
         applicationId "uk.co.jakelee.apodwallpaper"
-        minSdkVersion 17
-        targetSdkVersion 33
-        versionCode 11
-        versionName "1.2.1"
+        minSdkVersion 21
+        targetSdkVersion 37
+        versionCode 12
+        versionName "1.3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+        // DEMO_KEY is heavily rate limited, but keeps a clone building. A key can also be set in
+        // the app's own settings.
+        buildConfigField "String", "AUTH_CODE", "\"${apodApiKey}\""
         resConfigs "en"
-        multiDexEnabled true
     }
 
-    flavorDimensions "endpoint"
-    productFlavors {
-        apod {
-            dimension "endpoint"
-            applicationId "uk.co.jakelee.apodwallpaper"
-            buildConfigField "String", "AUTH_CODE", apod_api_key
-        }
-        moonmonday {
-            dimension "endpoint"
-            applicationId "uk.co.jakelee.moonmonday"
-            buildConfigField "String", "AUTH_CODE", '""'
+    buildFeatures {
+        viewBinding true
+        // Off by default from AGP 8; AUTH_CODE and BUILD_TIME are custom BuildConfig fields.
+        buildConfig true
+    }
+    if (signingReady) {
+        signingConfigs {
+            upload {
+                storeFile = file(project.findProperty('APOD_STORE_FILE').toString())
+                storePassword = project.findProperty('APOD_STORE_PASSWORD').toString()
+                keyAlias = project.findProperty('APOD_KEY_ALIAS').toString()
+                keyPassword = project.findProperty('APOD_KEY_PASSWORD').toString()
+            }
         }
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (signingReady) signingConfig = signingConfigs.upload
         }
     }
     compileOptions {
@@ -42,38 +59,32 @@ android {
 }
 
 dependencies {
-    // Core
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // The Kotlin stdlib comes from AGP's built-in Kotlin support, so it is not declared here.
 
-    // Scheduling
-    implementation 'com.google.firebase:firebase-core:16.0.6'
-    implementation "androidx.work:work-runtime-ktx:2.7.1"
-    implementation "androidx.work:work-rxjava2:2.7.1"
+    // Scheduling. 2.10.5 is the last release supporting minSdk 21; 2.11 requires 23.
+    implementation "androidx.work:work-runtime-ktx:2.10.5"
+    implementation "androidx.work:work-rxjava2:2.10.5"
 
     // Android UI libraries
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
-    implementation 'com.android.support:preference-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
 
     // Additional UI libraries
-    implementation 'com.jsibbold:zoomage:1.2.0'
-    implementation 'com.wdullaer:materialdatetimepicker:4.1.0'
+    // 1.2.0 and 4.1.0 were only ever on jcenter; these are the first releases on Maven Central.
+    implementation 'com.jsibbold:zoomage:1.3.1'
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 
     // Networking
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.google.code.gson:gson:2.8.2'
 
-    // Threading
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.10'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    // Threading. 2.2.21 and 2.1.1 are the final 2.x releases of each.
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    // Build
-    implementation 'com.android.support:multidex:1.0.3'
 
 }
-
-apply plugin: 'com.google.gms.google-services'

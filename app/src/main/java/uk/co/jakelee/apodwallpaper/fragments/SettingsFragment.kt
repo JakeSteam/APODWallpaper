@@ -11,6 +11,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.preference.*
 import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.R
@@ -22,10 +24,27 @@ import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)
-        view!!.setBackgroundColor(Color.WHITE)
+        view.setBackgroundColor(Color.WHITE)
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Edge to edge at targetSdk 35+ puts the last preference under the navigation bar.
+        listView.clipToPadding = false
+        val basePadding = listView.paddingBottom
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            listView.setPadding(
+                listView.paddingLeft, listView.paddingTop, listView.paddingRight, basePadding + bars.bottom
+            )
+            insets
+        }
+        view.requestApplyInsets()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -38,23 +57,26 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         setHasOptionsMenu(true)
         addPreferencesFromResource(R.xml.preferences_ui)
         if (!WallpaperHelper.canSetLockScreen()) {
-            val target = findPreference(getString(R.string.pref_lockscreen_enabled))
-            val category = findPreference(getString(R.string.category_targets)) as PreferenceCategory
-            category.removePreference(target)
+            val target = findPreference<Preference>(getString(R.string.pref_lockscreen_enabled))
+            val category = findPreference<PreferenceCategory>(getString(R.string.category_targets))
+            if (target != null) {
+                category?.removePreference(target)
+            }
         }
         setupListeners()
         setupVersionInfo()
         setupSeekbars()
         setupNotificationColourTitle()
-        val customKeyPref = (findPreference(getString(R.string.pref_custom_key)) as EditTextPreference)
-        if (customKeyPref.text.isNotEmpty()) {
-            customKeyPref.title = customKeyPref.text
+        val customKeyPref = findPreference<EditTextPreference>(getString(R.string.pref_custom_key))
+        val customKey = customKeyPref?.text
+        if (!customKey.isNullOrEmpty()) {
+            customKeyPref?.title = customKey
         }
     }
 
     private fun setupNotificationColourTitle() {
-        val notificationColourPref = (findPreference(getString(R.string.pref_notifications_colour)) as ListPreference)
-        notificationColourPref.title = String.format(getString(R.string.notifications_colour_title), notificationColourPref.value)
+        val pref = findPreference<ListPreference>(getString(R.string.pref_notifications_colour)) ?: return
+        pref.title = String.format(getString(R.string.notifications_colour_title), pref.value)
     }
 
     private fun setupSeekbars() {
@@ -91,26 +113,31 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
     }
 
     private fun setupVersionInfo() {
-        findPreference(getString(R.string.pref_version)).title = "V${BuildConfig.VERSION_NAME}"
-        findPreference(getString(R.string.pref_version)).summary = String.format(
-            getString(R.string.version_summary),
-            BuildConfig.VERSION_CODE,
-            SimpleDateFormat("dd MMM yyy", Locale.US).format(BuildConfig.BUILD_TIME)
-        )
+        findPreference<Preference>(getString(R.string.pref_version))?.apply {
+            title = "V${BuildConfig.VERSION_NAME}"
+            summary = String.format(
+                getString(R.string.version_summary),
+                BuildConfig.VERSION_CODE,
+                SimpleDateFormat("dd MMM yyy", Locale.US).format(BuildConfig.BUILD_TIME)
+            )
+        }
     }
 
     private fun setupListeners() {
-        findPreference(getString(R.string.pref_view_status)).onPreferenceClickListener = viewStatusListener
-        findPreference(getString(R.string.pref_view_quota)).onPreferenceClickListener = viewQuotaListener
-        findPreference(getString(R.string.pref_notifications_instant)).onPreferenceClickListener =
-                previewNotificationListener
-        findPreference(getString(R.string.pref_delete_images)).onPreferenceClickListener = deleteImagesListener
-        findPreference(getString(R.string.pref_test_jobs)).onPreferenceClickListener = testJobsListener
-        findPreference(getString(R.string.pref_feedback)).onPreferenceClickListener = giveFeedbackListener
+        setListener(R.string.pref_view_status, viewStatusListener)
+        setListener(R.string.pref_view_quota, viewQuotaListener)
+        setListener(R.string.pref_notifications_instant, previewNotificationListener)
+        setListener(R.string.pref_delete_images, deleteImagesListener)
+        setListener(R.string.pref_test_jobs, testJobsListener)
+        setListener(R.string.pref_feedback, giveFeedbackListener)
+    }
+
+    private fun setListener(id: Int, listener: Preference.OnPreferenceClickListener) {
+        findPreference<Preference>(getString(id))?.onPreferenceClickListener = listener
     }
 
     fun setupSeekbar(id: Int, step: Int, min: Int, max: Int) {
-        val seekbar = findPreference(getString(id)) as SeekBarPreference
+        val seekbar = findPreference<SeekBarPreference>(getString(id)) ?: return
         seekbar.seekBarIncrement = resources.getInteger(step)
         seekbar.min = resources.getInteger(min)
         seekbar.max = resources.getInteger(max)
@@ -118,16 +145,19 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     override fun onResume() {
         super.onResume()
-        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onPause() {
         super.onPause()
-        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        val pref = findPreference(key)
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == null) {
+            return
+        }
+        val pref = findPreference<Preference>(key)
         when {
             key == getString(R.string.pref_automatic_enabled) && pref is SwitchPreference -> {
                 if (pref.isChecked) {
@@ -142,12 +172,13 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                 EndpointCheckScheduler(activity!!).scheduleJob()
             }
             key == getString(R.string.pref_custom_key) && pref is EditTextPreference -> {
-                if (pref.text.length < 40) {
+                val enteredKey = pref.text
+                if (enteredKey == null || enteredKey.length < 40) {
                     pref.text = ""
                     Toast.makeText(activity!!, getString(R.string.error_invalid_api_key), Toast.LENGTH_SHORT).show()
                     pref.title = getString(R.string.no_api_key_set)
                 } else {
-                    pref.title = pref.text
+                    pref.title = enteredKey
                 }
             }
             key == getString(R.string.pref_notifications_colour) -> {
@@ -225,7 +256,7 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         )
         var count = 0
         var size = 0L
-        FileSystemHelper(activity!!).getImagesDirectory().listFiles().forEach {
+        FileSystemHelper(activity!!).getImagesDirectory().listFiles()?.forEach {
             count++
             size += it.length()
         }
