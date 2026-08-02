@@ -11,7 +11,7 @@ android {
     namespace "uk.co.jakelee.apodwallpaper"
     defaultConfig {
         applicationId "uk.co.jakelee.apodwallpaper"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode 11
         versionName "1.2.1"
@@ -21,7 +21,6 @@ android {
         // APOD_API_KEY in ~/.gradle/gradle.properties. Users can set their own key in settings.
         buildConfigField "String", "AUTH_CODE", "\"${apodApiKey}\""
         resConfigs "en"
-        multiDexEnabled true
     }
 
     buildFeatures {
