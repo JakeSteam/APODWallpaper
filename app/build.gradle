@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+// Read from ~/.gradle/gradle.properties, outside the repo. Tolerates the value being quoted or
+// not, since buildConfigField needs a quoted Java literal either way.
+def apodApiKey = (project.findProperty('APOD_API_KEY') ?: 'DEMO_KEY').toString().replaceAll('^"|"$', '')
+
 android {
     compileSdk 33
     defaultConfig {
@@ -12,25 +16,13 @@ android {
         versionName "1.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField "java.util.Date", "BUILD_TIME", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+        // NASA's shared DEMO_KEY is heavily rate limited, but it keeps a clone building without
+        // APOD_API_KEY in ~/.gradle/gradle.properties. Users can set their own key in settings.
+        buildConfigField "String", "AUTH_CODE", "\"${apodApiKey}\""
         resConfigs "en"
         multiDexEnabled true
     }
 
-    flavorDimensions "endpoint"
-    productFlavors {
-        apod {
-            dimension "endpoint"
-            applicationId "uk.co.jakelee.apodwallpaper"
-            // NASA's shared DEMO_KEY is heavily rate limited, but it keeps a clone building without
-            // apod_api_key in ~/.gradle/gradle.properties. Users can set their own key in settings.
-            buildConfigField "String", "AUTH_CODE", project.findProperty('apod_api_key') ?: '"DEMO_KEY"'
-        }
-        moonmonday {
-            dimension "endpoint"
-            applicationId "uk.co.jakelee.moonmonday"
-            buildConfigField "String", "AUTH_CODE", '""'
-        }
-    }
     buildTypes {
         release {
             minifyEnabled false

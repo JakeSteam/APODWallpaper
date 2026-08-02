@@ -6,21 +6,13 @@
 
 ## Building
 
-1. Check out the repo.
-2. [Create a Firebase project](https://console.firebase.google.com/u/0/) (for crash reporting).
-3. Put your `google-services.json` file in `/app/src/FLAVOURNAME/`. 
+Check out the repo and build — no other setup is required.
 
-### APOD
-
-1. [Get an APOD api key](https://api.nasa.gov/index.html#apply-for-an-api-key).
-2. Add it as `apod_api_key="xxxx"` in your `gradle.properties`.
-
-## Adding a new flavour
-
-1. Add the new flavour to app-level `build.gradle`, along with any auth code needed.
-2. Create a new Firebase project, download the `google-services.json` file, and place it in `/app/src/FLAVOURNAME/`.
-3. Copy an existing `Config.kt`, and place it in `/app/src/FLAVOURNAME/java/PACKAGENAME/Config/`.
-4. Modify `Config.kt` as necessary.
+The app calls NASA's APOD API, and falls back to their shared `DEMO_KEY` if you have no key of
+your own. That is rate limited across everyone using it, so for anything beyond a smoke test
+[get your own key](https://api.nasa.gov/index.html#apply-for-an-api-key) and add it as
+`APOD_API_KEY=xxxx` to `~/.gradle/gradle.properties`, outside the repo. A key can also be set at
+runtime, in the app's own settings.
 
 ## Libraries
 External libraries used in this app are listed below. Core Android / AndroidX libraries are excluded from this list.
