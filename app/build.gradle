@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 // Read from ~/.gradle/gradle.properties, outside the repo. Tolerates the value being quoted or
 // not, since buildConfigField needs a quoted Java literal either way.
@@ -23,6 +22,9 @@ android {
         multiDexEnabled true
     }
 
+    buildFeatures {
+        viewBinding true
+    }
     buildTypes {
         release {
             minifyEnabled false

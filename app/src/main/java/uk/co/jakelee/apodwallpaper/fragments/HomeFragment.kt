@@ -15,18 +15,10 @@ import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_main.backgroundImage
-import kotlinx.android.synthetic.main.fragment_main.bottomButtonsGroup
-import kotlinx.android.synthetic.main.fragment_main.descriptionBar
-import kotlinx.android.synthetic.main.fragment_main.fullscreenButton
-import kotlinx.android.synthetic.main.fragment_main.manuallySetButton
-import kotlinx.android.synthetic.main.fragment_main.metadataBar
-import kotlinx.android.synthetic.main.fragment_main.metadataGroup
-import kotlinx.android.synthetic.main.fragment_main.shareButton
-import kotlinx.android.synthetic.main.fragment_main.titleBar
 import uk.co.jakelee.apodwallpaper.R
 import uk.co.jakelee.apodwallpaper.api.ApiClient
 import uk.co.jakelee.apodwallpaper.api.ApiWrapper
+import uk.co.jakelee.apodwallpaper.databinding.FragmentMainBinding
 import uk.co.jakelee.apodwallpaper.helper.CalendarHelper
 import uk.co.jakelee.apodwallpaper.helper.ContentHelper
 import uk.co.jakelee.apodwallpaper.helper.FileSystemHelper
@@ -39,6 +31,8 @@ import java.util.concurrent.TimeoutException
 
 class HomeFragment : Fragment() {
     private var disposable: Disposable? = null
+    private var _binding: FragmentMainBinding? = null
+    private val binding get() = _binding!!
     var selectedYear: Int = Calendar.getInstance().get(Calendar.YEAR)
     var selectedMonth: Int = Calendar.getInstance().get(Calendar.MONTH) + 1
     var selectedDay: Int = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
@@ -46,8 +40,14 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    ): View {
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
@@ -66,19 +66,19 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         hideContent()
         displayContent(PreferenceHelper(activity!!).getStringPref(PreferenceHelper.StringPref.last_pulled))
-        descriptionBar.setOnClickListener {
+        binding.descriptionBar.setOnClickListener {
             val prefs = PreferenceHelper(activity!!)
             prefs.setBooleanPref(
                 PreferenceHelper.BooleanPref.show_description,
                 !prefs.getBooleanPref(PreferenceHelper.BooleanPref.show_description)
             )
-            descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
+            binding.descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
         }
     }
 
     override fun onResume() {
         super.onResume()
-        descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
+        binding.descriptionBar.setSingleLine(!PreferenceHelper(activity!!).getBooleanPref(PreferenceHelper.BooleanPref.show_description))
         if (EndpointCheckTimingHelper.canRecheck(activity!!)) {
             getContent(EndpointCheckTimingHelper.getLatestDate(), true, true)
         }
@@ -128,32 +128,35 @@ class HomeFragment : Fragment() {
     }
 
     private fun hideContent() {
-        backgroundImage.setImageResource(R.color.colorPrimary)
-        titleBar.text = activity!!.getString(R.string.loading_message)
-        bottomButtonsGroup.visibility = View.GONE
-        metadataGroup.visibility = View.GONE
+        binding.backgroundImage.setImageResource(R.color.colorPrimary)
+        binding.titleBar.text = activity!!.getString(R.string.loading_message)
+        binding.bottomButtonsGroup.visibility = View.GONE
+        binding.metadataGroup.visibility = View.GONE
     }
 
     private fun displayContent(dateString: String) {
+        // Reached from an Rx callback, which can outlive the view.
+        val binding = _binding ?: return
         if (dateString.isNotEmpty() && activity != null) {
             val contentData = ContentHelper(activity!!).getContentData(dateString)
-            titleBar.text = contentData.title
-            descriptionBar.text = contentData.desc
+            binding.titleBar.text = contentData.title
+            binding.descriptionBar.text = contentData.desc
             if (PreferenceHelper(activity!!).getStringPref(PreferenceHelper.StringPref.last_pulled) == dateString) {
                 val lastChecked =
                     DateUtils.getRelativeTimeSpanString(PreferenceHelper(activity!!).getLongPref(PreferenceHelper.LongPref.last_checked))
-                metadataBar.text = String.format(
+                binding.metadataBar.text = String.format(
                     getString(R.string.metadata_bar_checked),
                     dateString,
                     lastChecked,
                     contentData.copyright
                 )
             } else {
-                metadataBar.text = String.format(getString(R.string.metadata_bar), dateString, contentData.copyright)
+                binding.metadataBar.text =
+                    String.format(getString(R.string.metadata_bar), dateString, contentData.copyright)
             }
-            metadataGroup.visibility = View.VISIBLE
+            binding.metadataGroup.visibility = View.VISIBLE
             if (contentData.isImage) {
-                bottomButtonsGroup.visibility = View.VISIBLE
+                binding.bottomButtonsGroup.visibility = View.VISIBLE
                 val image = FileSystemHelper(activity!!).getImage(contentData.date)
                 if (image == null) {
                     Toast.makeText(activity!!, getString(R.string.error_image_not_found), Toast.LENGTH_SHORT).show()
@@ -162,10 +165,10 @@ class HomeFragment : Fragment() {
                     Toast.makeText(activity!!, getString(R.string.error_image_too_large), Toast.LENGTH_SHORT).show()
                     return
                 } else {
-                    backgroundImage.setImageBitmap(image)
+                    binding.backgroundImage.setImageBitmap(image)
                 }
-                fullscreenButton.setOnClickListener(fullscreenButtonListener(contentData.title, dateString))
-                shareButton.setOnClickListener(
+                binding.fullscreenButton.setOnClickListener(fullscreenButtonListener(contentData.title, dateString))
+                binding.shareButton.setOnClickListener(
                     shareButtonListener(
                         dateString,
                         contentData.title,
@@ -173,16 +176,18 @@ class HomeFragment : Fragment() {
                         contentData.imageUrlHd
                     )
                 )
-                manuallySetButton.setOnClickListener(manuallySetButtonListener(contentData.date, image, contentData.title))
+                binding.manuallySetButton.setOnClickListener(
+                    manuallySetButtonListener(contentData.date, image, contentData.title)
+                )
             } else {
-                descriptionBar.text = String.format(
+                binding.descriptionBar.text = String.format(
                     getString(R.string.apod_not_image),
-                    descriptionBar.text,
+                    binding.descriptionBar.text,
                     getString(R.string.app_name),
                     contentData.imageUrl
                 )
-                backgroundImage.setImageResource(R.color.colorPrimary)
-                bottomButtonsGroup.visibility = View.GONE
+                binding.backgroundImage.setImageResource(R.color.colorPrimary)
+                binding.bottomButtonsGroup.visibility = View.GONE
             }
         }
     }
