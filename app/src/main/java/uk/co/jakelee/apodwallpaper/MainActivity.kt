@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import uk.co.jakelee.apodwallpaper.fragments.HomeFragment
 import uk.co.jakelee.apodwallpaper.fragments.SettingsFragment
 import uk.co.jakelee.apodwallpaper.helper.PreferenceHelper
@@ -51,6 +52,10 @@ class MainActivity : AppCompatActivity() {
      * it back up underneath.
      */
     private fun keepContentBelowActionBar() {
+        // The strip behind the status bar is now the near-black window background, so its icons
+        // have to be light to stay visible.
+        WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
+
         val content = findViewById<View>(R.id.mainFrame)
         // Read the window's own insets rather than listening on this view: the decor has already
         // consumed the top inset by the time it reaches here, so a listener would only ever see 0.

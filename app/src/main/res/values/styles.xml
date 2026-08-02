@@ -7,6 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:navigationBarColor" tools:targetApi="21">@color/colorPrimary</item>
+        <!-- Targeting 35+ ignores android:statusBarColor, so the strip behind the status bar shows
+             the window background instead. Matching the action bar stops it reading as a white
+             band above the app. -->
+        <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
 </resources>
