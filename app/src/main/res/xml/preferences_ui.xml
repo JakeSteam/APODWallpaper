@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/category_app_options">
         <SwitchPreference
                 android:key="@string/pref_custom_key_enabled"
@@ -47,6 +48,7 @@
                 android:dependency="@string/pref_automatic_enabled"
                 android:summary="@string/automatic_check_wifi_desc"/>
         <SeekBarPreference
+                app:showSeekBarValue="true"
                 android:key="@string/pref_automatic_check_time"
                 android:defaultValue="@integer/automatic_check_time_default"
                 android:title="@string/automatic_check_time_title"
@@ -54,6 +56,7 @@
                 android:dependency="@string/pref_automatic_enabled"
                 android:summary="@string/automatic_check_time_desc"/>
         <SeekBarPreference
+                app:showSeekBarValue="true"
                 android:key="@string/pref_automatic_check_variation"
                 android:defaultValue="@integer/automatic_check_variation_default"
                 android:title="@string/automatic_check_variation_title"
@@ -76,6 +79,7 @@
                 android:icon="@drawable/ic_settings_filter"
                 android:summary="@string/filtering_enabled_desc"/>
         <SeekBarPreference
+                app:showSeekBarValue="true"
                 android:key="@string/pref_filtering_width"
                 android:defaultValue="@integer/filtering_width_default"
                 android:title="@string/filtering_width_title"
@@ -83,6 +87,7 @@
                 android:dependency="@string/pref_filtering_enabled"
                 android:summary="@string/filtering_width_desc"/>
         <SeekBarPreference
+                app:showSeekBarValue="true"
                 android:key="@string/pref_filtering_height"
                 android:defaultValue="@integer/filtering_height_default"
                 android:title="@string/filtering_height_title"
@@ -97,6 +102,7 @@
                 android:dependency="@string/pref_filtering_enabled"
                 android:summary="@string/filtering_ratio_enabled_desc"/>
         <SeekBarPreference
+                app:showSeekBarValue="true"
                 android:key="@string/pref_filtering_ratio"
                 android:defaultValue="@integer/filtering_ratio_default"
                 android:title="@string/filtering_ratio_title"
