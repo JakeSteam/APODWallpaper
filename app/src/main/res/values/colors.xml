@@ -4,4 +4,8 @@
     <color name="colorAccent">#141414</color>
 
     <color name="textBackground">#aa141414</color>
+
+    <!-- Was @color/mdtp_red from MaterialDateTimePicker, which resolved to this exact value
+         despite the name. -->
+    <color name="descriptionLink">#009688</color>
 </resources>

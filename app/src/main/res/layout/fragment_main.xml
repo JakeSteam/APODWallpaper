@@ -43,7 +43,7 @@
             app:layout_constraintBottom_toTopOf="@+id/fullscreenButton"
             app:layout_constraintVertical_bias="0.0"
             android:autoLink="web|email"
-            android:textColorLink="@color/mdtp_red"
+            android:textColorLink="@color/descriptionLink"
             android:ellipsize="end"/>
     <ImageView
             android:id="@+id/manuallySetButton"
