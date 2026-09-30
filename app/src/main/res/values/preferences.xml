@@ -13,17 +13,12 @@
     <string name="pref_last_manual_set">last_manual_set</string>
     <string name="pref_last_pulled">last_pulled</string>
     <string name="pref_last_checked">last_checked</string>
-    <string name="pref_api_quota">api_quota</string>
     <string name="pref_last_filtered_date">last_filtered_date</string>
     <string name="pref_last_filtered_reason">last_filtered_reason</string>
     <string name="pref_last_sync_fix_date">last_sync_fix_date</string>
 
     <!-- App options section -->
-    <string name="pref_custom_key_enabled">custom_key_enabled</string>
-    <bool name="custom_key_enabled_default">false</bool>
 
-    <string name="pref_custom_key">custom_key</string>
-    <string name="custom_key_default"></string>
 
     <string name="pref_show_description">show_description</string>
     <bool name="show_description_default">true</bool>
@@ -114,7 +109,6 @@
     <string name="pref_delete_images">delete_images</string>
     <string name="pref_test_jobs">test_jobs</string>
     <string name="pref_view_status">view_status</string>
-    <string name="pref_view_quota">view_quota</string>
     <string name="pref_version">version</string>
     <string name="pref_feedback">feedback</string>
 </resources>

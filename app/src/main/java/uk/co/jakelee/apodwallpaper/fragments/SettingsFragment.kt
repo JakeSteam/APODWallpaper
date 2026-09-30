@@ -67,11 +67,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         setupVersionInfo()
         setupSeekbars()
         setupNotificationColourTitle()
-        val customKeyPref = findPreference<EditTextPreference>(getString(R.string.pref_custom_key))
-        val customKey = customKeyPref?.text
-        if (!customKey.isNullOrEmpty()) {
-            customKeyPref?.title = customKey
-        }
     }
 
     private fun setupNotificationColourTitle() {
@@ -125,7 +120,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
 
     private fun setupListeners() {
         setListener(R.string.pref_view_status, viewStatusListener)
-        setListener(R.string.pref_view_quota, viewQuotaListener)
         setListener(R.string.pref_notifications_instant, previewNotificationListener)
         setListener(R.string.pref_delete_images, deleteImagesListener)
         setListener(R.string.pref_test_jobs, testJobsListener)
@@ -170,16 +164,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
                     || key == getString(R.string.pref_automatic_check_time)
                     || key == getString(R.string.pref_automatic_check_variation) -> {
                 EndpointCheckScheduler(activity!!).scheduleJob()
-            }
-            key == getString(R.string.pref_custom_key) && pref is EditTextPreference -> {
-                val enteredKey = pref.text
-                if (enteredKey == null || enteredKey.length < 40) {
-                    pref.text = ""
-                    Toast.makeText(activity!!, getString(R.string.error_invalid_api_key), Toast.LENGTH_SHORT).show()
-                    pref.title = getString(R.string.no_api_key_set)
-                } else {
-                    pref.title = enteredKey
-                }
             }
             key == getString(R.string.pref_notifications_colour) -> {
                 setupNotificationColourTitle()
@@ -262,25 +246,6 @@ class SettingsFragment : PreferenceFragmentCompat(), SharedPreferences.OnSharedP
         }
         dialog.findViewById<TextView>(R.id.images_saved)!!.text = count.toString()
         dialog.findViewById<TextView>(R.id.images_cache)!!.text = Formatter.formatFileSize(activity!!, size)
-        true
-    }
-
-    private val viewQuotaListener = Preference.OnPreferenceClickListener {
-        val prefHelper = PreferenceHelper(activity!!)
-        val remaining = prefHelper.getIntPref(PreferenceHelper.IntPref.api_quota)
-        if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)) {
-            Toast.makeText(
-                activity,
-                String.format(getString(R.string.api_key_custom_remaining), remaining),
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            Toast.makeText(
-                activity,
-                String.format(getString(R.string.api_key_remaining), remaining),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
         true
     }
 

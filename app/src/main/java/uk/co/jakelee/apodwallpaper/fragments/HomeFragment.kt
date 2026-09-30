@@ -134,7 +134,7 @@ class HomeFragment : Fragment() {
 
     private fun handleContentError(it: Throwable) {
         val errorString = when (it) {
-            is ApiClient.TooManyRequestsException -> getString(R.string.error_quota_hit)
+            is ApiClient.NoApodForDateException -> getString(R.string.error_no_apod_for_date)
             is TimeoutException -> getString(R.string.error_no_response)
             else -> String.format(getString(R.string.error_generic_retrieval_failure), it.localizedMessage)
         }
@@ -193,7 +193,7 @@ class HomeFragment : Fragment() {
                     shareButtonListener(
                         dateString,
                         contentData.title,
-                        contentData.imageUrl,
+                        contentData.pageUrl.ifEmpty { contentData.imageUrl },
                         contentData.imageUrlHd
                     )
                 )
@@ -205,7 +205,7 @@ class HomeFragment : Fragment() {
                     getString(R.string.apod_not_image),
                     binding.descriptionBar.text,
                     getString(R.string.app_name),
-                    contentData.imageUrl
+                    contentData.pageUrl.ifEmpty { contentData.imageUrl }
                 )
                 binding.backgroundImage.setImageResource(R.color.colorPrimary)
                 binding.bottomButtonsGroup.visibility = View.GONE
@@ -254,11 +254,11 @@ class HomeFragment : Fragment() {
             .commit()
     }
 
-    private fun shareButtonListener(date: String, title: String, url: String, hdUrl: String) = View.OnClickListener {
+    private fun shareButtonListener(date: String, title: String, pageUrl: String, hdUrl: String) = View.OnClickListener {
         AlertDialog.Builder(activity!!)
             .setTitle(String.format(getString(R.string.sharing_question), title))
             .setPositiveButton(getString(R.string.sharing_url_hd)) { _, _ -> shareUrl(title, hdUrl) }
-            .setNegativeButton(getString(R.string.sharing_url)) { _, _ -> shareUrl(title, url) }
+            .setNegativeButton(getString(R.string.sharing_url)) { _, _ -> shareUrl(title, pageUrl) }
             .setNeutralButton(getString(R.string.sharing_image)) { _, _ ->
                 FileSystemHelper(activity!!).shareImage(
                     date,

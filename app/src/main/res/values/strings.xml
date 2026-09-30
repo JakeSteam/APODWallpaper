@@ -18,7 +18,7 @@
 
     <string name="sharing_question">How would you like to share \"%s\"?</string>
     <string name="sharing_url_hd">HD URL</string>
-    <string name="sharing_url">URL</string>
+    <string name="sharing_url">APOD page</string>
     <string name="sharing_image">Image</string>
     <string name="sharing_title">Share "%s" to:</string>
     <string name="notification_channel_name">Daily APOD notifications</string>
@@ -32,9 +32,7 @@
     <string name="manual_set_lockscreen">Lock Screen</string>
     <string name="manual_set_wallpaper">Wallpaper</string>
     <string name="manual_set_cancel">Cancel</string>
-    <string name="error_quota_hit">Your API key is currently at capacity! Please use a custom key in settings, or wait
-        an hour.
-    </string>
+    <string name="error_no_apod_for_date">There\'s no APOD for that date! Try another day.</string>
     <string name="error_no_response">The APOD API failed to respond! Please try again later.</string>
     <string name="error_generic_retrieval_failure">Failed to retrieve APOD: %s</string>
     <string name="error_image_too_large">Image is too large to be displayed (> 100MB)! Try turning off HD images &amp;
@@ -46,27 +44,16 @@
     <string name="lockscreen_set">Set \"%s\" as your lock screen!</string>
     <string name="wallpaper_set">Set \"%s\" as your wallpaper!</string>
     <string name="settings_title">Settings</string>
-    <string name="error_invalid_api_key">Invalid API key! Please try entering it again</string>
-    <string name="no_api_key_set">No key set, tap to change</string>
-    <string name="api_key_custom_remaining">Your API key has %s requests left this hour.</string>
-    <string name="api_key_remaining">There are %s requests remaining this hour for the default API key. Use a custom one
-        for increased reliability!
-    </string>
     <string name="share_title">Share \"%s\" to:</string>
     <string name="error_returned_apod_format">Returned APOD isn\'t formatted correctly!</string>
     <string name="override_preferences">Image wouldn\'t usually be set due to %s, applying anyway!</string>
-    <string name="custom_key_enabled_desc">A custom API key ensures reliability, as no usage limits will be reached.
-    </string>
-    <string name="custom_key_enabled_title">Use custom APOD API key</string>
-    <string name="custom_key_title">No key set, tap to change</string>
-    <string name="custom_key_desc">Your custom API key can be requested from\nhttps://api.nasa.gov/</string>
     <string name="show_description_title">Show full description</string>
     <string name="show_description_desc">When enabled, the full APOD description will be shown. Tap description to
         toggle!
     </string>
     <string name="use_hd_images_title">Use HD images</string>
-    <string name="use_hd_images_desc">When enabled, HD images will be used. Some of these are too large to be displayed
-        in the app, but still work as wallpapers!
+    <string name="use_hd_images_desc">When enabled, images are downloaded at full size instead of up to 1920px. Some of
+        these are too large to be displayed in the app, but still work as wallpapers!
     </string>
     <string name="use_greyscale_images_title">Use greyscale images</string>
     <string name="use_greyscale_images_desc">When enabled, all images will be converted to black and white before being used. Only applies to new images.</string>
@@ -124,8 +111,6 @@
     <string name="test_jobs_desc">Schedule an example notification in 50 to 70 seconds, to check job scheduling works.</string>
     <string name="view_status_title">View status</string>
     <string name="view_status_desc">View current status of the app.</string>
-    <string name="view_quota_title">View quota</string>
-    <string name="view_quota_desc">View current API quota.</string>
     <string name="view_source_title">View source</string>
     <string name="view_source_desc">View complete app source code.</string>
     <string name="feedback_title">Give app feedback</string>
