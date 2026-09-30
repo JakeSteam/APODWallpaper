@@ -8,11 +8,9 @@
 
 Check out the repo and build — no other setup is required.
 
-The app calls NASA's APOD API, and falls back to their shared `DEMO_KEY` if you have no key of
-your own. That is rate limited across everyone using it, so for anything beyond a smoke test
-[get your own key](https://api.nasa.gov/index.html#apply-for-an-api-key) and add it as
-`APOD_API_KEY=xxxx` to `~/.gradle/gradle.properties`, outside the repo. A key can also be set at
-runtime, in the app's own settings.
+The app reads NASA's [APOD endpoint](https://science.nasa.gov/wp-json/wp/v2/apod-basic), which
+needs no API key. It replaced `api.nasa.gov/planetary/apod` in Sep 2026; see
+[nasa/apod-api](https://github.com/nasa/apod-api).
 
 ## Libraries
 External libraries used in this app are listed below. Core Android / AndroidX libraries are excluded from this list.

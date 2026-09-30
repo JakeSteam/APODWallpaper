@@ -2,7 +2,6 @@ package uk.co.jakelee.apodwallpaper.api
 
 import android.content.Context
 import io.reactivex.Single
-import uk.co.jakelee.apodwallpaper.BuildConfig
 import uk.co.jakelee.apodwallpaper.config.Config
 import uk.co.jakelee.apodwallpaper.helper.*
 
@@ -14,45 +13,19 @@ class ApiWrapper {
             val lastRunPref = if (manualCheck) PreferenceHelper.LongPref.last_run_manual else PreferenceHelper.LongPref.last_run_automatic
             prefHelper.setLongPref(lastRunPref, System.currentTimeMillis())
             prefHelper.setLongPref(PreferenceHelper.LongPref.last_checked, System.currentTimeMillis())
-            var checkedPreviousDay = false
-            return Single.fromCallable {
-                    val auth = getAuth(prefHelper)
-                    try {
-                        return@fromCallable ApiClient(Config().getUrl(auth, dateString)).getApiResponse(context)
-                    } catch (e: ApiClient.DateRequestedException) {
-                        if (pullingLatest && !checkedPreviousDay) {
-                            checkedPreviousDay = true
-                            return@fromCallable retryPreviousEntry(context, dateString, auth)
-                        } else {
-                            throw ApiClient.DateRequestedException()
-                        }
-                    }
-                }
+            // Latest is asked for directly, rather than guessing today's date and falling back a day,
+            // since the device's date is often ahead of the APOD's (US Eastern) one.
+            val url = if (pullingLatest) Config().getLatestUrl() else Config().getUrl(dateString)
+            return Single.fromCallable { ApiClient(url).getApiResponse(context) }
                 .map {
                     val fsh = FileSystemHelper(context)
-                    prefHelper.setIntPref(PreferenceHelper.IntPref.api_quota, it.second)
-                    saveDataIfNecessary(it.first, fsh, prefHelper, ContentHelper(context), manualCheck)
+                    saveDataIfNecessary(it, fsh, prefHelper, ContentHelper(context), manualCheck)
                     // If we're pulling the latest image, and it's different to the current latest
-                    if (pullingLatest && it.first.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
-                        handleNewLatestContent(it.first, fsh, manualCheck, context, prefHelper)
+                    if (pullingLatest && it.date != prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)) {
+                        handleNewLatestContent(it, fsh, manualCheck, context, prefHelper)
                     }
-                    return@map it.first
+                    return@map it
                 }
-        }
-
-        private fun getAuth(prefHelper: PreferenceHelper): String {
-            var auth = BuildConfig.AUTH_CODE
-            if (prefHelper.getBooleanPref(PreferenceHelper.BooleanPref.custom_key_enabled)
-                && prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key).isNotEmpty()
-            ) {
-                auth = prefHelper.getStringPref(PreferenceHelper.StringPref.custom_key)
-            }
-            return auth
-        }
-
-        private fun retryPreviousEntry(context: Context, dateString: String, apiKey: String): Pair<ContentItem, Int> {
-            val newDateString = Config().getPreviousEntryDate(dateString)
-            return ApiClient(Config().getUrl(apiKey, newDateString)).getApiResponse(context)
         }
 
         // If data hasn't been saved before, save it

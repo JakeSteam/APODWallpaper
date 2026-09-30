@@ -11,7 +11,8 @@ data class ContentItem(
     val imageUrl: String,
     val imageUrlHd: String,
     val copyright: String,
-    val isImage: Boolean
+    val isImage: Boolean,
+    val pageUrl: String
 ) {
 
     fun pullImageFromServer(useHd: Boolean): Bitmap {
