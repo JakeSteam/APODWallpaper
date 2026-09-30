@@ -44,20 +44,9 @@
     <string name="lockscreen_set">Set \"%s\" as your lock screen!</string>
     <string name="wallpaper_set">Set \"%s\" as your wallpaper!</string>
     <string name="settings_title">Settings</string>
-    <string name="error_invalid_api_key">Invalid API key! Please try entering it again</string>
-    <string name="no_api_key_set">No key set, tap to change</string>
-    <string name="api_key_custom_remaining">Your API key has %s requests left this hour.</string>
-    <string name="api_key_remaining">There are %s requests remaining this hour for the default API key. Use a custom one
-        for increased reliability!
-    </string>
     <string name="share_title">Share \"%s\" to:</string>
     <string name="error_returned_apod_format">Returned APOD isn\'t formatted correctly!</string>
     <string name="override_preferences">Image wouldn\'t usually be set due to %s, applying anyway!</string>
-    <string name="custom_key_enabled_desc">A custom API key ensures reliability, as no usage limits will be reached.
-    </string>
-    <string name="custom_key_enabled_title">Use custom APOD API key</string>
-    <string name="custom_key_title">No key set, tap to change</string>
-    <string name="custom_key_desc">Your custom API key can be requested from\nhttps://api.nasa.gov/</string>
     <string name="show_description_title">Show full description</string>
     <string name="show_description_desc">When enabled, the full APOD description will be shown. Tap description to
         toggle!
@@ -122,8 +111,6 @@
     <string name="test_jobs_desc">Schedule an example notification in 50 to 70 seconds, to check job scheduling works.</string>
     <string name="view_status_title">View status</string>
     <string name="view_status_desc">View current status of the app.</string>
-    <string name="view_quota_title">View quota</string>
-    <string name="view_quota_desc">View current API quota.</string>
     <string name="view_source_title">View source</string>
     <string name="view_source_desc">View complete app source code.</string>
     <string name="feedback_title">Give app feedback</string>

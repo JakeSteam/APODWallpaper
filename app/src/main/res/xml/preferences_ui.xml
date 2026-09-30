@@ -2,19 +2,6 @@
                   xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory android:title="@string/category_app_options">
         <SwitchPreference
-                android:key="@string/pref_custom_key_enabled"
-                android:defaultValue="@bool/custom_key_enabled_default"
-                android:title="@string/custom_key_enabled_title"
-                android:icon="@drawable/ic_settings_custom_key_enable"
-                android:summary="@string/custom_key_enabled_desc"/>
-        <EditTextPreference
-                android:key="@string/pref_custom_key"
-                android:defaultValue="@string/custom_key_default"
-                android:icon="@drawable/ic_settings_custom_key"
-                android:title="@string/custom_key_title"
-                android:dependency="@string/pref_custom_key_enabled"
-                android:summary="@string/custom_key_desc"/>
-        <SwitchPreference
                 android:key="@string/pref_show_description"
                 android:defaultValue="@bool/show_description_default"
                 android:title="@string/show_description_title"
@@ -194,11 +181,6 @@
                 android:title="@string/view_status_title"
                 android:icon="@drawable/ic_settings_history"
                 android:summary="@string/view_status_desc"/>
-        <Preference
-                android:key="@string/pref_view_quota"
-                android:title="@string/view_quota_title"
-                android:icon="@drawable/ic_settings_quota"
-                android:summary="@string/view_quota_desc"/>
         <PreferenceScreen
                 android:title="@string/view_source_title"
                 android:icon="@drawable/ic_settings_code"

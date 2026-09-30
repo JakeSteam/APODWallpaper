@@ -12,7 +12,6 @@ class PreferenceHelper(val context: Context) {
         automatic_check_wifi(R.string.pref_automatic_check_wifi, R.bool.automatic_check_wifi_default),
         automatic_check_fix(R.string.pref_automatic_check_fix, R.bool.automatic_check_fix_default),
         show_description(R.string.pref_show_description, R.bool.show_description_default),
-        custom_key_enabled(R.string.pref_custom_key_enabled, R.bool.custom_key_enabled_default),
         wallpaper_enabled(R.string.pref_wallpaper_enabled, R.bool.wallpaper_enabled_default),
         lockscreen_enabled(R.string.pref_lockscreen_enabled, R.bool.lockscreen_enabled_default),
         notifications_enabled(R.string.pref_notifications_enabled, R.bool.notifications_enabled_default),
@@ -35,9 +34,8 @@ class PreferenceHelper(val context: Context) {
 
     enum class StringPref(val prefId: Int, val defaultId: Int) {
         last_pulled(R.string.pref_last_pulled, R.string.empty_string),
-        custom_key(R.string.pref_custom_key, R.string.custom_key_default),
-        last_filtered_date(R.string.pref_last_filtered_date, R.string.custom_key_default),
-        last_filtered_reason(R.string.pref_last_filtered_reason, R.string.custom_key_default),
+        last_filtered_date(R.string.pref_last_filtered_date, R.string.empty_string),
+        last_filtered_reason(R.string.pref_last_filtered_reason, R.string.empty_string),
         notification_colour(R.string.pref_notifications_colour, R.string.notifications_colour_default)
     }
 
@@ -62,7 +60,6 @@ class PreferenceHelper(val context: Context) {
     fun setLongPref(pref: LongPref, value: Long) = prefs.edit().putLong(context.getString(pref.prefId), value).commit()
 
     enum class IntPref(val prefId: Int, val defaultId: Int) {
-        api_quota(R.string.pref_api_quota, R.integer.empty_int),
         minimum_width(R.string.pref_filtering_width, R.integer.filtering_width_default),
         minimum_height(R.string.pref_filtering_height, R.integer.filtering_height_default),
         filtering_ratio(R.string.pref_filtering_ratio, R.integer.filtering_ratio_default),
