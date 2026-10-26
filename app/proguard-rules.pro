@@ -1,21 +1,16 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Keep line numbers so Play Console stack traces stay readable once deobfuscated.
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Gson fills RemoteApod by reflection using its field names. Gson 2.8.2 ships no R8 rules of its own.
+-keepattributes Signature,*Annotation*
+-keep class uk.co.jakelee.apodwallpaper.config.RemoteApod { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Optional OkHttp 3.10 dependencies, used only when present at runtime.
+-dontwarn javax.annotation.Nullable
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.OpenSSLProvider
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# WorkManager's Room 2.6.1 keeps RoomDatabase subclasses but not their constructors, which R8
+# full mode strips, so WorkManager crashes on startup. Newer Room versions ship this rule themselves.
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
