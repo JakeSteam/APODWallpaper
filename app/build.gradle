@@ -40,7 +40,9 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            // R8 also puts mapping.txt in the bundle, so Play can deobfuscate crash reports.
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if (signingReady) signingConfig = signingConfigs.upload
         }
