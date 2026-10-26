@@ -26,7 +26,9 @@ class ApiClient(val url: String) {
                 404 -> throw NoApodForDateException()
                 500 -> throw ServerError()
                 503, 504 -> throw TimeoutException()
-                else -> throw UnknownError()
+                // Not UnknownError: that's a VirtualMachineError, which RxJava rethrows as fatal
+                // instead of passing to onError, so any other status code crashed the app.
+                else -> throw IOException("HTTP ${response.code()}")
             }
         }
     }

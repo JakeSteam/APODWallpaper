@@ -26,7 +26,8 @@ class NotificationHelper(val context: Context) {
         val dateString = prefHelper.getStringPref(PreferenceHelper.StringPref.last_pulled)
         if (!dateString.isEmpty()) {
             val content = ContentHelper(context).getContentData(dateString)
-            val image = FileSystemHelper(context).getImage(content.date)
+            // Null when the latest APOD is a video, or Android has cleared the image from the cache.
+            val image = FileSystemHelper(context).getImage(content.date) ?: return
             display(prefHelper, content, image)
         }
     }

@@ -1,9 +1,6 @@
 
 # Daily APOD Space Wallpaper
 
-> [!WARNING]
-> This repo is no longer actively developed, but PRs will be merged!
-
 ## Building
 
 Check out the repo and build — no other setup is required.
