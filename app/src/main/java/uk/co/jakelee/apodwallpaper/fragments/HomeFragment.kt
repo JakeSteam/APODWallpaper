@@ -53,6 +53,8 @@ class HomeFragment : Fragment() {
     }
 
     val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
+        // The picker isn't a DialogFragment, so it can outlive this fragment's view.
+        if (_binding == null) return@OnDateSetListener
         hideContent()
         selectedYear = year
         selectedMonth = (month + 1)
