@@ -57,8 +57,11 @@ class WallpaperHelper(val context: Context, val prefHelper: PreferenceHelper) {
     }
 
     fun updateWallpaper(bitmap: Bitmap) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N || manager.isSetWallpaperAllowed) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             manager.setBitmap(bitmap)
+        } else if (manager.isSetWallpaperAllowed) {
+            // Without FLAG_SYSTEM, setBitmap also replaces the lock screen
+            manager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM)
         }
     }
 
